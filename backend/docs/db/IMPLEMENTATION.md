@@ -1,0 +1,78 @@
+# DB 모델·마이그레이션 사용법
+
+2026-11-02 구현: SQLAlchemy 2 ORM 27개 테이블, PostgreSQL 17에서 검증한 Alembic 초기 revision `20261102_0001`.
+
+- 모델: `model/entities.py`, 공통 Base: `model/base.py`, 인덱스: `model/indexes.py`
+- 비동기 연결/세션 의존성: `library/database.py`의 `get_session`
+- 마이그레이션: `migrations/versions/20261102_0001_initial_kaifind_schema.py`
+- 통합 검증: `tests/test_schema.py`
+
+## 연결 설정
+
+`DATABASE_URL` 또는 `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`를 환경변수로 전달한다. 후자는 `POSTGRES_HOST` 기본 localhost, `POSTGRES_PORT` 기본 5432다. `.env.example`은 참고용이며 애플리케이션이 `.env`를 자동으로 읽지는 않는다. 비밀번호에 특수문자가 있으면 URL 인코딩을 적용하거나 개별 POSTGRES 변수를 사용한다.
+
+호스트에서 PostgreSQL 포워딩 포트에 연결할 때는 localhost, Compose backend에서 연결할 때는 서비스 이름 db를 사용한다. 연결 설정과 엔진은 지연 생성되며 모듈 import나 앱 시작만으로 테이블을 생성하지 않는다. 요청 세션의 commit/rollback은 서비스 트랜잭션에서 명시적으로 처리한다.
+
+호스트에서 환경변수를 설정한 뒤:
+
+```sh
+python -m alembic upgrade head
+python -m alembic current
+python -m alembic check
+```
+
+현재 저장소의 상위 `.env`와 실행 중인 Compose backend/db를 사용하는 경우, backend 디렉터리에서:
+
+```sh
+set -a
+source ../.env
+set +a
+export POSTGRES_HOST=db
+docker exec -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB -e POSTGRES_HOST backend python -m alembic upgrade head
+```
+
+실행 중인 backend 서비스 자체에 DB 설정을 계속 제공하려면 배포 환경의 환경변수에도 같은 설정을 전달해야 한다. 위 docker exec의 환경변수는 해당 명령에만 적용된다. API DB 호출은 아직 구현하지 않았다.
+
+## 검증 방법
+
+기존 데이터가 없는 별도 `kaifind_test_*` DB에 마이그레이션을 적용하고 그 주소를 TEST_DATABASE_URL로 전달한다.
+
+```sh
+DATABASE_URL="$TEST_DATABASE_URL" python -m alembic upgrade head
+python -m pytest -q tests/test_schema.py
+DATABASE_URL="$TEST_DATABASE_URL" python -m alembic downgrade base
+DATABASE_URL="$TEST_DATABASE_URL" python -m alembic upgrade head
+DATABASE_URL="$TEST_DATABASE_URL" python -m alembic check
+```
+
+테스트는 각 테스트의 데이터를 rollback한다. 임시 DB 생성/제거는 실행자가 담당한다. downgrade는 해당 스키마의 데이터를 제거하므로 검증용 DB에서만 왕복 검증한다. 초기 migration은 현재 모델의 create_all을 호출하지 않고 고정된 DDL을 포함한다.
+
+## DB가 보장하는 규칙
+
+PK/FK, enum CHECK, 상태·종료 시각 정합성, 위치 형태, 활성 수거 유일성, OPEN 신고/분쟁 중복 제한, 메일 슬롯 유일성, 후보·알림 중복 키, 사진 목적/소유권/물품·위치 연결, bounded 문자열 공백 검증을 포함한다.
+
+PostgreSQL 트리거는 다음을 추가 보장한다.
+
+- 카테고리 민감 속성 불변, 사진/과거 위치의 민감 라벨 하향 금지와 카테고리 변경 시 라벨 전파
+- 사진 연결의 물품·사진·위치 정체성 불변, 위치 버전 내용 불변
+- 종료 신고 private details 삭제와 OPEN 여부의 지연 제약 검사. OPEN 신고와 private 행은 같은 트랜잭션에서 생성해야 한다.
+- 최초 종료 시각 변경 및 신고 재개방 금지
+- 물품 종료/논리 삭제 시 대화·메시지 삭제, 논리 삭제 시 후보 삭제
+- 대화/메시지 쓰기 시 물품 행 잠금·상태 검사, 메시지 발신자가 대화 참여자인지 검사
+- 신고 종료 시 대기 이메일 항목 CANCELLED 처리
+
+ORM에서 User/FoundItem/LostReport를 수정하면 version 컬럼으로 낙관적 잠금이 적용된다. Core update·직접 SQL은 ORM 잠금을 우회하므로 서비스에서 버전 조건/행 잠금과 version 증가를 명시해야 한다.
+
+## 서비스·운영 구현에 남은 내용
+
+이번 변경은 DB 기반 작업이며 63개 API와 배치/워커 구현을 포함하지 않는다. 수거 상태와 수거 기록의 원자적 연동·최신 매칭·모든 관련 신고 종료·감사 및 outbox 생성은 서비스가 같은 트랜잭션에서 처리해야 한다. 사진 최소 1~5장, 가능한 건물 최소 1개, 미래 날짜, 서버 인가·CSRF·연락처 검출·GPS 제거·사진 바이트 전달 감사도 해당 처리 경로에서 검증한다.
+
+알림 worker, 슬롯 예약·재시도 날짜 이월, purge_after 계산·정리 배치, 객체 스토리지 삭제, 백업 삭제 재적용, 감사 metadata 값별 허용 형식·상태값 검증, 감사 append-only 전용 DB 권한은 후속 구현이다. 감사 CHECK는 이벤트/대상 enum·주체 형태·metadata 키 허용목록까지만 검사한다. 민감 데이터 원문 복제를 금지하는 것은 큐/로그 작성 경로에서도 지켜야 한다.
+
+초안의 수거 기록/제한 근거 삭제 후 정책 문제는 그대로 미정이다. collections.item_id와 audit/이벤트 식별자에는 독립 보존을 위해 물리 FK를 두지 않았다. collection_restrictions.source_dispute_id는 ON DELETE SET NULL로 제한 상태를 보존한다. 전체 미정 정책은 [스키마 초안](README.md)의 10절을 따른다.
+
+## 이번 적용 결과
+
+2026-11-02 실행 중인 Compose PostgreSQL 개발 DB에 `upgrade head`를 적용했다. 현재 revision은 `20261102_0001 (head)`이며 `alembic check`에서 신규 변경이 검출되지 않았다.
+
+별도 임시 PostgreSQL DB에서 upgrade→downgrade base→upgrade 왕복, 스키마 차이 검사, 통합 테스트 11개를 통과했다. 테스트는 수거 유일성·취소 후 재수거, 이메일 슬롯, 신고 종료 시 private 삭제·재개방 차단, 메시지 참여자 검사·종료 삭제, 사진 민감 라벨 유지·목적 검사, 위치 이력 불변, 수거 독립 보존, ORM version 충돌을 검증한다. 임시 DB는 검증 후 제거했다. 다중 요청 부하·외부 이메일 전송·백업 복구는 검증하지 않았다.

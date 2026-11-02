@@ -1,0 +1,106 @@
+"""기능별 API 기본 구조. 상세 계약은 docs/api 참고."""
+
+from uuid import UUID
+
+from fastapi import APIRouter, HTTPException, status
+
+router = APIRouter(tags=["found_items"])
+
+
+@router.get('/found-items', summary='검색·목록', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def list_found_items():
+    """ITEM-01: 검색·목록. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-01 구현 예정"},
+    )
+
+
+@router.get('/found-items/{itemId}', summary='공개 상세', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def get_found_item(itemId: UUID):
+    """ITEM-02: 공개 상세. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-02 구현 예정"},
+    )
+
+
+@router.post('/found-items', summary='습득물 등록', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def create_found_item():
+    """ITEM-03: 습득물 등록. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-03 구현 예정"},
+    )
+
+
+@router.patch('/found-items/{itemId}', summary='자기 게시물 수정', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def update_found_item(itemId: UUID):
+    """ITEM-04: 자기 게시물 수정. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-04 구현 예정"},
+    )
+
+
+@router.delete('/found-items/{itemId}', summary='자기 게시물 삭제', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def delete_found_item(itemId: UUID):
+    """ITEM-05: 자기 게시물 삭제. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-05 구현 예정"},
+    )
+
+
+@router.get('/found-items/{itemId}/drop-off', summary='보관 위치 조회', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def get_drop_off(itemId: UUID):
+    """ITEM-06: 보관 위치 조회. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-06 구현 예정"},
+    )
+
+
+@router.put('/found-items/{itemId}/drop-off', summary='보관 위치 변경', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def update_drop_off(itemId: UUID):
+    """ITEM-07: 보관 위치 변경. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-07 구현 예정"},
+    )
+
+
+@router.get('/found-items/{itemId}/drop-off/history', summary='보관 위치 이력', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def list_drop_off_history(itemId: UUID):
+    """ITEM-08: 보관 위치 이력. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-08 구현 예정"},
+    )
+
+
+@router.post('/found-items/{itemId}/repost', summary='만료 재등록', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def repost_found_item(itemId: UUID):
+    """ITEM-09: 만료 재등록. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-09 구현 예정"},
+    )
+
+
+@router.get('/me/found-items', summary='내 게시물', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def list_my_found_items():
+    """ITEM-10: 내 게시물. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-10 구현 예정"},
+    )
+
+
+@router.post('/found-items/{itemId}/reports', summary='부적절한 게시물 신고', responses={501: {"description": "아직 구현되지 않은 기능"}})
+async def report_found_item(itemId: UUID):
+    """MOD-01: 부적절한 게시물 신고. 요청·응답 모델과 서비스 연동 구현 예정."""
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail={"code": "NOT_IMPLEMENTED", "message": "MOD-01 구현 예정"},
+    )
