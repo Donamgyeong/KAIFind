@@ -358,3 +358,11 @@ class AuditLog(UUIDPrimaryKey, Base):
     event_metadata: Mapped[dict[str, Any]] = mapped_column("metadata", JSONB)
     occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=text("now()"))
     purge_after: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class AuthLoginRate(Base):
+    """Short-lived, shared per-IP mock-login throttle buckets."""
+    __tablename__ = 'auth_login_rates'
+    ip_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    window_started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    attempts: Mapped[int] = mapped_column(Integer)

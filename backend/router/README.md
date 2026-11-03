@@ -24,11 +24,10 @@
 인증·관리자 권한·CSRF 의존성, DB 및 서비스 로직은 후속 구현 대상입니다.
 현재 OpenAPI는 경로 구조 확인용이며 완성된 API 계약을 나타내지 않습니다.
 
-Auth는 `schema/auth.py`에 요청·응답 DTO, `schema/common.py`에 공통 enum·오류 모델,
-`router/auth_params.py`에 헤더·쿠키 파라미터를 정의하고 OpenAPI에 연결했습니다.
-Auth의 성공 응답과 로그아웃 204는 계약만 선언한 상태이며 서비스는 아직 501을 반환합니다.
-검증 오류를 400 ErrorResponse로 변환하는 처리와 세션·CSRF·Origin·Content-Type 검증은
-후속 구현 대상입니다. 현재 파라미터·본문 검증 실패에는 FastAPI 기본 422 응답이 적용됩니다.
+Auth의 5개 엔드포인트는 `service/auth.py`에 세션·CSRF·사용자 처리 로직을 구현했습니다.
+`schema/auth.py`는 DTO, `router/auth_params.py`는 파라미터,
+`library/auth_http.py`는 요청 가드와 공통 오류 응답을 담당합니다.
+설정·마이그레이션·테스트 실행법은 `docs/api/AUTH-IMPLEMENTATION.md`를 참고합니다.
 
 새 라우터는 모듈의 `router = APIRouter(...)`에 엔드포인트를 작성한 후
 `router/__init__.py`에서 `api_router.include_router(...)`로 등록합니다.

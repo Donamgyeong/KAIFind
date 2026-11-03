@@ -7,6 +7,8 @@
 - 마이그레이션: `migrations/versions/20261102_0001_initial_kaifind_schema.py`
 - 통합 검증: `tests/test_schema.py`
 
+2026-11-03: Auth 로그인 제한용 `auth_login_rates` 테이블을 추가했다. 최신 revision은 `20261103_0002`이며 기존 DB에도 `alembic upgrade head`가 필요하다.
+
 ## 연결 설정
 
 `DATABASE_URL` 또는 `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`를 환경변수로 전달한다. 후자는 `POSTGRES_HOST` 기본 localhost, `POSTGRES_PORT` 기본 5432다. `.env.example`은 참고용이며 애플리케이션이 `.env`를 자동으로 읽지는 않는다. 비밀번호에 특수문자가 있으면 URL 인코딩을 적용하거나 개별 POSTGRES 변수를 사용한다.
@@ -31,7 +33,7 @@ export POSTGRES_HOST=db
 docker exec -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB -e POSTGRES_HOST backend python -m alembic upgrade head
 ```
 
-실행 중인 backend 서비스 자체에 DB 설정을 계속 제공하려면 배포 환경의 환경변수에도 같은 설정을 전달해야 한다. 위 docker exec의 환경변수는 해당 명령에만 적용된다. API DB 호출은 아직 구현하지 않았다.
+실행 중인 backend 서비스 자체에 DB 설정을 계속 제공하려면 배포 환경의 환경변수에도 같은 설정을 전달해야 한다. 위 docker exec의 환경변수는 해당 명령에만 적용된다. Auth API의 DB 호출을 구현했다.
 
 ## 검증 방법
 

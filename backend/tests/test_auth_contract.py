@@ -1,26 +1,19 @@
-"""Public HTTP acceptance tests.
-
-Strict xfail marks pending service behavior: an implemented case becomes XPASS
-and fails the run until its marker is removed. Never mock the auth handlers.
-The current app has no configurable clock, mock-account registry or repository;
-DB rollback, expiry boundaries and concurrency need those seams before testing.
-"""
+"""Public HTTP acceptance tests against real PostgreSQL sessions."""
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from router.auth import router
 
-pending = pytest.mark.xfail(strict=True, raises=AssertionError,
-                            reason='Auth service and error translation are not implemented')
 BASE = '/api/v1/auth'
 COOKIE = 'KAIFIND_SESSION'
 
 
 @pytest.fixture
-def client():
+def client(auth_runtime):
     # Mount the real router without importing unrelated ORM/database dependencies.
     app = FastAPI()
+    app.state.auth_runtime = auth_runtime
     app.include_router(router, prefix='/api/v1')
     with TestClient(app, base_url='https://testserver') as client:
         yield client
@@ -57,7 +50,6 @@ def login(client):
     return response
 
 
-@pending
 def test_csrf_creates_secure_anonymous_cookie(client):
     response = client.get(BASE + '/csrf')
     assert response.status_code == 200
@@ -70,7 +62,6 @@ def test_csrf_creates_secure_anonymous_cookie(client):
         assert attribute not in cookie
 
 
-@pending
 def test_csrf_reuses_session_and_token(client):
     token = csrf(client)
     session = client.cookies.get(COOKIE)
@@ -79,14 +70,12 @@ def test_csrf_reuses_session_and_token(client):
     assert_error(client.get(BASE + '/me'), 401, 'AUTH_REQUIRED')
 
 
-@pending
 def test_unknown_cookie_replaced_with_anonymous_session(client):
     client.cookies.set(COOKIE, 'unknown-session', domain='testserver.local', path='/')
     csrf(client)
     assert client.cookies.get(COOKIE) != 'unknown-session'
 
 
-@pending
 def test_account_list_exposes_only_public_fields(client):
     response = client.get(BASE + '/mock/accounts')
     assert response.status_code == 200
@@ -98,7 +87,6 @@ def test_account_list_exposes_only_public_fields(client):
 
 
 @pytest.mark.parametrize('cookie', [None, 'unknown-session'])
-@pending
 def test_me_requires_authenticated_session(client, cookie):
     if cookie:
         client.cookies.set(COOKIE, cookie)
@@ -114,7 +102,6 @@ def test_me_requires_authenticated_session(client, cookie):
     *[({'mockAccountId': 'student-01', field: 'ADMIN'}, field, 'UNKNOWN_FIELD')
       for field in ['role', 'email', 'name', 'userId', 'affiliation']],
 ])
-@pending
 def test_login_field_errors(client, payload, field, code):
     token = csrf(client)
     response = client.post(BASE + '/mock/login', json=payload, headers={'X-CSRF-Token': token})
@@ -123,7 +110,6 @@ def test_login_field_errors(client, payload, field, code):
 
 
 @pytest.mark.parametrize('body', ['', '{', '{"mockAccountId":'])
-@pending
 def test_malformed_json(client, body):
     token = csrf(client)
     response = client.post(BASE + '/mock/login', content=body,
@@ -132,7 +118,6 @@ def test_malformed_json(client, body):
 
 
 @pytest.mark.parametrize('content_type', [None, 'text/plain'])
-@pending
 def test_login_requires_json_media_type(client, content_type):
     token = csrf(client)
     headers = {'X-CSRF-Token': token}
@@ -144,7 +129,6 @@ def test_login_requires_json_media_type(client, content_type):
 
 @pytest.mark.parametrize('path', ['/mock/login', '/logout'])
 @pytest.mark.parametrize('token', [None, '', 'incorrect-token'])
-@pending
 def test_writes_reject_missing_or_invalid_csrf(client, path, token):
     csrf(client)
     headers = {} if token is None else {'X-CSRF-Token': token}
@@ -152,7 +136,6 @@ def test_writes_reject_missing_or_invalid_csrf(client, path, token):
     assert_error(client.post(BASE + path, headers=headers, **kwargs), 403, 'CSRF_INVALID')
 
 
-@pending
 def test_login_rotates_session_and_me_matches_response(client):
     old_token = csrf(client)
     old_session = client.cookies.get(COOKIE)
@@ -169,7 +152,6 @@ def test_login_rotates_session_and_me_matches_response(client):
     assert_error(client.get(BASE + '/me'), 401, 'AUTH_REQUIRED')
 
 
-@pending
 def test_invalid_account_preserves_existing_login(client):
     logged_in = login(client).json()
     session = client.cookies.get(COOKIE)
@@ -181,7 +163,6 @@ def test_invalid_account_preserves_existing_login(client):
 
 
 @pytest.mark.parametrize('authenticated', [False, True])
-@pending
 def test_logout_deletes_session_and_returns_no_body(client, authenticated):
     token = login(client).json()['csrfToken'] if authenticated else csrf(client)
     session = client.cookies.get(COOKIE)
@@ -199,14 +180,12 @@ def test_logout_deletes_session_and_returns_no_body(client, authenticated):
 
 @pytest.mark.parametrize('method,path', [('GET', '/csrf'), ('GET', '/mock/accounts'),
     ('GET', '/me'), ('POST', '/mock/login'), ('POST', '/logout')])
-@pending
 def test_all_auth_responses_disable_caching(client, method, path):
     response = client.request(method, BASE + path)
     assert response.headers.get('cache-control') == 'no-store'
 
 
 @pytest.mark.parametrize('language,expected', [('ko', 'ko'), ('en', 'en'), ('ja', 'ko'), (None, 'ko')])
-@pending
 def test_error_language_and_shape(client, language, expected):
     headers = {} if language is None else {'Accept-Language': language}
     response = client.get(BASE + '/me', headers=headers)
@@ -215,7 +194,6 @@ def test_error_language_and_shape(client, language, expected):
 
 
 @pytest.mark.parametrize('path', ['/mock/login', '/logout'])
-@pending
 def test_disallowed_origin_preserves_session(client, path):
     token = csrf(client)
     session = client.cookies.get(COOKIE)
@@ -227,7 +205,6 @@ def test_disallowed_origin_preserves_session(client, path):
     assert csrf(client) == token
 
 
-@pending
 def test_token_from_another_browser_is_rejected(client):
     own_token = csrf(client)
     with TestClient(client.app, base_url='https://testserver') as other:
@@ -237,7 +214,6 @@ def test_token_from_another_browser_is_rejected(client):
     assert csrf(client) == own_token
 
 
-@pending
 def test_repeat_login_keeps_user_id(client):
     first = login(client).json()
     second = login(client).json()
@@ -246,7 +222,6 @@ def test_repeat_login_keeps_user_id(client):
     assert first['csrfToken'] != second['csrfToken']
 
 
-@pending
 def test_logout_does_not_revoke_other_browser(client):
     first = login(client).json()
     first_session = client.cookies.get(COOKIE)

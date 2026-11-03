@@ -1,0 +1,105 @@
+"""Auth transport guards and localized error responses, including validation errors."""
+import logging
+
+from fastapi.exceptions import RequestValidationError
+from fastapi.routing import APIRoute
+from starlette.responses import JSONResponse
+
+from service.auth import AuthError, AuthService, clear_cookie, runtime
+
+MESSAGES = {
+    'AUTH_REQUIRED': ('로그인이 필요합니다.', 'Please sign in.'),
+    'SESSION_EXPIRED': ('세션이 만료되었습니다.', 'Your session has expired.'),
+    'CSRF_INVALID': ('유효하지 않은 CSRF 토큰입니다.', 'Invalid CSRF token.'),
+    'ORIGIN_NOT_ALLOWED': ('허용되지 않은 요청 출처입니다.', 'Request origin is not allowed.'),
+    'INVALID_MOCK_ACCOUNT': ('사용할 수 없는 테스트 계정입니다.', 'The mock account is unavailable.'),
+    'MOCK_AUTH_DISABLED': ('목업 인증이 비활성화되어 있습니다.', 'Mock authentication is disabled.'),
+    'VALIDATION_ERROR': ('입력값을 확인해주세요.', 'Please check your input.'),
+    'MALFORMED_JSON': ('올바른 JSON을 보내주세요.', 'Please provide valid JSON.'),
+    'UNSUPPORTED_MEDIA_TYPE': ('application/json 형식이 필요합니다.', 'Content-Type must be application/json.'),
+    'RATE_LIMITED': ('잠시 후 다시 시도해주세요.', 'Too many requests. Please try again later.'),
+    'INTERNAL_SERVER_ERROR': ('서버 오류가 발생했습니다.', 'An internal server error occurred.'),
+    'REQUIRED': ('필수 입력값입니다.', 'This field is required.'),
+    'INVALID_TYPE': ('올바른 타입으로 입력해주세요.', 'Invalid value type.'),
+    'INVALID_FORMAT': ('올바른 형식으로 입력해주세요.', 'Invalid value format.'),
+    'UNKNOWN_FIELD': ('정의되지 않은 필드입니다.', 'Unknown field.'),
+}
+
+
+def language(request):
+    return 'en' if request.headers.get('accept-language') == 'en' else 'ko'
+
+
+def message(code, lang):
+    return MESSAGES[code][lang == 'en']
+
+
+def error_response(error, request):
+    lang = language(request)
+    fields = [dict(field=e['field'], code=e['code'], message=message(e['code'], lang)) for e in error.fields]
+    response = JSONResponse(status_code=error.status, headers=error.headers,
+        content=dict(code=error.code, message=message(error.code, lang), fieldErrors=fields))
+    if error.clear_cookie:
+        clear_cookie(response)
+    return response
+
+
+def validation_error(exc):
+    fields = []
+    for error in exc.errors():
+        kind = error['type']
+        if kind == 'json_invalid':
+            return AuthError(400, 'MALFORMED_JSON')
+        if kind == 'missing':
+            code = 'REQUIRED'
+        elif kind == 'extra_forbidden':
+            code = 'UNKNOWN_FIELD'
+        elif kind.endswith('_type') or kind.endswith('_parsing'):
+            code = 'INVALID_TYPE'
+        else:
+            code = 'INVALID_FORMAT'
+        fields.append(dict(field='.'.join(map(str, error['loc'][1:])) or 'body', code=code))
+    return AuthError(400, 'VALIDATION_ERROR', fields=fields)
+
+
+class AuthRoute(APIRoute):
+    def get_route_handler(self):
+        handler = super().get_route_handler()
+        async def handle(request):
+            try:
+                rt = runtime(request)
+                path = request.url.path
+                if path.endswith(('/mock/accounts', '/mock/login')) and not rt.settings.allow_mock:
+                    raise AuthError(404, 'MOCK_AUTH_DISABLED')
+                if request.method == 'POST':
+                    origin = request.headers.get('origin')
+                    if origin is not None and origin not in rt.settings.allowed_origins:
+                        raise AuthError(403, 'ORIGIN_NOT_ALLOWED')
+                    if path.endswith('/mock/login'):
+                        # Trust the socket peer, never unverified forwarded headers.
+                        await AuthService(rt).rate_limit(request.client.host if request.client else 'unknown')
+                        media_type = request.headers.get('content-type', '').split(';')[0].strip().lower()
+                        if media_type != 'application/json':
+                            raise AuthError(415, 'UNSUPPORTED_MEDIA_TYPE')
+                        try:
+                            await request.json()
+                        except (ValueError, UnicodeError):
+                            raise AuthError(400, 'MALFORMED_JSON')
+                    if not request.cookies.get('KAIFIND_SESSION') or not request.headers.get('x-csrf-token'):
+                        raise AuthError(403, 'CSRF_INVALID')
+                elif path.endswith('/me') and not request.cookies.get('KAIFIND_SESSION'):
+                    raise AuthError(401, 'AUTH_REQUIRED')
+                try:
+                    response = await handler(request)
+                except RequestValidationError as exc:
+                    raise validation_error(exc) from None
+            except AuthError as exc:
+                response = error_response(exc, request)
+            except Exception:
+                # Do not log request bodies, cookies, tokens or DB exception details.
+                logging.getLogger(__name__).error('Auth request failed')
+                response = error_response(AuthError(500, 'INTERNAL_SERVER_ERROR'), request)
+            response.headers['Cache-Control'] = 'no-store'
+            response.headers['Content-Language'] = language(request)
+            return response
+        return handle

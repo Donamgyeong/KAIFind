@@ -7,20 +7,24 @@ from router.auth import router
 
 
 @pytest.fixture
-def app():
+def app(auth_runtime):
     app = FastAPI()
+    app.state.auth_runtime = auth_runtime
     app.include_router(router, prefix='/api/v1')
     return app
 
 
-@pytest.mark.parametrize('method,path', [('get', '/me'), ('post', '/logout'), ('post', '/mock/login')])
-def test_missing_required_cookie_is_a_validation_response_not_a_server_error(app, method, path):
-    with TestClient(app) as client:
-        response = client.request(method, '/api/v1/auth' + path)
-    # Temporary default FastAPI behavior; service implementation will replace this
-    # with 401/403 according to the acceptance tests in test_auth_contract.py.
-    assert response.status_code == 422
-    assert any(e['loc'] == ['cookie', 'KAIFIND_SESSION'] for e in response.json()['detail'])
+@pytest.mark.parametrize('method,path,status,code', [
+    ('get', '/me', 401, 'AUTH_REQUIRED'),
+    ('post', '/logout', 403, 'CSRF_INVALID'),
+    ('post', '/mock/login', 403, 'CSRF_INVALID'),
+])
+def test_missing_cookie_returns_auth_error(app, method, path, status, code):
+    with TestClient(app, base_url='https://testserver') as client:
+        kwargs = {'json': {'mockAccountId': 'student-01'}} if path == '/mock/login' else {}
+        response = client.request(method, '/api/v1/auth' + path, **kwargs)
+    assert response.status_code == status
+    assert response.json()['code'] == code
 
 
 def test_openapi_documents_transport_parameters(app):
@@ -32,6 +36,8 @@ def test_openapi_documents_transport_parameters(app):
         assert parameters[key]['required'] is False
     assert not any(p['in'] in {'query', 'path'} for p in operation['parameters'])
     assert 'application/json' in operation['requestBody']['content']
+    assert '422' not in operation['responses']
+    assert '400' in operation['responses']
 
 
 def test_openapi_logout_has_no_success_body(app):
