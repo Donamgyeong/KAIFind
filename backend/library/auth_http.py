@@ -26,6 +26,23 @@ MESSAGES = {
 }
 
 
+MESSAGES.update({
+    'FORBIDDEN': ('관리자 권한이 필요합니다.', 'Administrator access is required.'),
+    'NOT_FOUND': ('대상을 찾을 수 없습니다.', 'Resource not found.'),
+    'LAST_ADMIN': ('마지막 관리자 권한은 회수할 수 없습니다.', 'The last administrator cannot be removed.'),
+    'BUILDING_CODE_EXISTS': ('이미 사용 중인 건물 코드입니다.', 'Building code already exists.'),
+    'CATEGORY_NAME_EXISTS': ('이미 사용 중인 카테고리 이름입니다.', 'Category name already exists.'),
+    'OPEN_REPORT_EXISTS': ('검토 대기 중인 신고가 있습니다.', 'An open report already exists.'),
+    'REPORT_ALREADY_REVIEWED': ('이미 검토된 신고입니다.', 'Report has already been reviewed.'),
+    'DISPUTE_ALREADY_RESOLVED': ('이미 처리된 분쟁입니다.', 'Dispute has already been resolved.'),
+    'INVALID_DECISION': ('기각 시 수거자를 제한할 수 없습니다.', 'A dismissed dispute cannot restrict the collector.'),
+    'DISPUTE_NOT_UPHELD': ('인용 완료된 분쟁이 필요합니다.', 'A resolved, upheld dispute is required.'),
+    'COLLECTOR_MISMATCH': ('분쟁의 수거자와 대상 회원이 다릅니다.', 'The user is not the disputed collector.'),
+    'INVALID_TIME_RANGE': ('종료 시각은 시작 시각 이후여야 합니다.', 'End time must be after start time.'),
+    'CONCURRENT_MODIFICATION': ('동시 변경이 발생했습니다. 다시 시도해주세요.', 'Concurrent modification; please retry.'),
+})
+
+
 def language(request):
     return 'en' if request.headers.get('accept-language') == 'en' else 'ko'
 

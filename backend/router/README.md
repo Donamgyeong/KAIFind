@@ -22,7 +22,7 @@
 미구현 핸들러는 모두 HTTP 501을 반환합니다. UUID 경로 파라미터는 UUID로 검증하며,
 사진 접근 토큰은 문자열로 받습니다. 요청·응답 DTO, 검색·페이지네이션 쿼리,
 인증·관리자 권한·CSRF 의존성, DB 및 서비스 로직은 후속 구현 대상입니다.
-현재 OpenAPI는 경로 구조 확인용이며 완성된 API 계약을 나타내지 않습니다.
+미구현 라우터의 OpenAPI는 경로 구조 확인용이며 완성된 API 계약을 나타내지 않습니다.
 
 Auth의 5개 엔드포인트는 `service/auth.py`에 세션·CSRF·사용자 처리 로직을 구현했습니다.
 `schema/auth.py`는 DTO, `router/auth_params.py`는 파라미터,
@@ -33,3 +33,9 @@ Auth의 5개 엔드포인트는 `service/auth.py`에 세션·CSRF·사용자 처
 `router/__init__.py`에서 `api_router.include_router(...)`로 등록합니다.
 
 의존성이 설치된 환경에서 `uvicorn main:app --reload`로 실행하고 `/docs`에서 확인합니다.
+
+Admin의 17개 엔드포인트와 MOD-01 회원 게시물 신고를 구현했습니다.
+`schema/admin.py`는 DTO, `router/admin_params.py`는 검색 파라미터,
+`library/protected_http.py`는 세션·ADMIN·CSRF·Origin 검사 및 요청 트랜잭션,
+`service/admin.py`와 `service/audit.py`는 업무 처리·감사를 담당합니다.
+실행·마이그레이션·검증 범위는 [관리자 구현 현황](../docs/api/ADMIN-IMPLEMENTATION.md)을 참고합니다.

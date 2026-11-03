@@ -7,7 +7,7 @@
 - 마이그레이션: `migrations/versions/20261102_0001_initial_kaifind_schema.py`
 - 통합 검증: `tests/test_schema.py`
 
-2026-11-03: Auth 로그인 제한용 `auth_login_rates` 테이블을 추가했다. 최신 revision은 `20261103_0002`이며 기존 DB에도 `alembic upgrade head`가 필요하다.
+2026-11-03: Auth 로그인 제한용 `auth_login_rates` 테이블을 추가했다. Auth 변경 revision은 `20261103_0002`이며 기존 DB에도 `alembic upgrade head`가 필요하다.
 
 ## 연결 설정
 
@@ -71,10 +71,20 @@ ORM에서 User/FoundItem/LostReport를 수정하면 version 컬럼으로 낙관�
 
 알림 worker, 슬롯 예약·재시도 날짜 이월, purge_after 계산·정리 배치, 객체 스토리지 삭제, 백업 삭제 재적용, 감사 metadata 값별 허용 형식·상태값 검증, 감사 append-only 전용 DB 권한은 후속 구현이다. 감사 CHECK는 이벤트/대상 enum·주체 형태·metadata 키 허용목록까지만 검사한다. 민감 데이터 원문 복제를 금지하는 것은 큐/로그 작성 경로에서도 지켜야 한다.
 
-초안의 수거 기록/제한 근거 삭제 후 정책 문제는 그대로 미정이다. collections.item_id와 audit/이벤트 식별자에는 독립 보존을 위해 물리 FK를 두지 않았다. collection_restrictions.source_dispute_id는 ON DELETE SET NULL로 제한 상태를 보존한다. 전체 미정 정책은 [스키마 초안](README.md)의 10절을 따른다.
+수거 기록 삭제 후 조회·취소 정책은 미정이다. 제한 근거 삭제 후 해제 충돌은 ADS-04에서 해제 시 disputeId 생략을 허용하는 설계로 조정했다. 명시적 해제까지 유지·해제 절차는 SRS 미정 사항의 설계 제안이며 해당 API·서비스는 아직 미구현이다. collections.item_id와 audit/이벤트 식별자에는 독립 보존을 위해 물리 FK를 두지 않았다. collection_restrictions.source_dispute_id는 ON DELETE SET NULL로 제한 상태를 보존한다. 전체 미정 정책은 [스키마 초안](README.md)의 10절을 따른다.
 
 ## 이번 적용 결과
 
 2026-11-02 실행 중인 Compose PostgreSQL 개발 DB에 `upgrade head`를 적용했다. 현재 revision은 `20261102_0001 (head)`이며 `alembic check`에서 신규 변경이 검출되지 않았다.
 
 별도 임시 PostgreSQL DB에서 upgrade→downgrade base→upgrade 왕복, 스키마 차이 검사, 통합 테스트 11개를 통과했다. 테스트는 수거 유일성·취소 후 재수거, 이메일 슬롯, 신고 종료 시 private 삭제·재개방 차단, 메시지 참여자 검사·종료 삭제, 사진 민감 라벨 유지·목적 검사, 위치 이력 불변, 수거 독립 보존, ORM version 충돌을 검증한다. 임시 DB는 검증 후 제거했다. 다중 요청 부하·외부 이메일 전송·백업 복구는 검증하지 않았다.
+
+## 2026-11-03 관리자 API 추가
+
+최신 revision은 `20261103_0003`이다. 건물 코드와 각 언어별 카테고리 이름에
+`lower(btrim(...))` 고유 인덱스를 추가하여 동시 생성·이름 변경 중복을 방지한다.
+기존 데이터에 정규화 중복이 있으면 마이그레이션은 실패하며 자동 병합하지 않는다.
+개발·운영 DB 적용 전 중복을 정리해야 한다.
+
+Admin API·회원 게시물 신고·변경 감사 서비스는 구현했다.
+기존 비관리자 업무 API 및 보존 정리 배치·감사 전용 DB 권한 설정은 별도 작업이다.

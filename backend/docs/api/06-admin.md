@@ -365,7 +365,7 @@ MOD-01은 로그인 회원 공통 API이고 나머지는 ADMIN만 사용한다. 
 
 ### 처리 규칙
 
-1. 새 건물을 active=true로 생성한다. code는 대소문자를 정규화하여 고유성을 검사하는 설계 제안이다.
+1. 새 건물을 active=true로 생성한다. code는 앞뒤 공백 제거·대문자로 저장하고, DB에서도 lower(btrim(code)) 고유 인덱스로 중복을 검사한다. 이는 설계 제안의 구현 선택이다.
 2. 이름은 한국어·영어 표시를 지원한다. 생성 행위자·시각을 기록한다.
 
 ### Response
@@ -526,7 +526,7 @@ MOD-01은 로그인 회원 공통 API이고 나머지는 ADMIN만 사용한다. 
 
 ### 처리 규칙
 
-1. 카테고리를 active=true로 생성한다. 민감 분류 값은 서버의 접근 제어 근거이다.
+1. 카테고리를 active=true로 생성한다. 민감 분류 값은 서버의 접근 제어 근거이다. 이름은 앞뒤 공백을 제거하며 한국어·영어 각각 대소문자 무시 중복을 금지한다. 생성·이름 변경에 같은 규칙을 적용하는 구현 선택이다.
 2. 민감 범주 예시는 신분증·지갑·휴대전화이며 최종 목록은 프로젝트 정책으로 확정해야 한다.
 3. 민감 여부는 게시물 작성자가 임의로 지정할 수 없다.
 
@@ -1016,7 +1016,7 @@ MOD-01은 로그인 회원 공통 API이고 나머지는 ADMIN만 사용한다. 
 | 필드 | 타입 | 필수 | 검증·설명 |
 | --- | --- | --- | --- |
 | restricted | boolean | 예 | true 제한, false 해제 |
-| disputeId | UUID | 예 | 수거 제한 또는 해제의 근거가 되는 해당 회원의 인용된 분쟁 |
+| disputeId | UUID | 조건부 | restricted=true이면 필수. 해당 회원의 인용된 분쟁. 해제 시 생략 가능하며 명시적 null은 거부 |
 
 ```json
 {
@@ -1027,10 +1027,20 @@ MOD-01은 로그인 회원 공통 API이고 나머지는 ADMIN만 사용한다. 
 
 ### 처리 규칙
 
-1. 관리자가 검토·인용한 분쟁의 수거자에게만 수거 표시 권한을 제한하거나 해제한다. 기간을 임의로 추가하지 않는다.
-2. 같은 상태 요청은 200. 회원 역할이나 로그인 가능 여부를 변경하지 않는다.
-3. 기한 없이 명시적 해제까지 유지하는 것은 초안 정책이며 SRS는 제한 기간·해제 정책을 정하지 않았다.
-4. 별도 자유서술 개인정보를 추가 수집하지 않고 근거 분쟁 ID·행위자·시각만 감사 기록에 남긴다.
+1. restricted=true는 disputeId가 필수다. 검토 완료·인용된 분쟁인지와 대상 회원이 해당 수거 기록의 수거자인지 검사한다. 불일치 시 각각 DISPUTE_NOT_UPHELD / COLLECTOR_MISMATCH를 반환한다. 존재하지 않는 회원·분쟁은 404 NOT_FOUND다.
+2. restricted=false는 관리자만 실행하며 disputeId를 생략할 수 있다. 기존 제한 상태를 기준으로 해제하므로 근거 분쟁이 보존 만료로 삭제되어도 해제할 수 있다. disputeId를 제공하면 설정과 동일한 분쟁·수거자 검증을 수행한다. 생략하면 기존 source_dispute_id를 유지하며 삭제된 근거를 복원하지 않는다.
+3. 같은 상태 요청은 200이다. 제한 행이 없는 회원의 해제 요청도 restricted=false인 상태 행을 생성해 응답한다. 회원 역할이나 로그인 가능 여부는 변경하지 않는다.
+4. 근거 분쟁 삭제 시 source_dispute_id만 NULL로 바꾸고 제한 상태는 유지한다. 분쟁 삭제 자체로 자동 해제하지 않으며, 해제를 위해 분쟁·수거 기록의 보존기간을 연장하지 않는다.
+5. 상태 변경과 감사 기록은 같은 트랜잭션으로 처리한다. 행위자 ADMIN·대상 USER·시각과 restricted를 기록하고, 유효한 근거 분쟁 ID가 남아 있을 때만 metadata.disputeId를 포함한다. 별도 자유서술 개인정보나 삭제된 분쟁 원문을 수집·복원하지 않는다.
+6. 명시적 해제까지 기한 없이 유지하는 정책과 위 해제 절차는 SRS 미정 사항을 보완한 설계 제안이다. SRS의 기존 확정 요구사항으로 간주하지 않는다.
+
+근거 분쟁 삭제 후 해제 요청 예시:
+
+```json
+{
+  "restricted": false
+}
+```
 
 ### Response
 
@@ -1182,7 +1192,8 @@ MOD-01은 로그인 회원 공통 API이고 나머지는 ADMIN만 사용한다. 
 | AdminDisputeResponse | status | OPEN/RESOLVED | 예 | 분쟁상태 |
 | AdminDisputeResponse | decision | UPHELD/DISMISSED/null | 예 | 인용·기각 |
 | AdminDisputeResponse | createdAt / resolvedAt | date-time, date-time/null | 예 | 접수·해결 시각 |
-| CollectionRestrictionResponse | userId / disputeId | UUID 각각 | 예 | 회원·근거 분쟁 |
+| CollectionRestrictionResponse | userId | UUID | 예 | 회원 |
+| CollectionRestrictionResponse | disputeId | UUID/null | 예 | 저장된 근거 분쟁. 근거 삭제 또는 근거 없이 해제 상태를 생성한 경우 null |
 | CollectionRestrictionResponse | restricted | boolean | 예 | 제한 여부 |
 | CollectionRestrictionResponse | updatedAt | date-time | 예 | 변경 시각 |
 | StatisticsResponse | postedCount / collectedCount / expiredCount | integer 각각 | 예 | 0 이상 상태별 수 |

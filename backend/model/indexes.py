@@ -1,5 +1,5 @@
 """Query and concurrency indexes; imported once with the model package."""
-from sqlalchemy import CheckConstraint, Index, String, text
+from sqlalchemy import CheckConstraint, Index, String, func, text
 from .base import Base
 
 
@@ -81,3 +81,9 @@ _audit.append_constraint(CheckConstraint(
     "metadata - ARRAY['fromStatus','toStatus','collectionId','photoId','reportId',"
     "'disputeId','fromRole','toRole','restricted','decision']::text[] = '{}'::jsonb",
     name='metadata_keys'))
+
+# Case-insensitive uniqueness also protects concurrent admin creates/renames.
+Index('uq_buildings_code_normalized', func.lower(func.btrim(Base.metadata.tables['buildings'].c.code)), unique=True)
+for lang in ('ko', 'en'):
+    Index(f'uq_categories_name_{lang}_normalized',
+          func.lower(func.btrim(Base.metadata.tables['categories'].c[f'name_{lang}'])), unique=True)

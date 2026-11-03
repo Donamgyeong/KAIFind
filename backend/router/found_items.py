@@ -2,7 +2,12 @@
 
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Request, status
+
+from library.protected_http import ProtectedRoute
+from schema.admin import CreatePostReportRequest, PostReportResponse
+from schema.common import ErrorResponse
+from service.admin import AdminService
 
 router = APIRouter(tags=["found_items"])
 
@@ -97,10 +102,14 @@ async def list_my_found_items():
     )
 
 
-@router.post('/found-items/{itemId}/reports', summary='부적절한 게시물 신고', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def report_found_item(itemId: UUID):
-    """MOD-01: 부적절한 게시물 신고. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "MOD-01 구현 예정"},
-    )
+# MOD-01 shares the protected transaction wrapper with admin review endpoints.
+
+
+async def report_found_item(request: Request, itemId: UUID, body: CreatePostReportRequest):
+    return await AdminService(request).create_report(itemId, body)
+
+
+router.add_api_route('/found-items/{itemId}/reports', report_found_item, methods=['POST'],
+    summary='부적절한 게시물 신고', status_code=201, response_model=PostReportResponse,
+    route_class_override=ProtectedRoute,
+    responses={code: {'model': ErrorResponse} for code in (400, 401, 403, 404, 409, 415, 500)})

@@ -18,3 +18,9 @@ python -m pytest tests -q
 Auth 테스트는 각 테스트 시작 시 `users`, `sessions`, `auth_login_rates`와 연결 데이터를 TRUNCATE한다. 반드시 전용 폐기 가능한 DB를 사용한다. 공유 DB에서 병렬 pytest 실행은 지원하지 않는다. DB 주소가 없으면 DB 통합 테스트는 skip되므로 전체 검증 결과로 해석하지 않는다.
 
 테스트 clock은 `2026-11-03T10:00:00+09:00`으로 고정하며 직접 전진시킨다. 합성 계정·암호화 키·허용 origin은 fixture에서 주입하고 실제 핸들러·DB를 대체하지 않는다.
+
+관리자 테스트도 같은 전용 DB를 사용한다. `test_admin_models.py`는 DB 없이 DTO·감사 허용목록·OpenAPI를,
+`test_admin_contract.py`는 실제 HTTP·DB로 권한 즉시 반영, 쓰기 보안, 기준정보 중복,
+신고 숨김, 분쟁 검토, 근거 삭제 후 제한 해제, 통계·감사 필터와 감사 실패 롤백을 검증한다.
+동시 관리자 회수·게시물/분쟁 검토·카테고리 생성 경합도 포함한다.
+관리자 fixture는 `buildings`, `categories`, `audit_logs`도 TRUNCATE하므로 동일 DB 병렬 실행은 금지한다.

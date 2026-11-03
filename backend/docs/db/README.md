@@ -168,7 +168,7 @@ lost_date_to를 발견일 상한으로 사용하지 않는다. 공통 키워드�
 | --- | --- | --- |
 | `collections` | id, item_id uuid (논리 참조), finder_id uuid FK, collector_id uuid FK, collected_at, undone_at timestamptz?, undone_by_user_id uuid? FK, purge_after | finder_id는 당시 작성자 ID. 취소 시 기록 삭제 대신 undone_at·행위자 저장 |
 | `disputes` | id, collection_id uuid FK, reason varchar(1000), status text, decision text?, created_at, resolved_at timestamptz?, reviewer_id uuid? FK, purge_after | OPEN/RESOLVED, UPHELD/DISMISSED. 물품·수거자·작성자는 collection에서 조회 |
-| `collection_restrictions` | user_id uuid PK/FK, restricted boolean, source_dispute_id uuid? FK, updated_by_user_id uuid FK, updated_at | 행 없음은 제한 없음. source_dispute_id는 아래 보존 충돌 참고 |
+| `collection_restrictions` | user_id uuid PK/FK, restricted boolean, source_dispute_id uuid? FK, updated_by_user_id uuid FK, updated_at | 행 없음은 제한 없음. source_dispute_id는 ON DELETE SET NULL. 근거 삭제는 자동 해제가 아니며 ADS-04 해제는 근거 없이 가능 |
 | `post_reports` | id, item_id uuid FK, reporter_id uuid FK, reason_code text, details varchar(1000), status text, decision text?, created_at, reviewed_at timestamptz?, reviewer_id uuid? FK | reason=INAPPROPRIATE/SPAM/OTHER, OPEN/REVIEWED, HIDE/DISMISS |
 
 활성 수거 유일성과 운영 중복 제약은 아래와 같다. SQL은 핵심 제약 예시이며 전체 DDL은 아니다.
@@ -304,7 +304,7 @@ KST 날짜 필터는 found_at에 날짜 함수를 씌우기보다 KST 시작/종
 | DB와 저장소 | PostgreSQL 버전·운영 위치, 객체 저장소 선택. 라이브러리 설치 사실만으로 확정하지 않음 |
 | 보존 주기 | 재등록 시 물품의 이전 위치/사진도 새 주기로 함께 보존할지. 초안은 물품 단위, 과거 버전별 만료는 미도입 |
 | 장기 수거 상태 | collected_at+1년 후 기록은 삭제되지만 재등록된 물품은 남을 수 있음. 이때 COLLECTED 기록 조회·취소를 허용할지 정책 필요 |
-| 제한 근거와 삭제 충돌 | 제한은 명시적 해제까지 유지하지만 근거 분쟁은 1년 뒤 삭제됨. source_dispute_id를 FK ON DELETE SET NULL로 두고 제한 유지 제안. 근거 삭제 뒤 ADS-04가 인용 분쟁 ID를 필수로 요구하는 계약은 조정 필요. 분쟁 영구 보존으로 우회하지 않음 |
+| 제한 근거와 삭제 충돌 | 설정에는 인용 분쟁·수거자 일치 검증 필수. ADS-04 해제는 disputeId 생략 가능. 근거 삭제 시 ON DELETE SET NULL로 제한 상태 유지, 자동 해제 없음. 해제 시 관리자·회원·시각·restricted=false를 감사에 기록하고 삭제된 근거는 복원하지 않음. 명시적 해제까지 유지·해제 절차는 SRS 미정 사항의 설계 제안이며 분쟁 영구 보존으로 우회하지 않음 |
 | 한도·요약 | 20통·20시·마감 이후 이월·재시도 실제 발송일 재예약은 제안이며 확정 필요 |
 | 세션·URL | 30분/12시간·사진 60초·미연결 24시간은 API 제안값 |
 | 키워드·검색 | 정규화 방식, 한국어 토큰화, 검색 q의 일치 의미, DB 확장 허용 여부 |
