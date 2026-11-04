@@ -1,4 +1,4 @@
-FROM python:3.10.21-slim
+FROM python:3.11.18-slim
 
 WORKDIR /app
 

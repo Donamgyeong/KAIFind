@@ -38,7 +38,7 @@ services:
       - db-data:/var/lib/postgresql/data
 
   storage:
-    image: minio/minio
+    image: elestio/minio
     container_name: storage
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
