@@ -39,3 +39,8 @@ Admin의 17개 엔드포인트와 MOD-01 회원 게시물 신고를 구현했습
 `library/protected_http.py`는 세션·ADMIN·CSRF·Origin 검사 및 요청 트랜잭션,
 `service/admin.py`와 `service/audit.py`는 업무 처리·감사를 담당합니다.
 실행·마이그레이션·검증 범위는 [관리자 구현 현황](../docs/api/ADMIN-IMPLEMENTATION.md)을 참고합니다.
+
+Photo의 3개 엔드포인트는 `service/photos.py`에 업로드·접근 권한·단기 토큰·프록시 조회를 구현했습니다.
+`library/photo_images.py`는 정제, `library/photo_storage.py`는 MinIO 연결,
+`library/photo_http.py`는 오류 응답·사진 토큰 로그 마스킹을 담당합니다.
+설정·정리 작업·연결 서비스 사용 범위는 [사진 API 및 MinIO](../docs/MINIO.md)를 참고합니다.

@@ -13,15 +13,15 @@
 키 생성 예:
 
 ```sh
-python -c 'import base64, secrets; print(base64.b64encode(secrets.token_bytes(32)).decode())'
+docker compose exec -T backend python -c 'import base64, secrets; print(base64.b64encode(secrets.token_bytes(32)).decode())'
 ```
 
-생성한 키는 배포 환경의 비밀 설정에 보관한다. 애플리케이션은 `.env`를 자동으로 읽지 않는다. Compose 사용 시 위 환경변수를 backend 컨테이너에도 전달해야 한다.
+생성한 키는 프로젝트 루트 `.env` 또는 배포 환경의 비밀 설정에 보관한다. 애플리케이션은 `.env`를 자동으로 읽지 않는다. 기존 Compose가 위 환경변수를 backend 컨테이너에 전달한다. 변경 후 `docker compose up -d backend`로 반영한다.
 
 ## 마이그레이션과 브라우저
 
 ```sh
-python -m alembic upgrade head
+docker compose exec -T backend python -m alembic upgrade head
 ```
 
 최신 revision `20261103_0002`는 로그인 요청 제한용 테이블을 추가한다. 기존 사용자는 첫 로그인 때 `mockSubject`로 조회하거나 생성하므로 별도 사용자 seed 명령은 필요 없다. 가상 계정 정의와 최초 역할은 서버의 `DEFAULT_ACCOUNTS`에서 관리한다. 기존 사용자의 역할은 로그인으로 덮어쓰지 않는다.

@@ -1,26 +1,53 @@
 # 테스트 실행
 
-Python 3.11 이상에서 프로젝트 의존성을 설치하고 별도 `kaifind_test_*` PostgreSQL DB에 마이그레이션을 적용한다.
+Python·pip·pytest·Alembic은 기존 Compose의 backend 컨테이너 안에서 실행한다.
+프로젝트 루트 `.env`를 설정하고 기존 `db`, `storage`, `backend` 서비스를 실행한 상태에서:
 
 ```sh
-DATABASE_URL="$TEST_DATABASE_URL" python -m alembic upgrade head
-python -m pytest tests -q
+docker compose exec -T backend python -m scripts.test_backend
 ```
 
-`TEST_DATABASE_URL`은 직접 설정해야 하며, DB 이름이 `kaifind_test_`로 시작하지 않으면 통합 테스트를 거부한다. 운영 DB를 지정하지 않는다.
+이 명령은 기존 db 서비스 안의 별도 `kaifind_test_backend` 데이터베이스를 준비하고,
+해당 DB에 마이그레이션을 적용한 뒤 전체 테스트를 실행한다. PostgreSQL 데이터베이스 생성 권한이
+필요하며, 이미 준비된 테스트 DB는 재사용한다. 테스트 DB와 개발 DB는 분리한다.
+MinIO는 기존 storage 서비스를 사용하며 테스트마다 `kaifind-test-<임의 값>` 버킷을 생성·삭제한다.
+새 서비스 컨테이너나 호스트 가상환경을 만들지 않는다.
+
+일부 테스트만 실행할 수도 있다.
+
+```sh
+docker compose exec -T backend python -m scripts.test_backend tests/test_photo_contract.py -q
+```
+
+기본 테스트 DB를 바꾸려면 `docker compose exec -e TEST_DATABASE_URL=...`로
+전용 DB 주소를 전달한다. DB 이름이 `kaifind_test_`로 시작하지 않으면 통합 테스트를 거부한다.
+개발·운영 DB를 지정하지 않는다. MinIO의 `TEST_MINIO_*` 설정은 별도 지정하지 않으면
+backend의 `MINIO_*` 환경변수를 사용한다. 자격증명은 로그·코드에 기록하지 않는다.
+
+## 인증·관리자·스키마
 
 - `test_auth_models.py`: DB 없이 요청 필드·타입·추가 필드 거부와 응답 직렬화를 검증한다.
 - `test_auth_params.py`: 파라미터 누락 시 최종 인증 오류, OpenAPI 파라미터와 204 응답을 검증한다.
-- `test_auth_contract.py`: 실제 라우터를 호출해 로그인·CSRF·쿠키·로그아웃·언어별 오류 계약을 검증한다. 예상 실패 표시는 없다.
+- `test_auth_contract.py`: 실제 라우터로 로그인·CSRF·쿠키·로그아웃·언어별 오류 계약을 검증한다.
 - `test_auth_service.py`: PostgreSQL에서 만료 경계·활동 갱신·권한 유지·암호화·롤백·동시 로그인·세션 폐기 경합·IP별 동시 요청 제한을 검증한다.
-- `test_schema.py`: 기존 PostgreSQL 스키마 제약을 검증하며 테스트별 트랜잭션을 롤백한다.
+- `test_schema.py`: PostgreSQL 스키마 제약을 검증하며 테스트별 트랜잭션을 롤백한다.
+- `test_admin_models.py`: DB 없이 DTO·감사 허용목록·OpenAPI를 검증한다.
+- `test_admin_contract.py`: HTTP·DB로 권한 즉시 반영, 쓰기 보안, 기준정보 중복, 신고 숨김,
+  분쟁 검토, 근거 삭제 후 제한 해제, 통계·감사 필터·감사 실패 롤백·동시 변경을 검증한다.
 
-Auth 테스트는 각 테스트 시작 시 `users`, `sessions`, `auth_login_rates`와 연결 데이터를 TRUNCATE한다. 반드시 전용 폐기 가능한 DB를 사용한다. 공유 DB에서 병렬 pytest 실행은 지원하지 않는다. DB 주소가 없으면 DB 통합 테스트는 skip되므로 전체 검증 결과로 해석하지 않는다.
+Auth 테스트는 각 테스트 시작 시 `users`, `sessions`, `auth_login_rates`와 연결 데이터를 TRUNCATE한다.
+관리자·사진 fixture는 기준정보·감사·사진 intent도 TRUNCATE하므로 반드시 전용 테스트 DB를 사용한다.
+동일 DB에서 병렬 pytest 실행은 지원하지 않는다. DB 주소가 없어서 skip된 결과는 통합 검증 성공이 아니다.
 
-테스트 clock은 `2026-11-03T10:00:00+09:00`으로 고정하며 직접 전진시킨다. 합성 계정·암호화 키·허용 origin은 fixture에서 주입하고 실제 핸들러·DB를 대체하지 않는다.
+테스트 clock은 `2026-11-03T10:00:00+09:00`으로 고정하며 직접 전진시킨다.
+합성 계정·암호화 키·허용 origin은 fixture에서 주입하고 실제 핸들러·DB를 대체하지 않는다.
 
-관리자 테스트도 같은 전용 DB를 사용한다. `test_admin_models.py`는 DB 없이 DTO·감사 허용목록·OpenAPI를,
-`test_admin_contract.py`는 실제 HTTP·DB로 권한 즉시 반영, 쓰기 보안, 기준정보 중복,
-신고 숨김, 분쟁 검토, 근거 삭제 후 제한 해제, 통계·감사 필터와 감사 실패 롤백을 검증한다.
-동시 관리자 회수·게시물/분쟁 검토·카테고리 생성 경합도 포함한다.
-관리자 fixture는 `buildings`, `categories`, `audit_logs`도 TRUNCATE하므로 동일 DB 병렬 실행은 금지한다.
+## 사진 API
+
+`test_photo_images.py`와 `test_photo_storage.py`는 DB 없이 이미지 정제·GPS 제거·회전·포맷·크기·픽셀 제한,
+SDK 연결 해제·설정·OpenAPI·Uvicorn 토큰 마스킹을 검증한다.
+`test_photo_contract.py`는 실제 PostgreSQL과 MinIO에서 API·인가·감사 커밋·업로드 보상·정리·동시 연결을 검증한다.
+사진 테스트의 임시 버킷에는 테스트 산출물만 저장하고 fixture 종료 시 해당 버킷을 삭제한다.
+DB 또는 MinIO 설정이 없으면 해당 통합 테스트는 skip된다.
+실제 모바일 네트워크의 업로드 5초 목표, 물품 등록 HTTP 전체 흐름, 연결 사진의 보존 기간 삭제는
+현재 검증 범위에 포함하지 않는다.
