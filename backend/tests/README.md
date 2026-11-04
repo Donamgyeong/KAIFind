@@ -51,3 +51,13 @@ SDK 연결 해제·설정·OpenAPI·Uvicorn 토큰 마스킹을 검증한다.
 DB 또는 MinIO 설정이 없으면 해당 통합 테스트는 skip된다.
 실제 모바일 네트워크의 업로드 5초 목표, 물품 등록 HTTP 전체 흐름, 연결 사진의 보존 기간 삭제는
 현재 검증 범위에 포함하지 않는다.
+
+## 프로필 API
+
+- `test_profile_models.py`: 언어 trim·ko/en 검증, 필수 필드·추가 필드 거부 및 OpenAPI 계약을 검증한다.
+- `test_profile_contract.py`: MEMBER·ADMIN 본인 조회, 언어 변경·재로그인 유지·계정 간 격리,
+  인증·세션 만료·CSRF·Origin·JSON 오류와 실패 시 프로필 보존, 응답 헤더를 검증한다.
+
+```sh
+docker compose exec -T backend python -m scripts.test_backend tests/test_profile_models.py tests/test_profile_contract.py -q
+```
