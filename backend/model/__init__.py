@@ -5,5 +5,5 @@ from .entities import (AuditLog, AuthLoginRate, Building, Category, Collection, 
     FoundItem, KeywordSubscription, LostReport, LostReportBuilding,
     LostReportPrivateDetail, MatchCandidate, Message, Notification,
     NotificationKeywordSource, NotificationSetting, OutboxEvent, Photo,
-    PhotoAccessGrant, PhotoAttachment, PostReport, Session, User)
+    PhotoAccessGrant, PhotoAttachment, PhotoUploadIntent, PostReport, Session, User)
 from . import indexes as _indexes

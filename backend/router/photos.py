@@ -1,34 +1,103 @@
-"""기능별 API 기본 구조. 상세 계약은 docs/api 참고."""
+"""Private photo uploads and expiring, reauthorized proxy access."""
 
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Request, Response
 
-router = APIRouter(tags=["photos"])
-
-
-@router.post('/photos', summary='사진 업로드', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def upload_photo():
-    """PHOTO-01: 사진 업로드. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "PHOTO-01 구현 예정"},
-    )
+from library.photo_http import PhotoRoute
+from schema.common import ErrorResponse
+from schema.photos import PhotoAccessResponse, PhotoUploadResponse
+from service.photos import service
 
 
-@router.post('/photos/{photoId}/access-url', summary='사진 단기 링크', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def create_photo_access_url(photoId: UUID):
-    """PHOTO-02: 사진 단기 링크. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "PHOTO-02 구현 예정"},
-    )
+router = APIRouter(tags=['photos'], route_class=PhotoRoute)
+
+errors = {
+    code: {'model': ErrorResponse}
+    for code in (400, 401, 403, 404, 409, 410, 413, 415, 422, 503)
+}
+session_param = {
+    'name': 'KAIFIND_SESSION',
+    'in': 'cookie',
+    'schema': {'type': 'string'},
+}
+csrf_param = {
+    'name': 'X-CSRF-Token',
+    'in': 'header',
+    'required': True,
+    'schema': {'type': 'string'},
+}
 
 
-@router.get('/photo-access/{accessToken}', summary='사진 바이트', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def get_photo_content(accessToken: str):
-    """PHOTO-03: 사진 바이트. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "PHOTO-03 구현 예정"},
-    )
+@router.post(
+    '/photos',
+    summary='사진 업로드',
+    status_code=201,
+    response_model=PhotoUploadResponse,
+    responses=errors,
+    openapi_extra={
+        'parameters': [dict(session_param, required=True), csrf_param],
+        'requestBody': {
+            'required': True,
+            'content': {
+                'multipart/form-data': {
+                    'schema': {
+                        'type': 'object',
+                        'required': ['file', 'purpose'],
+                        'additionalProperties': False,
+                        'properties': {
+                            'file': {'type': 'string', 'format': 'binary'},
+                            'purpose': {
+                                'type': 'string',
+                                'enum': ['ITEM', 'DROP_OFF'],
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+)
+async def upload_photo(request: Request):
+    return await service(request).upload(request)
+
+
+@router.post(
+    '/photos/{photoId}/access-url',
+    summary='사진 단기 링크',
+    response_model=PhotoAccessResponse,
+    responses=errors,
+    openapi_extra={
+        'parameters': [dict(session_param, required=True), csrf_param],
+    },
+)
+async def create_photo_access_url(request: Request, photoId: UUID):
+    return await service(request).issue_url(request, photoId)
+
+
+@router.get(
+    '/photo-access/{accessToken}',
+    summary='사진 바이트',
+    response_class=Response,
+    responses={
+        **errors,
+        405: {'model': ErrorResponse},
+        200: {
+            'content': {
+                mime: {'schema': {'type': 'string', 'format': 'binary'}}
+                for mime in ('image/jpeg', 'image/png', 'image/webp')
+            },
+        },
+    },
+    openapi_extra={'parameters': [session_param]},
+)
+async def get_photo_content(request: Request, accessToken: str):
+    content, mime = await service(request).content(request, accessToken)
+
+    return Response(content, media_type=mime)
+
+
+@router.head('/photo-access/{accessToken}', include_in_schema=False)
+async def reject_photo_head(accessToken: str):
+    # PhotoRoute rejects HEAD before this handler is called.
+    raise AssertionError('HEAD guard missing')

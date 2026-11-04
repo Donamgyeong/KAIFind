@@ -57,7 +57,7 @@ def seed(db):
 def test_schema_matches_migrated_database(db):
     names = set(db.execute(text("SELECT tablename FROM pg_tables WHERE schemaname='public'" )).scalars())
     assert set(Base.metadata.tables) <= names
-    assert db.execute(text('SELECT version_num FROM alembic_version')).scalar_one() == '20261103_0003'
+    assert db.execute(text('SELECT version_num FROM alembic_version')).scalar_one() == '20261104_0004'
 
 
 def test_single_active_collector_and_new_collection_after_undo(db, seed):
@@ -131,9 +131,9 @@ def test_photo_sensitivity_is_latched_and_purpose_checked(db, seed):
     db.execute(insert(Category).values(id=sensitive, name_ko='민감', name_en='Sensitive', sensitive=True))
     db.execute(update(FoundItem).where(FoundItem.id==seed['item']).values(category_id=sensitive))
     db.execute(update(FoundItem).where(FoundItem.id==seed['item']).values(category_id=seed['category']))
-    assert db.execute(select(PhotoAttachment.sensitive_latched)).scalar_one() is True
+    assert db.execute(select(PhotoAttachment.sensitive_latched).where(PhotoAttachment.photo_id == photo)).scalar_one() is True
     with pytest.raises(IntegrityError), db.begin_nested():
-        db.execute(update(PhotoAttachment).values(sensitive_latched=False))
+        db.execute(update(PhotoAttachment).where(PhotoAttachment.photo_id == photo).values(sensitive_latched=False))
     drop_photo = uuid4()
     db.execute(insert(Photo).values(id=drop_photo, uploader_id=seed['finder'], purpose='DROP_OFF',
         object_key=str(drop_photo), content_type='image/png', size_bytes=100, width=10, height=10))

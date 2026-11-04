@@ -27,6 +27,15 @@ MESSAGES = {
 
 
 MESSAGES.update({
+    'PHOTO_TOO_LARGE': ('사진 크기 제한을 초과했습니다.', 'Photo exceeds the size limit.'),
+    'PHOTO_ALREADY_ATTACHED': ('이미 연결된 사진입니다.', 'Photo is already attached.'),
+    'INVALID_REFERENCE': ('유효하지 않은 참조입니다.', 'Invalid reference.'),
+    'INVALID_IMAGE': ('지원되는 올바른 사진을 보내주세요.', 'Provide a valid JPEG, PNG or WebP image.'),
+    'PHOTO_FORBIDDEN': ('사진에 접근할 권한이 없습니다.', 'You cannot access this photo.'),
+    'PHOTO_LINK_EXPIRED': ('사진 링크가 만료되었습니다.', 'The photo link has expired.'),
+    'PHOTO_MULTIPART_REQUIRED': ('multipart/form-data 형식이 필요합니다.', 'Content-Type must be multipart/form-data.'),
+    'PHOTO_STORAGE_UNAVAILABLE': ('사진 저장소를 사용할 수 없습니다.', 'Photo storage is unavailable.'),
+    'PHOTO_METHOD_NOT_ALLOWED': ('지원하지 않는 사진 요청입니다.', 'This photo request is not supported.'),
     'FORBIDDEN': ('관리자 권한이 필요합니다.', 'Administrator access is required.'),
     'NOT_FOUND': ('대상을 찾을 수 없습니다.', 'Resource not found.'),
     'LAST_ADMIN': ('마지막 관리자 권한은 회수할 수 없습니다.', 'The last administrator cannot be removed.'),

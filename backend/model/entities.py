@@ -148,8 +148,15 @@ class PhotoAccessGrant(UUIDPrimaryKey, Base):
     token_hash: Mapped[str] = mapped_column(Text, unique=True)
     photo_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("photos.id", ondelete="CASCADE"))
     session_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("sessions.id", ondelete="CASCADE"))
+    requires_session: Mapped[bool] = mapped_column(Boolean, server_default=text('true'))
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=text("now()"))
+
+class PhotoUploadIntent(Base):
+    """Durable object key recorded before PUT, retained until upload commits."""
+    __tablename__ = 'photo_upload_intents'
+    object_key: Mapped[str] = mapped_column(Text, primary_key=True)
+    cleanup_after: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
 
 class LostReport(UUIDPrimaryKey, Base):
     __tablename__ = "lost_reports"
