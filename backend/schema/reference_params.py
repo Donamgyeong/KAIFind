@@ -1,4 +1,4 @@
-"""Public reference query contracts."""
+"""Pydantic query contracts for public reference endpoints."""
 
 from schema.common import ApiModel
 

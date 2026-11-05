@@ -18,6 +18,19 @@
   관련된 짧은 문장까지 무조건 한 줄씩 띄우거나 불필요한 구분 주석을 반복하지 않는다.
 - 가독성만 정리하는 작업에서는 동작 변경을 섞지 않고 변경 전후 실행 구조와 관련 테스트로 검증한다.
 
+## API 모델과 라우터 의존성 분류
+
+- Pydantic 요청·응답·쿼리 모델은 `schema/`에 둔다. 쿼리 파라미터 모델도
+  라우터에서 사용한다는 이유로 `router/`에 두지 않는다.
+- 쿼리 모델을 별도 파일로 분리할 때는 `schema/<기능>_params.py`에 둔다.
+  예: `schema/admin_params.py`, `schema/reference_params.py`.
+- `Header`, `Cookie`, `Depends` 등 FastAPI의 HTTP 입력 추출·의존성 주입을
+  담당하는 함수·클래스는 `router/`에 둔다. 예: `router/auth_params.py`의
+  헤더·쿠키 의존성 dataclass. 파일명이나 dataclass 여부만으로 분류하지 않고
+  실제 역할을 기준으로 판단한다.
+- 한 파일에 Pydantic 모델과 FastAPI 의존성이 섞이면 역할별로 분리한다.
+  파일 이동 시 import, 테스트, 관련 문서의 경로도 함께 갱신한다.
+
 ## 컨테이너와 의존성
 
 - 기존 상위 `docker-compose.yaml`의 `backend`, `db`, `storage` 서비스를 사용한다.

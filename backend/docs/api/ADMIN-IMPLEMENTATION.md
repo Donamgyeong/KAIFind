@@ -14,7 +14,7 @@ Python 3.11 이상과 기존 Auth 설정·DB 연결 설정이 필요하다.
 ## 구현 구조
 
 - `schema/admin.py`: 입력 검증, 페이지·응답 DTO, KST 시각 직렬화
-- `router/admin_params.py`: 페이지·필터·시간 파라미터
+- `schema/admin_params.py`: 페이지·필터·시간 파라미터의 Pydantic 모델
 - `library/protected_http.py`: 인증·현재 DB 역할·쓰기 CSRF·Origin·JSON 검증, 오류 계약, 요청 트랜잭션
 - `service/admin.py`: 회원·기준정보·신고·분쟁·제한·통계·감사 조회
 - `service/audit.py`: 감사 허용목록·값 형식 검증과 달력 기준 1년 보존 기한 계산

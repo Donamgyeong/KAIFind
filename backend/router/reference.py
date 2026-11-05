@@ -5,9 +5,9 @@ from typing import Annotated
 from fastapi import APIRouter, Query, Request
 
 from library.reference_http import ReferenceRoute
-from router.reference_params import BuildingParams, CategoryParams
 from schema.common import ErrorResponse
 from schema.reference import BuildingListResponse, CategoryListResponse
+from schema.reference_params import BuildingParams, CategoryParams
 from service.reference import ReferenceService
 
 

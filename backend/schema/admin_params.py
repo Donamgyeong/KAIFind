@@ -3,6 +3,7 @@ from uuid import UUID
 from typing import Literal
 
 from pydantic import AwareDatetime, Field
+
 from schema.admin import AuditAction, Name
 from schema.common import ApiModel, Role
 

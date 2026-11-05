@@ -6,7 +6,7 @@ import pytest
 from pydantic import ValidationError
 
 from main import app
-from router.reference_params import BuildingParams
+from schema.reference_params import BuildingParams
 from schema.reference import BuildingCountSummary
 
 

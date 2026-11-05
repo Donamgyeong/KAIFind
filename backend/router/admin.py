@@ -6,7 +6,7 @@ from fastapi import APIRouter, Query, Request
 
 from library.protected_http import ProtectedRoute
 from model import Building, Category
-from router.admin_params import AuditParams, DisputesParams, ReferenceParams, ReportsParams, UsersParams
+from schema.admin_params import AuditParams, DisputesParams, ReferenceParams, ReportsParams, UsersParams
 from schema.admin import (AdminDisputeResponse, AdminUserSummary, AuditLogResponse,
     BuildingResponse, CategoryResponse, CollectionRestrictionResponse,
     CreateBuildingRequest, CreateCategoryRequest, Page, PostReportResponse,

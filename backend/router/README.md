@@ -25,7 +25,7 @@
 미구현 라우터의 OpenAPI는 경로 구조 확인용이며 완성된 API 계약을 나타내지 않습니다.
 
 Auth의 5개 엔드포인트는 `service/auth.py`에 세션·CSRF·사용자 처리 로직을 구현했습니다.
-`schema/auth.py`는 DTO, `router/auth_params.py`는 파라미터,
+`schema/auth.py`는 DTO, `router/auth_params.py`는 헤더·쿠키를 받는 FastAPI 의존성 dataclass,
 `library/auth_http.py`는 요청 가드와 공통 오류 응답을 담당합니다.
 설정·마이그레이션·테스트 실행법은 `docs/api/AUTH-IMPLEMENTATION.md`를 참고합니다.
 
@@ -35,7 +35,7 @@ Auth의 5개 엔드포인트는 `service/auth.py`에 세션·CSRF·사용자 처
 의존성이 설치된 환경에서 `uvicorn main:app --reload`로 실행하고 `/docs`에서 확인합니다.
 
 Admin의 17개 엔드포인트와 MOD-01 회원 게시물 신고를 구현했습니다.
-`schema/admin.py`는 DTO, `router/admin_params.py`는 검색 파라미터,
+`schema/admin.py`는 DTO, `schema/admin_params.py`는 Pydantic 검색 파라미터 모델,
 `library/protected_http.py`는 세션·ADMIN·CSRF·Origin 검사 및 요청 트랜잭션,
 `service/admin.py`와 `service/audit.py`는 업무 처리·감사를 담당합니다.
 실행·마이그레이션·검증 범위는 [관리자 구현 현황](../docs/api/ADMIN-IMPLEMENTATION.md)을 참고합니다.
@@ -46,7 +46,7 @@ Photo의 3개 엔드포인트는 `service/photos.py`에 업로드·접근 권한
 설정·정리 작업·연결 서비스 사용 범위는 [사진 API 및 MinIO](../docs/MINIO.md)를 참고합니다.
 
 Reference의 공개 GET `/buildings`, `/categories`를 구현했습니다.
-`schema/reference.py`는 응답 DTO, `router/reference_params.py`는 쿼리 검증,
+`schema/reference.py`는 응답 DTO, `schema/reference_params.py`는 Pydantic 쿼리 검증 모델,
 `service/reference.py`는 활성 기준정보 조회와 최신 보관 이력 기반 집계를 담당합니다.
 `library/reference_http.py`는 인증 없이 공통 오류·언어·no-store 헤더를 적용합니다.
 건물 집계는 `includePostedCount=true`일 때만 제공하며 현재 DROP_OFF인 공개 POSTED만 셉니다.
