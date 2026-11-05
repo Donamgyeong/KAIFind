@@ -61,3 +61,18 @@ DB 또는 MinIO 설정이 없으면 해당 통합 테스트는 skip된다.
 ```sh
 docker compose exec -T backend python -m scripts.test_backend tests/test_profile_models.py tests/test_profile_contract.py -q
 ```
+
+## 공개 기준정보 API
+
+- `test_reference_models.py`: 집계 필드 직렬화·음수 거부, 쿼리 추가 필드 거부, 공개 OpenAPI를 검증한다.
+- `test_reference_contract.py`: 실제 PostgreSQL에서 활성 목록·빈 목록·정렬, 관리자 변경 반영,
+  회원·비회원·잘못되거나 만료된 쿠키의 공개 접근, 최신 보관 건물별 집계와 제외 조건,
+  쿼리 오류·언어·DB 오류 은닉·응답 헤더를 검증한다. MinIO는 사용하지 않는다.
+
+```sh
+docker compose exec -T backend python -m scripts.test_backend tests/test_reference_models.py tests/test_reference_contract.py -q
+```
+
+목록은 생성시각 내림차순·동률 ID 내림차순이다. `postedCount`는 요청 시 0건도 포함하고
+생략 또는 false이면 응답 필드에서 제외한다. 집계는 물품별 최대 revision_no를 먼저 선택한 후
+DROP_OFF·POSTED·비숨김·비삭제 조건을 적용한다. 실제 대규모 데이터 성능은 별도 검증 대상이다.

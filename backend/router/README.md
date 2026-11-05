@@ -44,3 +44,9 @@ Photo의 3개 엔드포인트는 `service/photos.py`에 업로드·접근 권한
 `library/photo_images.py`는 정제, `library/photo_storage.py`는 MinIO 연결,
 `library/photo_http.py`는 오류 응답·사진 토큰 로그 마스킹을 담당합니다.
 설정·정리 작업·연결 서비스 사용 범위는 [사진 API 및 MinIO](../docs/MINIO.md)를 참고합니다.
+
+Reference의 공개 GET `/buildings`, `/categories`를 구현했습니다.
+`schema/reference.py`는 응답 DTO, `router/reference_params.py`는 쿼리 검증,
+`service/reference.py`는 활성 기준정보 조회와 최신 보관 이력 기반 집계를 담당합니다.
+`library/reference_http.py`는 인증 없이 공통 오류·언어·no-store 헤더를 적용합니다.
+건물 집계는 `includePostedCount=true`일 때만 제공하며 현재 DROP_OFF인 공개 POSTED만 셉니다.
