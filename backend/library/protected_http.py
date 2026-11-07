@@ -19,6 +19,7 @@ CONFLICTS = {
     'uq_categories_name_ko_normalized': 'CATEGORY_NAME_EXISTS',
     'uq_categories_name_en_normalized': 'CATEGORY_NAME_EXISTS',
     'uq_post_reports_open_reporter': 'OPEN_REPORT_EXISTS',
+    'uq_disputes_open_collection': 'OPEN_DISPUTE_EXISTS',
 }
 
 

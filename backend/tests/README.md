@@ -90,3 +90,15 @@ docker compose exec -T -w /app backend python -m scripts.test_backend tests/test
 테스트 DB의 마이그레이션 이력이 현재 소스와 다르면 기존 DB 이력을 덮어쓰지 않고
 별도 `kaifind_test_*` DB를 `TEST_DATABASE_URL`로 지정한다.
 실제 부하와 폴링 주기, 클라이언트 HTML 렌더링은 검증 범위 밖이다.
+
+## 분쟁 API
+
+`test_dispute_contract.py`는 작성자 접수·작성자/관리자 목록 권한, 사유·페이지 검증,
+숨김·삭제·미수거 처리, 관리자 검토·수거 제한 연동, 보존 만료 상속,
+취소·재수거 이력과 동률 정렬, 동시 접수 유일성, 취소 트랜잭션과 접수 경합을 검증한다.
+수거 취소 API는 아직 미구현이므로 경합 테스트는 동일한 물품 잠금을 사용하는 DB
+트랜잭션으로 취소를 재현한다. 수거 HTTP 전체 흐름과 대규모 조회 성능은 미검증이다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_dispute_contract.py tests/test_admin_contract.py tests/test_schema.py -q
+```
