@@ -2,6 +2,8 @@
 
 작성일: 2026-11-02 · 상태: 설계 초안 v0.1 (초기 구현 추가)
 
+2026-11-07 비동기 매칭: [번역·키워드 구조](../design/translation-keyword-matching.md), [상세 DB 설계](../design/translation-keyword-db-schema.md). DB 모델과 revision `20261107_0006`을 구현했다. 아래 동기 매칭 설명은 최초 설계 이력이며 새 비동기 서비스·워커는 아직 구현하지 않았다.
+
 SQLAlchemy 모델과 Alembic 초기 마이그레이션 사용법·구현 범위는 [구현 안내](IMPLEMENTATION.md)를 참고한다. 아래는 최초 설계 기록이며 서비스/운영까지 구현 완료를 뜻하지 않는다.
 
 ## 설계 근거와 전제

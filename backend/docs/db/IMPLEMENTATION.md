@@ -1,6 +1,20 @@
 # DB 모델·마이그레이션 사용법
 
-2026-11-06: revision `20261106_0005`는 found_items/lost_reports의 description_version과 자동 증가 트리거, 후보 의미 점수·판정 버전·근거 제약, Outbox lease_token을 추가한다. 기존 키워드 전용 후보는 비활성화하고 이력을 보존한다. 모델 차원 확정 전이므로 벡터 테이블·확장 활성화·생성 작업은 아직 추가하지 않는다. 상세 범위는 [임베딩 DB 구조](../design/embedding-db-schema.md)를 참고한다.
+2026-11-07: 개발 DB는 저장소에서 빠진 `20261106_0005`를 가리키고 있었다. Git 이력 `79af37a`의 원본 마이그레이션을 복원하고 새 revision `20261107_0006`을 연결했다. 번역·키워드 기반 비동기 매칭의 [상세 DB 설계](../design/translation-keyword-db-schema.md)를 DB 모델·마이그레이션에 반영했다. 과거 embedding-db-schema.md 링크는 유효하지 않다.
+
+## 2026-11-07 번역·키워드 DB 기반
+
+- `model/matching.py`: 분석 프로필·정책·활성 정책·양쪽 분석 결과·generation 기반 재평가 작업, 총 6개 테이블 추가.
+- `model/entities.py`, `model/indexes.py`: text_version, 후보 판정 버전·복합 FK·공통 키워드·legacy_evidence, outbox 실패/취소/lease 제약, 작업·날짜 인덱스 추가.
+- `20261107_0006`: description_version 카운터를 유지해 text_version으로 변경. 제목/설명 변경 트리거, 프로필·정책 불변 트리거, READY 결과/입력 정체성 보호, 논리 삭제 시 분석·재평가 작업 제거, 분석 삭제 시 대기 outbox 취소 구현.
+- 기존 의미 점수·버전은 후보의 legacy_evidence에 보존한다. 후보 ID·최초 시각·최초 알림을 유지하고 건물 근거 없는 이전 후보는 재평가 전까지 비활성화한다.
+- 기존 outbox lease를 해제하므로 배포 시 소비자를 멈춘 뒤 마이그레이션하고 호환 소비자로 재개해야 한다. 현재 번역·매칭 소비자는 아직 미구현이다.
+
+신규 프로필의 실제 모델 revision·라이브러리 버전은 런타임 호환성 검증 후 등록한다. 마이그레이션은 가짜 프로필이나 활성 정책을 넣지 않는다. API/워커의 작업 생성, lease 소유권 조건부 저장, 재시도·재평가, 카테고리 advisory lock, 수거 최신성 확인, 알림 연동·정리 배치는 후속 구현이다. DB 필드·제약만으로 이 서비스 계약까지 완료된 것은 아니다.
+
+검증은 기존 backend 컨테이너의 `/app`에서 기존 db 안의 별도 `kaifind_test_matching_schema_20261107` DB로 수행했다. 전체 upgrade→downgrade base→upgrade와 `alembic check`를 통과했다. 별도 임시 DB의 이행 테스트는 기존 의미 판정·버전·알림 시각 보존 및 0005↔0006 왕복을 확인한다. 개발 DB에는 downgrade를 실행하지 않는다.
+
+2026-11-07 적용 결과: 기존 개발 DB를 `20261106_0005`에서 `20261107_0006 (head)`으로 upgrade했고 `alembic check`에서 차이가 없었다. 적용 전후 기존 테이블별 행 수, 원본 텍스트 버전 카운터, 후보 ID·최초 매칭/알림 시각 보존을 확인했다. 전체 테스트 328개와 이후 추가한 기존 데이터 이행·ORM 버전 조회 테스트 각 1개, 총 330개가 통과했다. 번역 품질·처리량·워커/수거 최신성 경합은 아직 검증하지 않았다.
 
 현재 개발·테스트 명령은 [상위 개발 안내](../../README.md)를 따른다. 아래 과거 호스트 Python 예시 대신 실행 중인 backend 컨테이너의 /app에서 `docker compose exec -T backend ...`로 실행한다.
 

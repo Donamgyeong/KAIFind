@@ -6,4 +6,6 @@ from .entities import (AuditLog, AuthLoginRate, Building, Category, Collection, 
     LostReportPrivateDetail, MatchCandidate, Message, Notification,
     NotificationKeywordSource, NotificationSetting, OutboxEvent, Photo,
     PhotoAccessGrant, PhotoAttachment, PhotoUploadIntent, PostReport, Session, User)
+from .matching import (FoundItemTextFeature, LostReportTextFeature, MatchEvaluationJob,
+    MatchingPolicy, MatchingRuntime, TextAnalysisProfile)
 from . import indexes as _indexes

@@ -4,9 +4,9 @@ from uuid import UUID
 from typing import Any
 
 from sqlalchemy import (BigInteger, Boolean, CheckConstraint, Date, DateTime,
-    ForeignKey, ForeignKeyConstraint, Integer, String, Text, UniqueConstraint,
+    FetchedValue, ForeignKey, ForeignKeyConstraint, Integer, String, Text, UniqueConstraint,
     Uuid, text)
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base, UUIDPrimaryKey
@@ -71,6 +71,7 @@ class Category(UUIDPrimaryKey, Base):
 class FoundItem(UUIDPrimaryKey, Base):
     __tablename__ = "found_items"
     __table_args__ = (
+        CheckConstraint('text_version > 0', name='text_version_positive'),
         CheckConstraint("status IN ('POSTED','COLLECTED','EXPIRED')", name='status'),
         CheckConstraint("(status = 'POSTED') = (closed_at IS NULL)", name='closed_state'),
     )
@@ -78,6 +79,8 @@ class FoundItem(UUIDPrimaryKey, Base):
     category_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("categories.id", ondelete="RESTRICT"))
     found_building_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("buildings.id", ondelete="RESTRICT"))
     title: Mapped[str] = mapped_column(String(100))
+    text_version: Mapped[int] = mapped_column(
+        BigInteger, server_default=text('1'), server_onupdate=FetchedValue())
     description: Mapped[str] = mapped_column(String(2000))
     found_location_description: Mapped[str] = mapped_column(String(300))
     found_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
@@ -161,6 +164,7 @@ class PhotoUploadIntent(Base):
 class LostReport(UUIDPrimaryKey, Base):
     __tablename__ = "lost_reports"
     __table_args__ = (
+        CheckConstraint('text_version > 0', name='text_version_positive'),
         CheckConstraint("status IN ('OPEN','RESOLVED','CLOSED')", name='status'),
         CheckConstraint('lost_date_from <= lost_date_to', name='dates'),
         CheckConstraint("(status = 'OPEN') = (closed_at IS NULL)", name='closed_state'),
@@ -168,6 +172,8 @@ class LostReport(UUIDPrimaryKey, Base):
     owner_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("users.id", ondelete="RESTRICT"))
     category_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("categories.id", ondelete="RESTRICT"))
     description: Mapped[str] = mapped_column(String(2000))
+    text_version: Mapped[int] = mapped_column(
+        BigInteger, server_default=text('1'), server_onupdate=FetchedValue())
     lost_date_from: Mapped[date] = mapped_column(Date)
     lost_date_to: Mapped[date] = mapped_column(Date)
     status: Mapped[str] = mapped_column(Text, server_default='OPEN')
@@ -194,6 +200,32 @@ class MatchCandidate(UUIDPrimaryKey, Base):
     __table_args__ = (
         CheckConstraint('NOT active OR building_matched OR keyword_matched', name='reason'),
         UniqueConstraint('report_id', 'item_id'),
+        ForeignKeyConstraint(
+            ['policy_id', 'analysis_profile_id'],
+            ['matching_policies.id', 'matching_policies.analysis_profile_id'],
+            name='fk_match_candidate_policy_profile', ondelete='RESTRICT'),
+        ForeignKeyConstraint(
+            ['item_feature_id', 'item_id', 'analysis_profile_id'],
+            ['found_item_text_features.id', 'found_item_text_features.item_id', 'found_item_text_features.profile_id'],
+            name='fk_match_candidate_item_feature', deferrable=True, initially='DEFERRED'),
+        ForeignKeyConstraint(
+            ['report_feature_id', 'report_id', 'analysis_profile_id'],
+            ['lost_report_text_features.id', 'lost_report_text_features.report_id', 'lost_report_text_features.profile_id'],
+            name='fk_match_candidate_report_feature', deferrable=True, initially='DEFERRED'),
+        CheckConstraint(
+            '(policy_id IS NULL AND analysis_profile_id IS NULL AND evaluated_item_version IS NULL '
+            'AND evaluated_report_version IS NULL AND item_feature_id IS NULL AND report_feature_id IS NULL '
+            'AND cardinality(common_keywords) = 0) OR '
+            '(policy_id IS NOT NULL AND analysis_profile_id IS NOT NULL '
+            'AND evaluated_item_version IS NOT NULL AND evaluated_item_version > 0 '
+            'AND evaluated_report_version IS NOT NULL AND evaluated_report_version > 0 '
+            'AND ((keyword_matched AND item_feature_id IS NOT NULL AND report_feature_id IS NOT NULL '
+            'AND cardinality(common_keywords) > 0) OR '
+            '(NOT keyword_matched AND cardinality(common_keywords) = 0)))', name='analysis_evidence'),
+        CheckConstraint(
+            'coalesce(array_ndims(common_keywords), 1) = 1 '
+            'AND array_position(common_keywords, NULL) IS NULL', name='common_keywords_shape'),
+        CheckConstraint("legacy_evidence IS NULL OR jsonb_typeof(legacy_evidence) = 'object'", name='legacy_evidence_object'),
     )
     report_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("lost_reports.id", ondelete="CASCADE"))
     item_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("found_items.id", ondelete="CASCADE"))
@@ -203,6 +235,14 @@ class MatchCandidate(UUIDPrimaryKey, Base):
     building_matched: Mapped[bool] = mapped_column(Boolean, server_default=text('false'))
     keyword_matched: Mapped[bool] = mapped_column(Boolean, server_default=text('false'))
     first_notified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    policy_id: Mapped[UUID | None] = mapped_column(Uuid)
+    analysis_profile_id: Mapped[UUID | None] = mapped_column(Uuid)
+    evaluated_item_version: Mapped[int | None] = mapped_column(BigInteger)
+    evaluated_report_version: Mapped[int | None] = mapped_column(BigInteger)
+    item_feature_id: Mapped[UUID | None] = mapped_column(Uuid)
+    report_feature_id: Mapped[UUID | None] = mapped_column(Uuid)
+    common_keywords: Mapped[list[str]] = mapped_column(ARRAY(Text), server_default=text("'{}'::text[]"))
+    legacy_evidence: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
 
 class Collection(UUIDPrimaryKey, Base):
     __tablename__ = "collections"
@@ -287,6 +327,10 @@ class OutboxEvent(UUIDPrimaryKey, Base):
     __table_args__ = (
         CheckConstraint('attempts >= 0', name='attempts'),
         UniqueConstraint('aggregate_id', 'aggregate_version', 'event_type'),
+        CheckConstraint('(lease_until IS NULL) = (lease_token IS NULL)', name='lease_pair'),
+        CheckConstraint('num_nonnulls(processed_at, failed_at, cancelled_at) <= 1', name='one_terminal'),
+        CheckConstraint(
+            'num_nonnulls(processed_at, failed_at, cancelled_at) = 0 OR lease_token IS NULL', name='terminal_lease'),
     )
     event_type: Mapped[str] = mapped_column(Text)
     aggregate_id: Mapped[UUID] = mapped_column(Uuid)
@@ -297,6 +341,9 @@ class OutboxEvent(UUIDPrimaryKey, Base):
     attempts: Mapped[int] = mapped_column(Integer, server_default=text('0'))
     next_attempt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=text("now()"))
     lease_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    lease_token: Mapped[UUID | None] = mapped_column(Uuid)
+    failed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    cancelled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_error_code: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 class Notification(UUIDPrimaryKey, Base):

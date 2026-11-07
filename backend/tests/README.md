@@ -31,6 +31,8 @@ backend의 `MINIO_*` 환경변수를 사용한다. 자격증명은 로그·코�
 - `test_auth_contract.py`: 실제 라우터로 로그인·CSRF·쿠키·로그아웃·언어별 오류 계약을 검증한다.
 - `test_auth_service.py`: PostgreSQL에서 만료 경계·활동 갱신·권한 유지·암호화·롤백·동시 로그인·세션 폐기 경합·IP별 동시 요청 제한을 검증한다.
 - `test_schema.py`: PostgreSQL 스키마 제약을 검증하며 테스트별 트랜잭션을 롤백한다.
+- `test_matching_schema.py`: 텍스트 버전·프로필 불변성·분석 상태·후보 FK·lease/종료 제약·generation·삭제 취소와 SKIP LOCKED를 검증한다.
+- `test_matching_migration.py`: 기존 db 서비스에 별도 `kaifind_test_matching_migration_*` DB를 생성해 0005→0006 데이터 이행·다운그레이드·재적용을 검증하고 해당 임시 DB만 삭제한다. CREATEDB 권한이 필요하다.
 - `test_admin_models.py`: DB 없이 DTO·감사 허용목록·OpenAPI를 검증한다.
 - `test_admin_contract.py`: HTTP·DB로 권한 즉시 반영, 쓰기 보안, 기준정보 중복, 신고 숨김,
   분쟁 검토, 근거 삭제 후 제한 해제, 통계·감사 필터·감사 실패 롤백·동시 변경을 검증한다.

@@ -45,7 +45,16 @@ index('notifications', 'ix_notifications_list', 'recipient_id', 'created_at DESC
 index('notifications', 'ix_notifications_unread', 'recipient_id', 'created_at DESC',
       'id DESC', where='read_at IS NULL')
 index('outbox_events', 'ix_outbox_events_pending', 'next_attempt_at', 'id',
-      where='processed_at IS NULL')
+      where='processed_at IS NULL AND failed_at IS NULL AND cancelled_at IS NULL')
+index('found_items', 'ix_found_items_match_date', 'category_id', 'found_at', 'id',
+      where='deleted_at IS NULL')
+for feature_table, owner in (
+    ('found_item_text_features', 'item_id'),
+    ('lost_report_text_features', 'report_id'),
+):
+    index(feature_table, f'ix_{feature_table}_backfill', 'profile_id', 'status', owner)
+index('match_evaluation_jobs', 'ix_match_evaluation_jobs_pending', 'next_attempt_at', 'id',
+      where='completed_generation < requested_generation AND failed_at IS NULL')
 index('email_deliveries', 'ix_email_deliveries_pending', 'next_attempt_at', 'id',
       where="status IN ('PENDING','RETRY')")
 for table in ('disputes', 'post_reports'):
