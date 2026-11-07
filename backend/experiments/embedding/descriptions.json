@@ -1,0 +1,4802 @@
+[
+  {
+    "id": "v2-calibration-bottle-1-d",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "파란 스탠리 손잡이 텀블러. 뚜껑에 별 스티커가 있다."
+  },
+  {
+    "id": "v2-calibration-bottle-1-ko",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "뚜껑에 별 스티커가 있다. 찾는 물건은 파란 스탠리 손잡이 텀블러입니다."
+  },
+  {
+    "id": "v2-calibration-bottle-1-en",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a blue stanley handled tumbler. There is a star sticker on the lid."
+  },
+  {
+    "id": "v2-calibration-bottle-1-typo",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "파란스탠리손잡이텀블러, 뚜껑에별스티커가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-bottle-1-mixed",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "파란 스탠리 손잡이 텀블러 lost. There is a star sticker on the lid. 찾아요"
+  },
+  {
+    "id": "v2-calibration-bottle-1-partial",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "파란 스탠리 손잡이 텀블러 찾습니다."
+  },
+  {
+    "id": "v2-calibration-bottle-1-context",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my blue stanley handled tumbler. There is a star sticker on the lid. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-bottle-2-d",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Red Stanley handled tumbler. There is a star sticker on the lid."
+  },
+  {
+    "id": "v2-calibration-bottle-2-ko",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "뚜껑에 별 스티커가 있다. 찾는 물건은 빨간 스탠리 손잡이 텀블러입니다."
+  },
+  {
+    "id": "v2-calibration-bottle-2-en",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a red stanley handled tumbler. There is a star sticker on the lid."
+  },
+  {
+    "id": "v2-calibration-bottle-2-typo",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "빨간스탠리손잡이텀블러, 뚜껑에별스티커가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-bottle-2-mixed",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "빨간 스탠리 손잡이 텀블러 lost. There is a star sticker on the lid. 찾아요"
+  },
+  {
+    "id": "v2-calibration-bottle-2-partial",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "빨간 스탠리 손잡이 텀블러 찾습니다."
+  },
+  {
+    "id": "v2-calibration-bottle-2-context",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my red stanley handled tumbler. There is a star sticker on the lid. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-bottle-3-d",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "파란 락앤락 보온병. 손잡이는 없고 은색 뚜껑에 작은 흠집이 있다."
+  },
+  {
+    "id": "v2-calibration-bottle-3-ko",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "손잡이는 없고 은색 뚜껑에 작은 흠집이 있다. 찾는 물건은 파란 락앤락 보온병입니다."
+  },
+  {
+    "id": "v2-calibration-bottle-3-en",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a blue locknlock vacuum bottle. No handle; the silver lid has a small scratch."
+  },
+  {
+    "id": "v2-calibration-bottle-3-typo",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "파란락앤락보온병, 손잡이는없고은색뚜껑에작은흠집이있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-bottle-3-mixed",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "파란 락앤락 보온병 lost. No handle; the silver lid has a small scratch. 찾아요"
+  },
+  {
+    "id": "v2-calibration-bottle-3-partial",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "파란 락앤락 보온병 찾습니다."
+  },
+  {
+    "id": "v2-calibration-bottle-3-context",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my blue locknlock vacuum bottle. No handle; the silver lid has a small scratch. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-bottle-4-d",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Black Thermos vacuum bottle. It has a screw lid and a rabbit sticker on the bottom."
+  },
+  {
+    "id": "v2-calibration-bottle-4-ko",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "뚜껑을 돌려 열며 바닥에 토끼 스티커가 있다. 찾는 물건은 검정 써모스 보온병입니다."
+  },
+  {
+    "id": "v2-calibration-bottle-4-en",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black thermos vacuum bottle. It has a screw lid and a rabbit sticker on the bottom."
+  },
+  {
+    "id": "v2-calibration-bottle-4-typo",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정써모스보온병, 뚜껑을돌려열며바닥에토끼스티커가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-bottle-4-mixed",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 써모스 보온병 lost. It has a screw lid and a rabbit sticker on the bottom. 찾아요"
+  },
+  {
+    "id": "v2-calibration-bottle-4-partial",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 써모스 보온병 찾습니다."
+  },
+  {
+    "id": "v2-calibration-bottle-4-context",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black thermos vacuum bottle. It has a screw lid and a rabbit sticker on the bottom. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-bottle-absent-ko",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "보라 나이키 스포츠 물병. 흰 뚜껑과 축구공 스티커가 있다."
+  },
+  {
+    "id": "v2-calibration-bottle-absent-en",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "v2-calibration-bottle-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Purple Nike sports bottle with a white lid and a football sticker."
+  },
+  {
+    "id": "v2-evaluation-bottle-1-d",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "초록 하이드로플라스크 물병. 뚜껑에 주황색 끈이 달려 있다."
+  },
+  {
+    "id": "v2-evaluation-bottle-1-ko",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "뚜껑에 주황색 끈이 달려 있다. 찾는 물건은 초록 하이드로플라스크 물병입니다."
+  },
+  {
+    "id": "v2-evaluation-bottle-1-en",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a green hydro flask water bottle. An orange strap is attached to the lid."
+  },
+  {
+    "id": "v2-evaluation-bottle-1-typo",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "초록하이드로플라스크물병, 뚜껑에주황색끈이달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-bottle-1-mixed",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "초록 하이드로플라스크 물병 lost. An orange strap is attached to the lid. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-bottle-1-partial",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "초록 하이드로플라스크 물병 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-bottle-1-context",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my green hydro flask water bottle. An orange strap is attached to the lid. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-bottle-2-d",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Yellow Hydro Flask water bottle. An orange strap is attached to the lid."
+  },
+  {
+    "id": "v2-evaluation-bottle-2-ko",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "뚜껑에 주황색 끈이 달려 있다. 찾는 물건은 노랑 하이드로플라스크 물병입니다."
+  },
+  {
+    "id": "v2-evaluation-bottle-2-en",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a yellow hydro flask water bottle. An orange strap is attached to the lid."
+  },
+  {
+    "id": "v2-evaluation-bottle-2-typo",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "노랑하이드로플라스크물병, 뚜껑에주황색끈이달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-bottle-2-mixed",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "노랑 하이드로플라스크 물병 lost. An orange strap is attached to the lid. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-bottle-2-partial",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "노랑 하이드로플라스크 물병 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-bottle-2-context",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my yellow hydro flask water bottle. An orange strap is attached to the lid. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-bottle-3-d",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "초록 조지루시 보온병. 검정 뚜껑에 잠금 버튼이 있다."
+  },
+  {
+    "id": "v2-evaluation-bottle-3-ko",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "검정 뚜껑에 잠금 버튼이 있다. 찾는 물건은 초록 조지루시 보온병입니다."
+  },
+  {
+    "id": "v2-evaluation-bottle-3-en",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a green zojirushi vacuum bottle. The black lid has a locking button."
+  },
+  {
+    "id": "v2-evaluation-bottle-3-typo",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "초록조지루시보온병, 검정뚜껑에잠금버튼이있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-bottle-3-mixed",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "초록 조지루시 보온병 lost. The black lid has a locking button. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-bottle-3-partial",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "초록 조지루시 보온병 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-bottle-3-context",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my green zojirushi vacuum bottle. The black lid has a locking button. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-bottle-4-d",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "White Starbucks travel mug. It has a handle and a cloud sticker on the bottom."
+  },
+  {
+    "id": "v2-evaluation-bottle-4-ko",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "손잡이가 있고 바닥에 구름 스티커가 있다. 찾는 물건은 흰 스타벅스 머그형 텀블러입니다."
+  },
+  {
+    "id": "v2-evaluation-bottle-4-en",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a white starbucks travel mug. It has a handle and a cloud sticker on the bottom."
+  },
+  {
+    "id": "v2-evaluation-bottle-4-typo",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "흰스타벅스머그형텀블러, 손잡이가있고바닥에구름스티커가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-bottle-4-mixed",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "흰 스타벅스 머그형 텀블러 lost. It has a handle and a cloud sticker on the bottom. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-bottle-4-partial",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "흰 스타벅스 머그형 텀블러 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-bottle-4-context",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my white starbucks travel mug. It has a handle and a cloud sticker on the bottom. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-bottle-absent-ko",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "주황 아디다스 스포츠 물병. 파란 뚜껑에 농구공 스티커가 있다."
+  },
+  {
+    "id": "v2-evaluation-bottle-absent-en",
+    "split": "evaluation",
+    "category": "bottle",
+    "item": "v2-evaluation-bottle-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Orange Adidas sports bottle with a blue lid and a basketball sticker."
+  },
+  {
+    "id": "v2-calibration-audio-1-d",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "흰 에어팟 프로 2 충전 케이스. 노란 오리 키링이 달려 있다."
+  },
+  {
+    "id": "v2-calibration-audio-1-ko",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "노란 오리 키링이 달려 있다. 찾는 물건은 흰 에어팟 프로 2 충전 케이스입니다."
+  },
+  {
+    "id": "v2-calibration-audio-1-en",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a white airpods pro 2 charging case. A yellow duck keychain is attached."
+  },
+  {
+    "id": "v2-calibration-audio-1-typo",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "흰에어팟프로2충전케이스, 노란오리키링이달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-audio-1-mixed",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "흰 에어팟 프로 2 충전 케이스 lost. A yellow duck keychain is attached. 찾아요"
+  },
+  {
+    "id": "v2-calibration-audio-1-partial",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "흰 에어팟 프로 2 충전 케이스 찾습니다."
+  },
+  {
+    "id": "v2-calibration-audio-1-context",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my white airpods pro 2 charging case. A yellow duck keychain is attached. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-audio-2-d",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "White Galaxy Buds2 Pro charging case. A yellow duck keychain is attached."
+  },
+  {
+    "id": "v2-calibration-audio-2-ko",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "노란 오리 키링이 달려 있다. 찾는 물건은 흰 갤럭시 버즈2 프로 충전 케이스입니다."
+  },
+  {
+    "id": "v2-calibration-audio-2-en",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a white galaxy buds2 pro charging case. A yellow duck keychain is attached."
+  },
+  {
+    "id": "v2-calibration-audio-2-typo",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "흰갤럭시버즈2프로충전케이스, 노란오리키링이달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-audio-2-mixed",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "흰 갤럭시 버즈2 프로 충전 케이스 lost. A yellow duck keychain is attached. 찾아요"
+  },
+  {
+    "id": "v2-calibration-audio-2-partial",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "흰 갤럭시 버즈2 프로 충전 케이스 찾습니다."
+  },
+  {
+    "id": "v2-calibration-audio-2-context",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my white galaxy buds2 pro charging case. A yellow duck keychain is attached. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-audio-3-d",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "검정 에어팟 프로 2 충전 케이스. 빨간 카라비너가 달려 있다."
+  },
+  {
+    "id": "v2-calibration-audio-3-ko",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "빨간 카라비너가 달려 있다. 찾는 물건은 검정 에어팟 프로 2 충전 케이스입니다."
+  },
+  {
+    "id": "v2-calibration-audio-3-en",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black airpods pro 2 charging case. A red carabiner is attached."
+  },
+  {
+    "id": "v2-calibration-audio-3-typo",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정에어팟프로2충전케이스, 빨간카라비너가달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-audio-3-mixed",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 에어팟 프로 2 충전 케이스 lost. A red carabiner is attached. 찾아요"
+  },
+  {
+    "id": "v2-calibration-audio-3-partial",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 에어팟 프로 2 충전 케이스 찾습니다."
+  },
+  {
+    "id": "v2-calibration-audio-3-context",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black airpods pro 2 charging case. A red carabiner is attached. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-audio-4-d",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Blue Sony wireless earbud case. The rounded lid has a small scratch."
+  },
+  {
+    "id": "v2-calibration-audio-4-ko",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "둥근 뚜껑에 작은 흠집이 있다. 찾는 물건은 파란 소니 무선 이어폰 케이스입니다."
+  },
+  {
+    "id": "v2-calibration-audio-4-en",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a blue sony wireless earbud case. The rounded lid has a small scratch."
+  },
+  {
+    "id": "v2-calibration-audio-4-typo",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "파란소니무선이어폰케이스, 둥근뚜껑에작은흠집이있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-audio-4-mixed",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "파란 소니 무선 이어폰 케이스 lost. The rounded lid has a small scratch. 찾아요"
+  },
+  {
+    "id": "v2-calibration-audio-4-partial",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "파란 소니 무선 이어폰 케이스 찾습니다."
+  },
+  {
+    "id": "v2-calibration-audio-4-context",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my blue sony wireless earbud case. The rounded lid has a small scratch. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-audio-absent-ko",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "빨간 비츠 유선 헤드폰. 머리띠 안쪽에 체크무늬가 있다."
+  },
+  {
+    "id": "v2-calibration-audio-absent-en",
+    "split": "calibration",
+    "category": "audio",
+    "item": "v2-calibration-audio-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Red Beats wired headphones with a checked pattern inside the headband."
+  },
+  {
+    "id": "v2-evaluation-audio-1-d",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "보라 갤럭시 버즈 FE 충전 케이스. 초록 공룡 키링이 달려 있다."
+  },
+  {
+    "id": "v2-evaluation-audio-1-ko",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "초록 공룡 키링이 달려 있다. 찾는 물건은 보라 갤럭시 버즈 FE 충전 케이스입니다."
+  },
+  {
+    "id": "v2-evaluation-audio-1-en",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a purple galaxy buds fe charging case. A green dinosaur keychain is attached."
+  },
+  {
+    "id": "v2-evaluation-audio-1-typo",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "보라갤럭시버즈FE충전케이스, 초록공룡키링이달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-audio-1-mixed",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "보라 갤럭시 버즈 FE 충전 케이스 lost. A green dinosaur keychain is attached. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-audio-1-partial",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "보라 갤럭시 버즈 FE 충전 케이스 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-audio-1-context",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my purple galaxy buds fe charging case. A green dinosaur keychain is attached. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-audio-2-d",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "White Galaxy Buds FE charging case. A green dinosaur keychain is attached."
+  },
+  {
+    "id": "v2-evaluation-audio-2-ko",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "초록 공룡 키링이 달려 있다. 찾는 물건은 흰 갤럭시 버즈 FE 충전 케이스입니다."
+  },
+  {
+    "id": "v2-evaluation-audio-2-en",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a white galaxy buds fe charging case. A green dinosaur keychain is attached."
+  },
+  {
+    "id": "v2-evaluation-audio-2-typo",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "흰갤럭시버즈FE충전케이스, 초록공룡키링이달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-audio-2-mixed",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "흰 갤럭시 버즈 FE 충전 케이스 lost. A green dinosaur keychain is attached. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-audio-2-partial",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "흰 갤럭시 버즈 FE 충전 케이스 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-audio-2-context",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my white galaxy buds fe charging case. A green dinosaur keychain is attached. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-audio-3-d",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "보라 에어팟 3 충전 케이스. 초록 공룡 키링이 달려 있다."
+  },
+  {
+    "id": "v2-evaluation-audio-3-ko",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "초록 공룡 키링이 달려 있다. 찾는 물건은 보라 에어팟 3 충전 케이스입니다."
+  },
+  {
+    "id": "v2-evaluation-audio-3-en",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a purple airpods 3 charging case. A green dinosaur keychain is attached."
+  },
+  {
+    "id": "v2-evaluation-audio-3-typo",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "보라에어팟3충전케이스, 초록공룡키링이달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-audio-3-mixed",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "보라 에어팟 3 충전 케이스 lost. A green dinosaur keychain is attached. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-audio-3-partial",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "보라 에어팟 3 충전 케이스 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-audio-3-context",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my purple airpods 3 charging case. A green dinosaur keychain is attached. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-audio-4-d",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Silver JBL wireless earbud case. It has a black silicone cover and a loop."
+  },
+  {
+    "id": "v2-evaluation-audio-4-ko",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "검정 실리콘 덮개와 고리가 있다. 찾는 물건은 은색 JBL 무선 이어폰 케이스입니다."
+  },
+  {
+    "id": "v2-evaluation-audio-4-en",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a silver jbl wireless earbud case. It has a black silicone cover and a loop."
+  },
+  {
+    "id": "v2-evaluation-audio-4-typo",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "은색JBL무선이어폰케이스, 검정실리콘덮개와고리가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-audio-4-mixed",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "은색 JBL 무선 이어폰 케이스 lost. It has a black silicone cover and a loop. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-audio-4-partial",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "은색 JBL 무선 이어폰 케이스 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-audio-4-context",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my silver jbl wireless earbud case. It has a black silicone cover and a loop. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-audio-absent-ko",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "노란 보스 유선 헤드폰. 머리띠 안쪽에 줄무늬가 있다."
+  },
+  {
+    "id": "v2-evaluation-audio-absent-en",
+    "split": "evaluation",
+    "category": "audio",
+    "item": "v2-evaluation-audio-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Yellow Bose wired headphones with stripes inside the headband."
+  },
+  {
+    "id": "v2-calibration-bag-1-d",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "검정 나이키 백팩. 앞주머니에 흰 고양이 패치가 있다."
+  },
+  {
+    "id": "v2-calibration-bag-1-ko",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "앞주머니에 흰 고양이 패치가 있다. 찾는 물건은 검정 나이키 백팩입니다."
+  },
+  {
+    "id": "v2-calibration-bag-1-en",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black nike backpack. There is a white cat patch on the front pocket."
+  },
+  {
+    "id": "v2-calibration-bag-1-typo",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정나이키백팩, 앞주머니에흰고양이패치가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-bag-1-mixed",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 나이키 백팩 lost. There is a white cat patch on the front pocket. 찾아요"
+  },
+  {
+    "id": "v2-calibration-bag-1-partial",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 나이키 백팩 찾습니다."
+  },
+  {
+    "id": "v2-calibration-bag-1-context",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black nike backpack. There is a white cat patch on the front pocket. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-bag-2-d",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Black Adidas backpack. There is a white cat patch on the front pocket."
+  },
+  {
+    "id": "v2-calibration-bag-2-ko",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "앞주머니에 흰 고양이 패치가 있다. 찾는 물건은 검정 아디다스 백팩입니다."
+  },
+  {
+    "id": "v2-calibration-bag-2-en",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black adidas backpack. There is a white cat patch on the front pocket."
+  },
+  {
+    "id": "v2-calibration-bag-2-typo",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정아디다스백팩, 앞주머니에흰고양이패치가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-bag-2-mixed",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 아디다스 백팩 lost. There is a white cat patch on the front pocket. 찾아요"
+  },
+  {
+    "id": "v2-calibration-bag-2-partial",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 아디다스 백팩 찾습니다."
+  },
+  {
+    "id": "v2-calibration-bag-2-context",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black adidas backpack. There is a white cat patch on the front pocket. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-bag-3-d",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "회색 나이키 백팩. 앞주머니가 찢어졌고 패치는 없다."
+  },
+  {
+    "id": "v2-calibration-bag-3-ko",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "앞주머니가 찢어졌고 패치는 없다. 찾는 물건은 회색 나이키 백팩입니다."
+  },
+  {
+    "id": "v2-calibration-bag-3-en",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a grey nike backpack. The front pocket is torn and there are no patches."
+  },
+  {
+    "id": "v2-calibration-bag-3-typo",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "회색나이키백팩, 앞주머니가찢어졌고패치는없다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-bag-3-mixed",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "회색 나이키 백팩 lost. The front pocket is torn and there are no patches. 찾아요"
+  },
+  {
+    "id": "v2-calibration-bag-3-partial",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "회색 나이키 백팩 찾습니다."
+  },
+  {
+    "id": "v2-calibration-bag-3-context",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my grey nike backpack. The front pocket is torn and there are no patches. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-bag-4-d",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Beige Muji canvas tote bag. A red ribbon is tied to the long handle."
+  },
+  {
+    "id": "v2-calibration-bag-4-ko",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "긴 손잡이에 빨간 리본을 묶었다. 찾는 물건은 베이지 무인양품 캔버스 가방입니다."
+  },
+  {
+    "id": "v2-calibration-bag-4-en",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a beige muji canvas tote bag. A red ribbon is tied to the long handle."
+  },
+  {
+    "id": "v2-calibration-bag-4-typo",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "베이지무인양품캔버스가방, 긴손잡이에빨간리본을묶었다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-bag-4-mixed",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "베이지 무인양품 캔버스 가방 lost. A red ribbon is tied to the long handle. 찾아요"
+  },
+  {
+    "id": "v2-calibration-bag-4-partial",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "베이지 무인양품 캔버스 가방 찾습니다."
+  },
+  {
+    "id": "v2-calibration-bag-4-context",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my beige muji canvas tote bag. A red ribbon is tied to the long handle. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-bag-absent-ko",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "보라 휠라 여행용 캐리어. 바퀴가 네 개이고 손잡이에 흰 끈이 있다."
+  },
+  {
+    "id": "v2-calibration-bag-absent-en",
+    "split": "calibration",
+    "category": "bag",
+    "item": "v2-calibration-bag-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Purple Fila suitcase with four wheels and a white strap on the handle."
+  },
+  {
+    "id": "v2-evaluation-bag-1-d",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "남색 잔스포츠 백팩. 옆주머니에 노란 해바라기 배지가 있다."
+  },
+  {
+    "id": "v2-evaluation-bag-1-ko",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "옆주머니에 노란 해바라기 배지가 있다. 찾는 물건은 남색 잔스포츠 백팩입니다."
+  },
+  {
+    "id": "v2-evaluation-bag-1-en",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a navy jansport backpack. There is a yellow sunflower badge on the side pocket."
+  },
+  {
+    "id": "v2-evaluation-bag-1-typo",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "남색잔스포츠백팩, 옆주머니에노란해바라기배지가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-bag-1-mixed",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "남색 잔스포츠 백팩 lost. There is a yellow sunflower badge on the side pocket. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-bag-1-partial",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "남색 잔스포츠 백팩 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-bag-1-context",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my navy jansport backpack. There is a yellow sunflower badge on the side pocket. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-bag-2-d",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Navy Eastpak backpack. There is a yellow sunflower badge on the side pocket."
+  },
+  {
+    "id": "v2-evaluation-bag-2-ko",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "옆주머니에 노란 해바라기 배지가 있다. 찾는 물건은 남색 이스트팩 백팩입니다."
+  },
+  {
+    "id": "v2-evaluation-bag-2-en",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a navy eastpak backpack. There is a yellow sunflower badge on the side pocket."
+  },
+  {
+    "id": "v2-evaluation-bag-2-typo",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "남색이스트팩백팩, 옆주머니에노란해바라기배지가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-bag-2-mixed",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "남색 이스트팩 백팩 lost. There is a yellow sunflower badge on the side pocket. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-bag-2-partial",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "남색 이스트팩 백팩 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-bag-2-context",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my navy eastpak backpack. There is a yellow sunflower badge on the side pocket. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-bag-3-d",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "분홍 잔스포츠 백팩. 옆주머니에 노란 해바라기 배지가 있다."
+  },
+  {
+    "id": "v2-evaluation-bag-3-ko",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "옆주머니에 노란 해바라기 배지가 있다. 찾는 물건은 분홍 잔스포츠 백팩입니다."
+  },
+  {
+    "id": "v2-evaluation-bag-3-en",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a pink jansport backpack. There is a yellow sunflower badge on the side pocket."
+  },
+  {
+    "id": "v2-evaluation-bag-3-typo",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "분홍잔스포츠백팩, 옆주머니에노란해바라기배지가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-bag-3-mixed",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "분홍 잔스포츠 백팩 lost. There is a yellow sunflower badge on the side pocket. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-bag-3-partial",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "분홍 잔스포츠 백팩 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-bag-3-context",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my pink jansport backpack. There is a yellow sunflower badge on the side pocket. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-bag-4-d",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Brown Uniqlo crossbody bag. It is crescent shaped with a green ribbon on the zipper."
+  },
+  {
+    "id": "v2-evaluation-bag-4-ko",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "반달 모양이고 지퍼에 초록 리본이 있다. 찾는 물건은 갈색 유니클로 크로스백입니다."
+  },
+  {
+    "id": "v2-evaluation-bag-4-en",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a brown uniqlo crossbody bag. It is crescent shaped with a green ribbon on the zipper."
+  },
+  {
+    "id": "v2-evaluation-bag-4-typo",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "갈색유니클로크로스백, 반달모양이고지퍼에초록리본이있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-bag-4-mixed",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "갈색 유니클로 크로스백 lost. It is crescent shaped with a green ribbon on the zipper. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-bag-4-partial",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "갈색 유니클로 크로스백 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-bag-4-context",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my brown uniqlo crossbody bag. It is crescent shaped with a green ribbon on the zipper. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-bag-absent-ko",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "초록 쌤소나이트 여행용 캐리어. 바퀴가 두 개이고 손잡이에 검정 끈이 있다."
+  },
+  {
+    "id": "v2-evaluation-bag-absent-en",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "v2-evaluation-bag-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Green Samsonite suitcase with two wheels and a black strap on the handle."
+  },
+  {
+    "id": "v2-calibration-umbrella-1-d",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "JH 표시가 있는 남색 장우산. 나무 손잡이가 있으며 접이식은 아니다."
+  },
+  {
+    "id": "v2-calibration-umbrella-1-ko",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "나무 손잡이가 있으며 접이식은 아니다. 찾는 물건은 JH 표시가 있는 남색 장우산입니다."
+  },
+  {
+    "id": "v2-calibration-umbrella-1-en",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a navy long umbrella marked jh. It has a wooden handle and is not foldable."
+  },
+  {
+    "id": "v2-calibration-umbrella-1-typo",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "JH표시가있는남색장우산, 나무손잡이가있으며접이식은아니다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-umbrella-1-mixed",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "JH 표시가 있는 남색 장우산 lost. It has a wooden handle and is not foldable. 찾아요"
+  },
+  {
+    "id": "v2-calibration-umbrella-1-partial",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "JH 표시가 있는 남색 장우산 찾습니다."
+  },
+  {
+    "id": "v2-calibration-umbrella-1-context",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my navy long umbrella marked jh. It has a wooden handle and is not foldable. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-umbrella-2-d",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Navy long umbrella marked MK. It has a wooden handle and is not foldable."
+  },
+  {
+    "id": "v2-calibration-umbrella-2-ko",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "나무 손잡이가 있으며 접이식은 아니다. 찾는 물건은 MK 표시가 있는 남색 장우산입니다."
+  },
+  {
+    "id": "v2-calibration-umbrella-2-en",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a navy long umbrella marked mk. It has a wooden handle and is not foldable."
+  },
+  {
+    "id": "v2-calibration-umbrella-2-typo",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "MK표시가있는남색장우산, 나무손잡이가있으며접이식은아니다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-umbrella-2-mixed",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "MK 표시가 있는 남색 장우산 lost. It has a wooden handle and is not foldable. 찾아요"
+  },
+  {
+    "id": "v2-calibration-umbrella-2-partial",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "MK 표시가 있는 남색 장우산 찾습니다."
+  },
+  {
+    "id": "v2-calibration-umbrella-2-context",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my navy long umbrella marked mk. It has a wooden handle and is not foldable. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-umbrella-3-d",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "남색 삼단 접이식 우산. 검정 플라스틱 손잡이에 글자가 없다."
+  },
+  {
+    "id": "v2-calibration-umbrella-3-ko",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "검정 플라스틱 손잡이에 글자가 없다. 찾는 물건은 남색 삼단 접이식 우산입니다."
+  },
+  {
+    "id": "v2-calibration-umbrella-3-en",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a navy three-fold umbrella. There is no lettering on the black plastic handle."
+  },
+  {
+    "id": "v2-calibration-umbrella-3-typo",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "남색삼단접이식우산, 검정플라스틱손잡이에글자가없다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-umbrella-3-mixed",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "남색 삼단 접이식 우산 lost. There is no lettering on the black plastic handle. 찾아요"
+  },
+  {
+    "id": "v2-calibration-umbrella-3-partial",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "남색 삼단 접이식 우산 찾습니다."
+  },
+  {
+    "id": "v2-calibration-umbrella-3-context",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my navy three-fold umbrella. There is no lettering on the black plastic handle. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-umbrella-4-d",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Red transparent vinyl umbrella. It has a red border and a curved handle."
+  },
+  {
+    "id": "v2-calibration-umbrella-4-ko",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "빨간 테두리와 둥근 손잡이가 있다. 찾는 물건은 빨간 투명 비닐 장우산입니다."
+  },
+  {
+    "id": "v2-calibration-umbrella-4-en",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a red transparent vinyl umbrella. It has a red border and a curved handle."
+  },
+  {
+    "id": "v2-calibration-umbrella-4-typo",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "빨간투명비닐장우산, 빨간테두리와둥근손잡이가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-umbrella-4-mixed",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "빨간 투명 비닐 장우산 lost. It has a red border and a curved handle. 찾아요"
+  },
+  {
+    "id": "v2-calibration-umbrella-4-partial",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "빨간 투명 비닐 장우산 찾습니다."
+  },
+  {
+    "id": "v2-calibration-umbrella-4-context",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my red transparent vinyl umbrella. It has a red border and a curved handle. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-umbrella-absent-ko",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "분홍 오단 접이식 우산. 손잡이에 흰 꽃무늬가 있다."
+  },
+  {
+    "id": "v2-calibration-umbrella-absent-en",
+    "split": "calibration",
+    "category": "umbrella",
+    "item": "v2-calibration-umbrella-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Pink five-fold umbrella with white flowers on the handle."
+  },
+  {
+    "id": "v2-evaluation-umbrella-1-d",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "SY 표시가 있는 초록 장우산. 갈색 나무 손잡이 끝이 조금 벗겨졌다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-1-ko",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "갈색 나무 손잡이 끝이 조금 벗겨졌다. 찾는 물건은 SY 표시가 있는 초록 장우산입니다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-1-en",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a green long umbrella marked sy. The end of the brown wooden handle is slightly worn."
+  },
+  {
+    "id": "v2-evaluation-umbrella-1-typo",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "SY표시가있는초록장우산, 갈색나무손잡이끝이조금벗겨졌다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-umbrella-1-mixed",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "SY 표시가 있는 초록 장우산 lost. The end of the brown wooden handle is slightly worn. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-umbrella-1-partial",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "SY 표시가 있는 초록 장우산 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-1-context",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my green long umbrella marked sy. The end of the brown wooden handle is slightly worn. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-umbrella-2-d",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Green long umbrella marked DK. The end of the brown wooden handle is slightly worn."
+  },
+  {
+    "id": "v2-evaluation-umbrella-2-ko",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "갈색 나무 손잡이 끝이 조금 벗겨졌다. 찾는 물건은 DK 표시가 있는 초록 장우산입니다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-2-en",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a green long umbrella marked dk. The end of the brown wooden handle is slightly worn."
+  },
+  {
+    "id": "v2-evaluation-umbrella-2-typo",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "DK표시가있는초록장우산, 갈색나무손잡이끝이조금벗겨졌다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-umbrella-2-mixed",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "DK 표시가 있는 초록 장우산 lost. The end of the brown wooden handle is slightly worn. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-umbrella-2-partial",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "DK 표시가 있는 초록 장우산 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-2-context",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my green long umbrella marked dk. The end of the brown wooden handle is slightly worn. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-umbrella-3-d",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "초록 이단 접이식 우산. 납작한 회색 손잡이와 줄무늬가 있다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-3-ko",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "납작한 회색 손잡이와 줄무늬가 있다. 찾는 물건은 초록 이단 접이식 우산입니다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-3-en",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a green two-fold umbrella. It has a flat grey handle and striped fabric."
+  },
+  {
+    "id": "v2-evaluation-umbrella-3-typo",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "초록이단접이식우산, 납작한회색손잡이와줄무늬가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-umbrella-3-mixed",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "초록 이단 접이식 우산 lost. It has a flat grey handle and striped fabric. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-umbrella-3-partial",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "초록 이단 접이식 우산 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-3-context",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my green two-fold umbrella. It has a flat grey handle and striped fabric. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-umbrella-4-d",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Yellow child-sized umbrella. It has a duck-shaped handle and a clear window."
+  },
+  {
+    "id": "v2-evaluation-umbrella-4-ko",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "손잡이가 오리 모양이고 투명한 창이 있다. 찾는 물건은 노란 어린이 장우산입니다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-4-en",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a yellow child-sized umbrella. It has a duck-shaped handle and a clear window."
+  },
+  {
+    "id": "v2-evaluation-umbrella-4-typo",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "노란어린이장우산, 손잡이가오리모양이고투명한창이있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-umbrella-4-mixed",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "노란 어린이 장우산 lost. It has a duck-shaped handle and a clear window. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-umbrella-4-partial",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "노란 어린이 장우산 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-4-context",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my yellow child-sized umbrella. It has a duck-shaped handle and a clear window. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-umbrella-absent-ko",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "보라 오단 접이식 우산. 손잡이에 노란 달무늬가 있다."
+  },
+  {
+    "id": "v2-evaluation-umbrella-absent-en",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "v2-evaluation-umbrella-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Purple five-fold umbrella with yellow moons on the handle."
+  },
+  {
+    "id": "v2-calibration-wallet-1-d",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "검정 헤지스 반지갑. 겉면 오른쪽 아래에 은색 강아지 로고가 있다."
+  },
+  {
+    "id": "v2-calibration-wallet-1-ko",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "겉면 오른쪽 아래에 은색 강아지 로고가 있다. 찾는 물건은 검정 헤지스 반지갑입니다."
+  },
+  {
+    "id": "v2-calibration-wallet-1-en",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black hazzys bifold wallet. A silver dog logo is on the lower right of the outside."
+  },
+  {
+    "id": "v2-calibration-wallet-1-typo",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정헤지스반지갑, 겉면오른쪽아래에은색강아지로고가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-wallet-1-mixed",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 헤지스 반지갑 lost. A silver dog logo is on the lower right of the outside. 찾아요"
+  },
+  {
+    "id": "v2-calibration-wallet-1-partial",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 헤지스 반지갑 찾습니다."
+  },
+  {
+    "id": "v2-calibration-wallet-1-context",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black hazzys bifold wallet. A silver dog logo is on the lower right of the outside. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-wallet-2-d",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Brown Hazzys bifold wallet. A silver dog logo is on the lower right of the outside."
+  },
+  {
+    "id": "v2-calibration-wallet-2-ko",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "겉면 오른쪽 아래에 은색 강아지 로고가 있다. 찾는 물건은 갈색 헤지스 반지갑입니다."
+  },
+  {
+    "id": "v2-calibration-wallet-2-en",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a brown hazzys bifold wallet. A silver dog logo is on the lower right of the outside."
+  },
+  {
+    "id": "v2-calibration-wallet-2-typo",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "갈색헤지스반지갑, 겉면오른쪽아래에은색강아지로고가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-wallet-2-mixed",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "갈색 헤지스 반지갑 lost. A silver dog logo is on the lower right of the outside. 찾아요"
+  },
+  {
+    "id": "v2-calibration-wallet-2-partial",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "갈색 헤지스 반지갑 찾습니다."
+  },
+  {
+    "id": "v2-calibration-wallet-2-context",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my brown hazzys bifold wallet. A silver dog logo is on the lower right of the outside. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-wallet-3-d",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "검정 닥스 카드지갑. 체크무늬 천과 금색 단추가 있다."
+  },
+  {
+    "id": "v2-calibration-wallet-3-ko",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "체크무늬 천과 금색 단추가 있다. 찾는 물건은 검정 닥스 카드지갑입니다."
+  },
+  {
+    "id": "v2-calibration-wallet-3-en",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black daks card holder. It has checked fabric and a gold snap button."
+  },
+  {
+    "id": "v2-calibration-wallet-3-typo",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정닥스카드지갑, 체크무늬천과금색단추가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-wallet-3-mixed",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 닥스 카드지갑 lost. It has checked fabric and a gold snap button. 찾아요"
+  },
+  {
+    "id": "v2-calibration-wallet-3-partial",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 닥스 카드지갑 찾습니다."
+  },
+  {
+    "id": "v2-calibration-wallet-3-context",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black daks card holder. It has checked fabric and a gold snap button. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-wallet-4-d",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Pink Kakao Friends coin purse. It is shaped like Ryan with a rounded zipper."
+  },
+  {
+    "id": "v2-calibration-wallet-4-ko",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "라이언 얼굴 모양이고 둥근 지퍼가 있다. 찾는 물건은 분홍 카카오프렌즈 동전지갑입니다."
+  },
+  {
+    "id": "v2-calibration-wallet-4-en",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a pink kakao friends coin purse. It is shaped like Ryan with a rounded zipper."
+  },
+  {
+    "id": "v2-calibration-wallet-4-typo",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "분홍카카오프렌즈동전지갑, 라이언얼굴모양이고둥근지퍼가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-wallet-4-mixed",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "분홍 카카오프렌즈 동전지갑 lost. It is shaped like Ryan with a rounded zipper. 찾아요"
+  },
+  {
+    "id": "v2-calibration-wallet-4-partial",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "분홍 카카오프렌즈 동전지갑 찾습니다."
+  },
+  {
+    "id": "v2-calibration-wallet-4-context",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my pink kakao friends coin purse. It is shaped like Ryan with a rounded zipper. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-wallet-absent-ko",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "은색 프라다 장지갑. 지퍼가 두 개이고 삼각 로고가 있다."
+  },
+  {
+    "id": "v2-calibration-wallet-absent-en",
+    "split": "calibration",
+    "category": "wallet",
+    "item": "v2-calibration-wallet-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Silver Prada long wallet with two zippers and a triangular logo."
+  },
+  {
+    "id": "v2-evaluation-wallet-1-d",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "남색 빈폴 반지갑. 앞면에 작은 은색 자전거 로고가 있다."
+  },
+  {
+    "id": "v2-evaluation-wallet-1-ko",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "앞면에 작은 은색 자전거 로고가 있다. 찾는 물건은 남색 빈폴 반지갑입니다."
+  },
+  {
+    "id": "v2-evaluation-wallet-1-en",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a navy beanpole bifold wallet. A small silver bicycle logo is on the front."
+  },
+  {
+    "id": "v2-evaluation-wallet-1-typo",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "남색빈폴반지갑, 앞면에작은은색자전거로고가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-wallet-1-mixed",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "남색 빈폴 반지갑 lost. A small silver bicycle logo is on the front. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-wallet-1-partial",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "남색 빈폴 반지갑 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-wallet-1-context",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my navy beanpole bifold wallet. A small silver bicycle logo is on the front. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-wallet-2-d",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Green Beanpole bifold wallet. A small silver bicycle logo is on the front."
+  },
+  {
+    "id": "v2-evaluation-wallet-2-ko",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "앞면에 작은 은색 자전거 로고가 있다. 찾는 물건은 초록 빈폴 반지갑입니다."
+  },
+  {
+    "id": "v2-evaluation-wallet-2-en",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a green beanpole bifold wallet. A small silver bicycle logo is on the front."
+  },
+  {
+    "id": "v2-evaluation-wallet-2-typo",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "초록빈폴반지갑, 앞면에작은은색자전거로고가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-wallet-2-mixed",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "초록 빈폴 반지갑 lost. A small silver bicycle logo is on the front. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-wallet-2-partial",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "초록 빈폴 반지갑 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-wallet-2-context",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my green beanpole bifold wallet. A small silver bicycle logo is on the front. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-wallet-3-d",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "남색 몽블랑 카드지갑. 앞면에 흰 별 모양 장식과 카드 슬롯이 있다."
+  },
+  {
+    "id": "v2-evaluation-wallet-3-ko",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "앞면에 흰 별 모양 장식과 카드 슬롯이 있다. 찾는 물건은 남색 몽블랑 카드지갑입니다."
+  },
+  {
+    "id": "v2-evaluation-wallet-3-en",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a navy montblanc card holder. It has a white star emblem and card slots on the front."
+  },
+  {
+    "id": "v2-evaluation-wallet-3-typo",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "남색몽블랑카드지갑, 앞면에흰별모양장식과카드슬롯이있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-wallet-3-mixed",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "남색 몽블랑 카드지갑 lost. It has a white star emblem and card slots on the front. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-wallet-3-partial",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "남색 몽블랑 카드지갑 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-wallet-3-context",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my navy montblanc card holder. It has a white star emblem and card slots on the front. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-wallet-4-d",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Orange unbranded coin purse. It is rectangular with a black zipper and a short strap."
+  },
+  {
+    "id": "v2-evaluation-wallet-4-ko",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "사각형이며 검정 지퍼와 짧은 끈이 있다. 찾는 물건은 주황 무지 동전지갑입니다."
+  },
+  {
+    "id": "v2-evaluation-wallet-4-en",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a orange unbranded coin purse. It is rectangular with a black zipper and a short strap."
+  },
+  {
+    "id": "v2-evaluation-wallet-4-typo",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "주황무지동전지갑, 사각형이며검정지퍼와짧은끈이있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-wallet-4-mixed",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "주황 무지 동전지갑 lost. It is rectangular with a black zipper and a short strap. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-wallet-4-partial",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "주황 무지 동전지갑 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-wallet-4-context",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my orange unbranded coin purse. It is rectangular with a black zipper and a short strap. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-wallet-absent-ko",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "금색 구찌 장지갑. 단추가 두 개이고 초록 줄무늬가 있다."
+  },
+  {
+    "id": "v2-evaluation-wallet-absent-en",
+    "split": "evaluation",
+    "category": "wallet",
+    "item": "v2-evaluation-wallet-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Gold Gucci long wallet with two buttons and green stripes."
+  },
+  {
+    "id": "v2-calibration-keys-1-d",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "빨간 하트 키링이 달린 은색 열쇠 두 개. 둥근 고리에 큰 열쇠 하나와 작은 열쇠 하나가 있다."
+  },
+  {
+    "id": "v2-calibration-keys-1-ko",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "둥근 고리에 큰 열쇠 하나와 작은 열쇠 하나가 있다. 찾는 물건은 빨간 하트 키링이 달린 은색 열쇠 두 개입니다."
+  },
+  {
+    "id": "v2-calibration-keys-1-en",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a two silver keys with a red heart keychain. A round ring holds one large key and one small key."
+  },
+  {
+    "id": "v2-calibration-keys-1-typo",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "빨간하트키링이달린은색열쇠두개, 둥근고리에큰열쇠하나와작은열쇠하나가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-keys-1-mixed",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "빨간 하트 키링이 달린 은색 열쇠 두 개 lost. A round ring holds one large key and one small key. 찾아요"
+  },
+  {
+    "id": "v2-calibration-keys-1-partial",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "빨간 하트 키링이 달린 은색 열쇠 두 개 찾습니다."
+  },
+  {
+    "id": "v2-calibration-keys-1-context",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my two silver keys with a red heart keychain. A round ring holds one large key and one small key. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-keys-2-d",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Two silver keys with a blue heart keychain. A round ring holds one large key and one small key."
+  },
+  {
+    "id": "v2-calibration-keys-2-ko",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "둥근 고리에 큰 열쇠 하나와 작은 열쇠 하나가 있다. 찾는 물건은 파란 하트 키링이 달린 은색 열쇠 두 개입니다."
+  },
+  {
+    "id": "v2-calibration-keys-2-en",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a two silver keys with a blue heart keychain. A round ring holds one large key and one small key."
+  },
+  {
+    "id": "v2-calibration-keys-2-typo",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "파란하트키링이달린은색열쇠두개, 둥근고리에큰열쇠하나와작은열쇠하나가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-keys-2-mixed",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "파란 하트 키링이 달린 은색 열쇠 두 개 lost. A round ring holds one large key and one small key. 찾아요"
+  },
+  {
+    "id": "v2-calibration-keys-2-partial",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "파란 하트 키링이 달린 은색 열쇠 두 개 찾습니다."
+  },
+  {
+    "id": "v2-calibration-keys-2-context",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my two silver keys with a blue heart keychain. A round ring holds one large key and one small key. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-keys-3-d",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "검정 현대 자동차 스마트키. 옆면에 은색 버튼과 검정 가죽 고리가 있다."
+  },
+  {
+    "id": "v2-calibration-keys-3-ko",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "옆면에 은색 버튼과 검정 가죽 고리가 있다. 찾는 물건은 검정 현대 자동차 스마트키입니다."
+  },
+  {
+    "id": "v2-calibration-keys-3-en",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black hyundai car key fob. It has a silver side button and a black leather loop."
+  },
+  {
+    "id": "v2-calibration-keys-3-typo",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정현대자동차스마트키, 옆면에은색버튼과검정가죽고리가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-keys-3-mixed",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 현대 자동차 스마트키 lost. It has a silver side button and a black leather loop. 찾아요"
+  },
+  {
+    "id": "v2-calibration-keys-3-partial",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 현대 자동차 스마트키 찾습니다."
+  },
+  {
+    "id": "v2-calibration-keys-3-context",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black hyundai car key fob. It has a silver side button and a black leather loop. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-keys-4-d",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Gold bicycle lock key. The green plastic head is marked with the number 24."
+  },
+  {
+    "id": "v2-calibration-keys-4-ko",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "초록 플라스틱 머리에 숫자 24가 적혀 있다. 찾는 물건은 금색 자전거 자물쇠 열쇠입니다."
+  },
+  {
+    "id": "v2-calibration-keys-4-en",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a gold bicycle lock key. The green plastic head is marked with the number 24."
+  },
+  {
+    "id": "v2-calibration-keys-4-typo",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "금색자전거자물쇠열쇠, 초록플라스틱머리에숫자24가적혀있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-keys-4-mixed",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "금색 자전거 자물쇠 열쇠 lost. The green plastic head is marked with the number 24. 찾아요"
+  },
+  {
+    "id": "v2-calibration-keys-4-partial",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "금색 자전거 자물쇠 열쇠 찾습니다."
+  },
+  {
+    "id": "v2-calibration-keys-4-context",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my gold bicycle lock key. The green plastic head is marked with the number 24. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-keys-absent-ko",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "분홍 토끼 키링이 달린 금색 열쇠 네 개. 고리가 사각형이다."
+  },
+  {
+    "id": "v2-calibration-keys-absent-en",
+    "split": "calibration",
+    "category": "keys",
+    "item": "v2-calibration-keys-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Four gold keys with a pink rabbit keychain on a square ring."
+  },
+  {
+    "id": "v2-evaluation-keys-1-d",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "노란 별 키링이 달린 은색 열쇠 세 개. 타원형 고리에 길이가 다른 열쇠들이 있다."
+  },
+  {
+    "id": "v2-evaluation-keys-1-ko",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "타원형 고리에 길이가 다른 열쇠들이 있다. 찾는 물건은 노란 별 키링이 달린 은색 열쇠 세 개입니다."
+  },
+  {
+    "id": "v2-evaluation-keys-1-en",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a three silver keys with a yellow star keychain. An oval ring holds keys of different lengths."
+  },
+  {
+    "id": "v2-evaluation-keys-1-typo",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "노란별키링이달린은색열쇠세개, 타원형고리에길이가다른열쇠들이있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-keys-1-mixed",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "노란 별 키링이 달린 은색 열쇠 세 개 lost. An oval ring holds keys of different lengths. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-keys-1-partial",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "노란 별 키링이 달린 은색 열쇠 세 개 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-keys-1-context",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my three silver keys with a yellow star keychain. An oval ring holds keys of different lengths. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-keys-2-d",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Three silver keys with a purple star keychain. An oval ring holds keys of different lengths."
+  },
+  {
+    "id": "v2-evaluation-keys-2-ko",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "타원형 고리에 길이가 다른 열쇠들이 있다. 찾는 물건은 보라 별 키링이 달린 은색 열쇠 세 개입니다."
+  },
+  {
+    "id": "v2-evaluation-keys-2-en",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a three silver keys with a purple star keychain. An oval ring holds keys of different lengths."
+  },
+  {
+    "id": "v2-evaluation-keys-2-typo",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "보라별키링이달린은색열쇠세개, 타원형고리에길이가다른열쇠들이있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-keys-2-mixed",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "보라 별 키링이 달린 은색 열쇠 세 개 lost. An oval ring holds keys of different lengths. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-keys-2-partial",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "보라 별 키링이 달린 은색 열쇠 세 개 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-keys-2-context",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my three silver keys with a purple star keychain. An oval ring holds keys of different lengths. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-keys-3-d",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "흰 기아 자동차 스마트키. 회색 가죽 덮개와 파란 끈이 달려 있다."
+  },
+  {
+    "id": "v2-evaluation-keys-3-ko",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "회색 가죽 덮개와 파란 끈이 달려 있다. 찾는 물건은 흰 기아 자동차 스마트키입니다."
+  },
+  {
+    "id": "v2-evaluation-keys-3-en",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a white kia car key fob. It has a grey leather cover and a blue strap."
+  },
+  {
+    "id": "v2-evaluation-keys-3-typo",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "흰기아자동차스마트키, 회색가죽덮개와파란끈이달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-keys-3-mixed",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "흰 기아 자동차 스마트키 lost. It has a grey leather cover and a blue strap. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-keys-3-partial",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "흰 기아 자동차 스마트키 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-keys-3-context",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my white kia car key fob. It has a grey leather cover and a blue strap. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-keys-4-d",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Silver locker key. The orange plastic head is marked with the number 37."
+  },
+  {
+    "id": "v2-evaluation-keys-4-ko",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "주황 플라스틱 머리에 숫자 37이 적혀 있다. 찾는 물건은 은색 사물함 열쇠입니다."
+  },
+  {
+    "id": "v2-evaluation-keys-4-en",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a silver locker key. The orange plastic head is marked with the number 37."
+  },
+  {
+    "id": "v2-evaluation-keys-4-typo",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "은색사물함열쇠, 주황플라스틱머리에숫자37이적혀있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-keys-4-mixed",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "은색 사물함 열쇠 lost. The orange plastic head is marked with the number 37. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-keys-4-partial",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "은색 사물함 열쇠 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-keys-4-context",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my silver locker key. The orange plastic head is marked with the number 37. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-keys-absent-ko",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "초록 곰 키링이 달린 검정 열쇠 다섯 개. 고리가 삼각형이다."
+  },
+  {
+    "id": "v2-evaluation-keys-absent-en",
+    "split": "evaluation",
+    "category": "keys",
+    "item": "v2-evaluation-keys-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Five black keys with a green bear keychain on a triangular ring."
+  },
+  {
+    "id": "v2-calibration-glasses-1-d",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "검정 레이밴 사각 안경. 오른쪽 다리에 흰 로고가 있고 렌즈는 투명하다."
+  },
+  {
+    "id": "v2-calibration-glasses-1-ko",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "오른쪽 다리에 흰 로고가 있고 렌즈는 투명하다. 찾는 물건은 검정 레이밴 사각 안경입니다."
+  },
+  {
+    "id": "v2-calibration-glasses-1-en",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black ray-ban rectangular glasses. There is a white logo on the right arm and clear lenses."
+  },
+  {
+    "id": "v2-calibration-glasses-1-typo",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정레이밴사각안경, 오른쪽다리에흰로고가있고렌즈는투명하다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-glasses-1-mixed",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 레이밴 사각 안경 lost. There is a white logo on the right arm and clear lenses. 찾아요"
+  },
+  {
+    "id": "v2-calibration-glasses-1-partial",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 레이밴 사각 안경 찾습니다."
+  },
+  {
+    "id": "v2-calibration-glasses-1-context",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black ray-ban rectangular glasses. There is a white logo on the right arm and clear lenses. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-glasses-2-d",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Brown Ray-Ban rectangular glasses. There is a white logo on the right arm and clear lenses."
+  },
+  {
+    "id": "v2-calibration-glasses-2-ko",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "오른쪽 다리에 흰 로고가 있고 렌즈는 투명하다. 찾는 물건은 갈색 레이밴 사각 안경입니다."
+  },
+  {
+    "id": "v2-calibration-glasses-2-en",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a brown ray-ban rectangular glasses. There is a white logo on the right arm and clear lenses."
+  },
+  {
+    "id": "v2-calibration-glasses-2-typo",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "갈색레이밴사각안경, 오른쪽다리에흰로고가있고렌즈는투명하다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-glasses-2-mixed",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "갈색 레이밴 사각 안경 lost. There is a white logo on the right arm and clear lenses. 찾아요"
+  },
+  {
+    "id": "v2-calibration-glasses-2-partial",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "갈색 레이밴 사각 안경 찾습니다."
+  },
+  {
+    "id": "v2-calibration-glasses-2-context",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my brown ray-ban rectangular glasses. There is a white logo on the right arm and clear lenses. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-glasses-3-d",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "검정 레이밴 선글라스. 짙은 회색 렌즈와 접이식 금속 다리가 있다."
+  },
+  {
+    "id": "v2-calibration-glasses-3-ko",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "짙은 회색 렌즈와 접이식 금속 다리가 있다. 찾는 물건은 검정 레이밴 선글라스입니다."
+  },
+  {
+    "id": "v2-calibration-glasses-3-en",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black ray-ban sunglasses. They have dark grey lenses and folding metal arms."
+  },
+  {
+    "id": "v2-calibration-glasses-3-typo",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정레이밴선글라스, 짙은회색렌즈와접이식금속다리가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-glasses-3-mixed",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 레이밴 선글라스 lost. They have dark grey lenses and folding metal arms. 찾아요"
+  },
+  {
+    "id": "v2-calibration-glasses-3-partial",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 레이밴 선글라스 찾습니다."
+  },
+  {
+    "id": "v2-calibration-glasses-3-context",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black ray-ban sunglasses. They have dark grey lenses and folding metal arms. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-glasses-4-d",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Silver rimless glasses. They have blue nose pads and thin arms."
+  },
+  {
+    "id": "v2-calibration-glasses-4-ko",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "파란 코받침과 가느다란 다리가 있다. 찾는 물건은 은색 무테 안경입니다."
+  },
+  {
+    "id": "v2-calibration-glasses-4-en",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a silver rimless glasses. They have blue nose pads and thin arms."
+  },
+  {
+    "id": "v2-calibration-glasses-4-typo",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "은색무테안경, 파란코받침과가느다란다리가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-glasses-4-mixed",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "은색 무테 안경 lost. They have blue nose pads and thin arms. 찾아요"
+  },
+  {
+    "id": "v2-calibration-glasses-4-partial",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "은색 무테 안경 찾습니다."
+  },
+  {
+    "id": "v2-calibration-glasses-4-context",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my silver rimless glasses. They have blue nose pads and thin arms. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-glasses-absent-ko",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "보라 오클리 스포츠 고글. 흰 고무 밴드가 있다."
+  },
+  {
+    "id": "v2-calibration-glasses-absent-en",
+    "split": "calibration",
+    "category": "glasses",
+    "item": "v2-calibration-glasses-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Purple Oakley sports goggles with a white elastic strap."
+  },
+  {
+    "id": "v2-evaluation-glasses-1-d",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "초록 젠틀몬스터 둥근 안경. 왼쪽 다리에 금색 점 세 개가 있고 렌즈는 투명하다."
+  },
+  {
+    "id": "v2-evaluation-glasses-1-ko",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "왼쪽 다리에 금색 점 세 개가 있고 렌즈는 투명하다. 찾는 물건은 초록 젠틀몬스터 둥근 안경입니다."
+  },
+  {
+    "id": "v2-evaluation-glasses-1-en",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a green gentle monster round glasses. There are three gold dots on the left arm and clear lenses."
+  },
+  {
+    "id": "v2-evaluation-glasses-1-typo",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "초록젠틀몬스터둥근안경, 왼쪽다리에금색점세개가있고렌즈는투명하다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-glasses-1-mixed",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "초록 젠틀몬스터 둥근 안경 lost. There are three gold dots on the left arm and clear lenses. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-glasses-1-partial",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "초록 젠틀몬스터 둥근 안경 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-glasses-1-context",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my green gentle monster round glasses. There are three gold dots on the left arm and clear lenses. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-glasses-2-d",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Grey Gentle Monster round glasses. There are three gold dots on the left arm and clear lenses."
+  },
+  {
+    "id": "v2-evaluation-glasses-2-ko",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "왼쪽 다리에 금색 점 세 개가 있고 렌즈는 투명하다. 찾는 물건은 회색 젠틀몬스터 둥근 안경입니다."
+  },
+  {
+    "id": "v2-evaluation-glasses-2-en",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a grey gentle monster round glasses. There are three gold dots on the left arm and clear lenses."
+  },
+  {
+    "id": "v2-evaluation-glasses-2-typo",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "회색젠틀몬스터둥근안경, 왼쪽다리에금색점세개가있고렌즈는투명하다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-glasses-2-mixed",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "회색 젠틀몬스터 둥근 안경 lost. There are three gold dots on the left arm and clear lenses. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-glasses-2-partial",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "회색 젠틀몬스터 둥근 안경 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-glasses-2-context",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my grey gentle monster round glasses. There are three gold dots on the left arm and clear lenses. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-glasses-3-d",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "초록 젠틀몬스터 선글라스. 갈색 렌즈와 두꺼운 플라스틱 다리가 있다."
+  },
+  {
+    "id": "v2-evaluation-glasses-3-ko",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "갈색 렌즈와 두꺼운 플라스틱 다리가 있다. 찾는 물건은 초록 젠틀몬스터 선글라스입니다."
+  },
+  {
+    "id": "v2-evaluation-glasses-3-en",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a green gentle monster sunglasses. They have brown lenses and thick plastic arms."
+  },
+  {
+    "id": "v2-evaluation-glasses-3-typo",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "초록젠틀몬스터선글라스, 갈색렌즈와두꺼운플라스틱다리가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-glasses-3-mixed",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "초록 젠틀몬스터 선글라스 lost. They have brown lenses and thick plastic arms. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-glasses-3-partial",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "초록 젠틀몬스터 선글라스 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-glasses-3-context",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my green gentle monster sunglasses. They have brown lenses and thick plastic arms. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-glasses-4-d",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Gold half-rim glasses. They have black nose pads and thin curved arms."
+  },
+  {
+    "id": "v2-evaluation-glasses-4-ko",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "검정 코받침과 뒤로 휜 얇은 다리가 있다. 찾는 물건은 금색 반무테 안경입니다."
+  },
+  {
+    "id": "v2-evaluation-glasses-4-en",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a gold half-rim glasses. They have black nose pads and thin curved arms."
+  },
+  {
+    "id": "v2-evaluation-glasses-4-typo",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "금색반무테안경, 검정코받침과뒤로휜얇은다리가있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-glasses-4-mixed",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "금색 반무테 안경 lost. They have black nose pads and thin curved arms. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-glasses-4-partial",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "금색 반무테 안경 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-glasses-4-context",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my gold half-rim glasses. They have black nose pads and thin curved arms. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-glasses-absent-ko",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "노란 스완스 수영 고글. 파란 고무 밴드가 있다."
+  },
+  {
+    "id": "v2-evaluation-glasses-absent-en",
+    "split": "evaluation",
+    "category": "glasses",
+    "item": "v2-evaluation-glasses-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Yellow Swans swimming goggles with a blue elastic strap."
+  },
+  {
+    "id": "v2-calibration-stationery-1-d",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "검정 라미 만년필. 은색 클립이 있으며 뚜껑에 AB가 적혀 있다."
+  },
+  {
+    "id": "v2-calibration-stationery-1-ko",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "은색 클립이 있으며 뚜껑에 AB가 적혀 있다. 찾는 물건은 검정 라미 만년필입니다."
+  },
+  {
+    "id": "v2-calibration-stationery-1-en",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black lamy fountain pen. It has a silver clip and AB written on the cap."
+  },
+  {
+    "id": "v2-calibration-stationery-1-typo",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정라미만년필, 은색클립이있으며뚜껑에AB가적혀있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-stationery-1-mixed",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 라미 만년필 lost. It has a silver clip and AB written on the cap. 찾아요"
+  },
+  {
+    "id": "v2-calibration-stationery-1-partial",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 라미 만년필 찾습니다."
+  },
+  {
+    "id": "v2-calibration-stationery-1-context",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black lamy fountain pen. It has a silver clip and AB written on the cap. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-stationery-2-d",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Black Lamy ballpoint pen. It has a silver clip and AB written on the cap."
+  },
+  {
+    "id": "v2-calibration-stationery-2-ko",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "은색 클립이 있으며 뚜껑에 AB가 적혀 있다. 찾는 물건은 검정 라미 볼펜입니다."
+  },
+  {
+    "id": "v2-calibration-stationery-2-en",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a black lamy ballpoint pen. It has a silver clip and AB written on the cap."
+  },
+  {
+    "id": "v2-calibration-stationery-2-typo",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "검정라미볼펜, 은색클립이있으며뚜껑에AB가적혀있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-stationery-2-mixed",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "검정 라미 볼펜 lost. It has a silver clip and AB written on the cap. 찾아요"
+  },
+  {
+    "id": "v2-calibration-stationery-2-partial",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "검정 라미 볼펜 찾습니다."
+  },
+  {
+    "id": "v2-calibration-stationery-2-context",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my black lamy ballpoint pen. It has a silver clip and AB written on the cap. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-stationery-3-d",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "빨간 라미 만년필. 은색 클립이 있으며 뚜껑에 CD가 적혀 있다."
+  },
+  {
+    "id": "v2-calibration-stationery-3-ko",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "은색 클립이 있으며 뚜껑에 CD가 적혀 있다. 찾는 물건은 빨간 라미 만년필입니다."
+  },
+  {
+    "id": "v2-calibration-stationery-3-en",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a red lamy fountain pen. It has a silver clip and CD written on the cap."
+  },
+  {
+    "id": "v2-calibration-stationery-3-typo",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "빨간라미만년필, 은색클립이있으며뚜껑에CD가적혀있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-stationery-3-mixed",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "빨간 라미 만년필 lost. It has a silver clip and CD written on the cap. 찾아요"
+  },
+  {
+    "id": "v2-calibration-stationery-3-partial",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "빨간 라미 만년필 찾습니다."
+  },
+  {
+    "id": "v2-calibration-stationery-3-context",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my red lamy fountain pen. It has a silver clip and CD written on the cap. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-stationery-4-d",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Blue Monami pencil case. It is triangular with a yellow zipper."
+  },
+  {
+    "id": "v2-calibration-stationery-4-ko",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "삼각형 모양이며 노란 지퍼가 달려 있다. 찾는 물건은 파란 모나미 필통입니다."
+  },
+  {
+    "id": "v2-calibration-stationery-4-en",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a blue monami pencil case. It is triangular with a yellow zipper."
+  },
+  {
+    "id": "v2-calibration-stationery-4-typo",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "파란모나미필통, 삼각형모양이며노란지퍼가달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-calibration-stationery-4-mixed",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "파란 모나미 필통 lost. It is triangular with a yellow zipper. 찾아요"
+  },
+  {
+    "id": "v2-calibration-stationery-4-partial",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "파란 모나미 필통 찾습니다."
+  },
+  {
+    "id": "v2-calibration-stationery-4-context",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my blue monami pencil case. It is triangular with a yellow zipper. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-calibration-stationery-absent-ko",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "주황 스테들러 샤프. 검정 고무 그립과 흰 지우개가 있다."
+  },
+  {
+    "id": "v2-calibration-stationery-absent-en",
+    "split": "calibration",
+    "category": "stationery",
+    "item": "v2-calibration-stationery-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Orange Staedtler mechanical pencil with a black rubber grip and a white eraser."
+  },
+  {
+    "id": "v2-evaluation-stationery-1-d",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-1",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "흰 파커 만년필. 금색 클립이 있으며 뚜껑에 EF가 적혀 있다."
+  },
+  {
+    "id": "v2-evaluation-stationery-1-ko",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "금색 클립이 있으며 뚜껑에 EF가 적혀 있다. 찾는 물건은 흰 파커 만년필입니다."
+  },
+  {
+    "id": "v2-evaluation-stationery-1-en",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a white parker fountain pen. It has a gold clip and EF written on the cap."
+  },
+  {
+    "id": "v2-evaluation-stationery-1-typo",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "흰파커만년필, 금색클립이있으며뚜껑에EF가적혀있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-stationery-1-mixed",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-1",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "흰 파커 만년필 lost. It has a gold clip and EF written on the cap. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-stationery-1-partial",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-1",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "흰 파커 만년필 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-stationery-1-context",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-1",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my white parker fountain pen. It has a gold clip and EF written on the cap. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-stationery-2-d",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-2",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "White Parker ballpoint pen. It has a gold clip and EF written on the cap."
+  },
+  {
+    "id": "v2-evaluation-stationery-2-ko",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "금색 클립이 있으며 뚜껑에 EF가 적혀 있다. 찾는 물건은 흰 파커 볼펜입니다."
+  },
+  {
+    "id": "v2-evaluation-stationery-2-en",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a white parker ballpoint pen. It has a gold clip and EF written on the cap."
+  },
+  {
+    "id": "v2-evaluation-stationery-2-typo",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "흰파커볼펜, 금색클립이있으며뚜껑에EF가적혀있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-stationery-2-mixed",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-2",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "흰 파커 볼펜 lost. It has a gold clip and EF written on the cap. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-stationery-2-partial",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-2",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "흰 파커 볼펜 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-stationery-2-context",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-2",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my white parker ballpoint pen. It has a gold clip and EF written on the cap. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-stationery-3-d",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-3",
+    "role": "document",
+    "language": "ko",
+    "scenario": "document",
+    "text": "초록 파커 만년필. 금색 클립이 있으며 뚜껑에 GH가 적혀 있다."
+  },
+  {
+    "id": "v2-evaluation-stationery-3-ko",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "금색 클립이 있으며 뚜껑에 GH가 적혀 있다. 찾는 물건은 초록 파커 만년필입니다."
+  },
+  {
+    "id": "v2-evaluation-stationery-3-en",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a green parker fountain pen. It has a gold clip and GH written on the cap."
+  },
+  {
+    "id": "v2-evaluation-stationery-3-typo",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "초록파커만년필, 금색클립이있으며뚜껑에GH가적혀있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-stationery-3-mixed",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-3",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "초록 파커 만년필 lost. It has a gold clip and GH written on the cap. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-stationery-3-partial",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-3",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "초록 파커 만년필 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-stationery-3-context",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-3",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my green parker fountain pen. It has a gold clip and GH written on the cap. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-stationery-4-d",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-4",
+    "role": "document",
+    "language": "en",
+    "scenario": "document",
+    "text": "Grey zippered pencil case. It is cylindrical with a purple handle."
+  },
+  {
+    "id": "v2-evaluation-stationery-4-ko",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "paraphrase",
+    "text": "원통 모양이며 보라색 손잡이가 달려 있다. 찾는 물건은 회색 지퍼 필통입니다."
+  },
+  {
+    "id": "v2-evaluation-stationery-4-en",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "paraphrase",
+    "text": "I lost a grey zippered pencil case. It is cylindrical with a purple handle."
+  },
+  {
+    "id": "v2-evaluation-stationery-4-typo",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "typo",
+    "text": "회색지퍼필통, 원통모양이며보라색손잡이가달려있다 잃어버렷어요"
+  },
+  {
+    "id": "v2-evaluation-stationery-4-mixed",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-4",
+    "role": "query",
+    "language": "mixed",
+    "scenario": "mixed",
+    "text": "회색 지퍼 필통 lost. It is cylindrical with a purple handle. 찾아요"
+  },
+  {
+    "id": "v2-evaluation-stationery-4-partial",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-4",
+    "role": "query",
+    "language": "ko",
+    "scenario": "partial",
+    "text": "회색 지퍼 필통 찾습니다."
+  },
+  {
+    "id": "v2-evaluation-stationery-4-context",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-4",
+    "role": "query",
+    "language": "en",
+    "scenario": "context",
+    "text": "I am trying to find my grey zippered pencil case. It is cylindrical with a purple handle. I last had it while moving between classes. I checked my pockets and bag again, but it was not there. Please compare the details of the object rather than the place where I noticed it was missing."
+  },
+  {
+    "id": "v2-evaluation-stationery-absent-ko",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-absent",
+    "role": "query",
+    "language": "ko",
+    "scenario": "no_match",
+    "text": "보라 펜텔 샤프. 흰 고무 그립과 검정 지우개가 있다."
+  },
+  {
+    "id": "v2-evaluation-stationery-absent-en",
+    "split": "evaluation",
+    "category": "stationery",
+    "item": "v2-evaluation-stationery-absent",
+    "role": "query",
+    "language": "en",
+    "scenario": "no_match",
+    "text": "Purple Pentel mechanical pencil with a white rubber grip and a black eraser."
+  }
+]

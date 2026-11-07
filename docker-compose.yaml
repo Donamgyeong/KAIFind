@@ -50,7 +50,7 @@ services:
       start_period: 15s
 
   db:
-    image: postgres:17.11-alpine3.24
+    image: pgvector/pgvector:0.8.7-pg17-trixie
     container_name: db
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}

@@ -76,3 +76,33 @@ docker compose exec -T backend python -m scripts.test_backend tests/test_referen
 목록은 생성시각 내림차순·동률 ID 내림차순이다. `postedCount`는 요청 시 0건도 포함하고
 생략 또는 false이면 응답 필드에서 제외한다. 집계는 물품별 최대 revision_no를 먼저 선택한 후
 DROP_OFF·POSTED·비숨김·비삭제 조건을 적용한다. 실제 대규모 데이터 성능은 별도 검증 대상이다.
+
+## 임베딩 모델 비교 실험
+
+실행 방법과 합성 데이터의 한계는 [임베딩 실험 안내](../experiments/embedding/README.md)를 참고한다.
+평가 계산·로컬 모델 로딩 계약 테스트는 모델 다운로드·DB·MinIO 없이 실행한다.
+sentence-transformers는 requirements.txt로 먼저 설치한다.
+
+```sh
+docker compose exec -T -w /app backend python -m pytest tests/test_embedding_benchmark.py -q
+```
+
+재판정 실험은 `scripts.reranker_benchmark`와 별도 `rerankers.json`을 사용한다.
+`test_reranker_benchmark.py`는 쌍 구성의 동일성, 원시 logit 임계치 경계, 질의별 오탐,
+길이 초과·잘못된 점수 거부, 조정/평가 분리와 실제 소형 CrossEncoder 실행을 검증한다.
+소형 모델은 무작위 가중치로 로컬 생성하므로 모델 다운로드나 품질 평가를 하지 않는다.
+
+```sh
+docker compose exec -T -w /app backend python -m pytest \
+  tests/test_embedding_benchmark.py tests/test_reranker_benchmark.py -q
+```
+
+`test_qwen_reranker.py`는 Qwen 입력 형식·길이 제한·분기 처리와 단일 토큰 yes/no를
+검증한다. 로컬에서 무작위 가중치의 소형 Qwen 모델을 생성해 원시 로짓 차이,
+좌측 패딩과 배치 크기에 따른 점수 일관성도 검증한다. 실제 Qwen 다운로드는 하지 않는다.
+
+```sh
+docker compose exec -T -w /app backend python -m pytest \
+  tests/test_embedding_benchmark.py tests/test_reranker_benchmark.py \
+  tests/test_qwen_reranker.py -q
+```

@@ -57,7 +57,7 @@ def seed(db):
 def test_schema_matches_migrated_database(db):
     names = set(db.execute(text("SELECT tablename FROM pg_tables WHERE schemaname='public'" )).scalars())
     assert set(Base.metadata.tables) <= names
-    assert db.execute(text('SELECT version_num FROM alembic_version')).scalar_one() == '20261104_0004'
+    assert db.execute(text('SELECT version_num FROM alembic_version')).scalar_one() == '20261106_0005'
 
 
 def test_single_active_collector_and_new_collection_after_undo(db, seed):
@@ -88,6 +88,89 @@ def report(db, seed):
         description='Lost', lost_date_from=date.today(), lost_date_to=date.today(),
         expires_at=NOW+timedelta(days=30)))
     return rid
+
+
+@pytest.mark.parametrize('kind', ['item', 'report'])
+def test_description_version_tracks_only_description_changes(db, seed, kind):
+    model, key = FoundItem, seed['item']
+    if kind == 'report':
+        model, key = LostReport, report(db, seed)
+        db.execute(insert(LostReportPrivateDetail).values(report_id=key, details='Private'))
+
+    def version():
+        return db.execute(select(model.description_version).where(model.id == key)).scalar_one()
+
+    assert version() == 1
+    db.execute(update(model).where(model.id == key).values(description='New description'))
+    assert version() == 2
+    db.execute(update(model).where(model.id == key).values(description='New description'))
+    db.execute(update(model).where(model.id == key).values(description_version=99))
+    assert version() == 2
+    db.execute(update(model).where(model.id == key).values(description='Another description'))
+    assert version() == 3
+
+
+def test_semantic_candidates_require_evidence_and_bounded_score(db, seed):
+    from model import MatchCandidate
+
+    rid = report(db, seed)
+    db.execute(insert(LostReportPrivateDetail).values(report_id=rid, details='Private'))
+    values = dict(id=uuid4(), item_id=seed['item'], report_id=rid)
+    for extra in (
+        dict(keyword_matched=True),
+        dict(semantic_matched=True, semantic_score=0.9),
+        dict(building_matched=True, semantic_score=1.1),
+        dict(building_matched=True, semantic_score=float('nan')),
+        dict(building_matched=True, item_version=0),
+    ):
+        with pytest.raises(IntegrityError), db.begin_nested():
+            db.execute(insert(MatchCandidate).values(**values, **extra))
+
+    db.execute(insert(MatchCandidate).values(
+        **values, semantic_matched=True, semantic_score=0.9,
+        item_description_version=1, report_description_version=1,
+        item_version=1, report_version=1, matching_policy_version='semantic-v1',
+    ))
+    assert db.execute(select(MatchCandidate.semantic_score)).scalar_one() == 0.9
+
+
+def test_matching_migration_preserves_legacy_evidence_on_roundtrip(db, seed):
+    from importlib import import_module
+
+    from alembic.migration import MigrationContext
+    from alembic.operations import Operations
+
+    migration = import_module('migrations.versions.20261106_0005_matching_metadata')
+    rid = report(db, seed)
+    db.execute(insert(LostReportPrivateDetail).values(report_id=rid, details='Private'))
+    candidate = uuid4()
+    db.execute(text('SET CONSTRAINTS ALL IMMEDIATE'))
+
+    # Transactional DDL is rolled back by the db fixture; only the test DB is used.
+    with Operations.context(MigrationContext.configure(db)):
+        migration.downgrade()
+        db.execute(text('''
+            INSERT INTO match_candidates (
+                id, item_id, report_id, keyword_matched, first_notified_at
+            ) VALUES (:id, :item, :report, true, :notified)
+        '''), dict(id=candidate, item=seed['item'], report=rid, notified=NOW))
+        original = db.execute(text('''
+            SELECT matched_at, first_notified_at FROM match_candidates WHERE id=:id
+        '''), dict(id=candidate)).one()
+
+        migration.upgrade()
+        row = db.execute(text('''
+            SELECT active, keyword_matched, semantic_matched, matched_at, first_notified_at
+            FROM match_candidates WHERE id=:id
+        '''), dict(id=candidate)).one()
+        assert tuple(row[:3]) == (False, True, False)
+        assert tuple(row[3:]) == tuple(original)
+
+        migration.downgrade()
+        assert db.execute(text('''
+            SELECT keyword_matched FROM match_candidates WHERE id=:id
+        '''), dict(id=candidate)).scalar_one() is True
+        migration.upgrade()
 
 
 def test_open_report_requires_private_details_at_commit(db, seed):

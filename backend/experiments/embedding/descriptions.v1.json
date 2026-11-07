@@ -1,0 +1,326 @@
+[
+  {
+    "id": "c1-d",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "c1",
+    "role": "document",
+    "language": "ko",
+    "text": "파란색 스탠리 텀블러. 손잡이가 있고 뚜껑에 별 스티커가 붙어 있다."
+  },
+  {
+    "id": "c1-en",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "c1",
+    "role": "query",
+    "language": "en",
+    "text": "Blue Stanley tumbler with a handle and a star sticker on the lid."
+  },
+  {
+    "id": "c1-ko",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "c1",
+    "role": "query",
+    "language": "ko",
+    "text": "파란 스탠리 컵, 손잡이 있음. 뚜껑 별모양 스티커"
+  },
+  {
+    "id": "c2-d",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "c2",
+    "role": "document",
+    "language": "ko",
+    "text": "빨간색 스탠리 텀블러. 손잡이가 있고 스티커는 없다."
+  },
+  {
+    "id": "c2-en",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "c2",
+    "role": "query",
+    "language": "en",
+    "text": "Red Stanley tumbler with a handle and no stickers."
+  },
+  {
+    "id": "c2-ko",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "c2",
+    "role": "query",
+    "language": "ko",
+    "text": "빨강 스탠리 텀블러 손잡이 있음 스티커 없음"
+  },
+  {
+    "id": "c3-d",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "c3",
+    "role": "document",
+    "language": "ko",
+    "text": "파란색 락앤락 보온병. 손잡이 없이 은색 뚜껑이 있다."
+  },
+  {
+    "id": "c3-en",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "c3",
+    "role": "query",
+    "language": "en",
+    "text": "Blue LocknLock vacuum bottle, silver lid, no handle."
+  },
+  {
+    "id": "c3-ko",
+    "split": "calibration",
+    "category": "bottle",
+    "item": "c3",
+    "role": "query",
+    "language": "ko",
+    "text": "파랑 락앤락 보온병, 은색 뚜껑, 손잡이 없음"
+  },
+  {
+    "id": "c4-d",
+    "split": "calibration",
+    "category": "electronics",
+    "item": "c4",
+    "role": "document",
+    "language": "ko",
+    "text": "흰색 에어팟 프로 2 케이스. 노란 오리 키링이 달려 있다."
+  },
+  {
+    "id": "c4-en",
+    "split": "calibration",
+    "category": "electronics",
+    "item": "c4",
+    "role": "query",
+    "language": "en",
+    "text": "White AirPods Pro 2 case with a yellow duck keychain."
+  },
+  {
+    "id": "c4-ko",
+    "split": "calibration",
+    "category": "electronics",
+    "item": "c4",
+    "role": "query",
+    "language": "ko",
+    "text": "흰색 에어팟 프로2 충전케이스 노랑 오리 키링"
+  },
+  {
+    "id": "c5-d",
+    "split": "calibration",
+    "category": "electronics",
+    "item": "c5",
+    "role": "document",
+    "language": "ko",
+    "text": "흰색 갤럭시 버즈 케이스. 노란 오리 키링이 달려 있다."
+  },
+  {
+    "id": "c5-en",
+    "split": "calibration",
+    "category": "electronics",
+    "item": "c5",
+    "role": "query",
+    "language": "en",
+    "text": "White Galaxy Buds case with a yellow duck keychain."
+  },
+  {
+    "id": "c5-ko",
+    "split": "calibration",
+    "category": "electronics",
+    "item": "c5",
+    "role": "query",
+    "language": "ko",
+    "text": "흰 갤럭시버즈 케이스 오리 키링 노란색"
+  },
+  {
+    "id": "c6-d",
+    "split": "calibration",
+    "category": "electronics",
+    "item": "c6",
+    "role": "document",
+    "language": "ko",
+    "text": "검정 에어팟 프로 케이스. 빨간 카라비너가 달려 있다."
+  },
+  {
+    "id": "c6-en",
+    "split": "calibration",
+    "category": "electronics",
+    "item": "c6",
+    "role": "query",
+    "language": "en",
+    "text": "Black AirPods Pro case with a red carabiner."
+  },
+  {
+    "id": "c6-ko",
+    "split": "calibration",
+    "category": "electronics",
+    "item": "c6",
+    "role": "query",
+    "language": "ko",
+    "text": "검정색 에어팟프로 케이스 빨간 고리"
+  },
+  {
+    "id": "e1-d",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "e1",
+    "role": "document",
+    "language": "ko",
+    "text": "검정 나이키 백팩. 앞주머니에 흰 고양이 패치가 있다."
+  },
+  {
+    "id": "e1-en",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "e1",
+    "role": "query",
+    "language": "en",
+    "text": "Black Nike backpack with a white cat patch on the front pocket."
+  },
+  {
+    "id": "e1-ko",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "e1",
+    "role": "query",
+    "language": "ko",
+    "text": "검정 나이키 가방 앞쪽 흰색 고양이 패치"
+  },
+  {
+    "id": "e2-d",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "e2",
+    "role": "document",
+    "language": "ko",
+    "text": "검정 아디다스 백팩. 앞주머니에 흰 고양이 패치가 있다."
+  },
+  {
+    "id": "e2-en",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "e2",
+    "role": "query",
+    "language": "en",
+    "text": "Black Adidas backpack with a white cat patch on the front pocket."
+  },
+  {
+    "id": "e2-ko",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "e2",
+    "role": "query",
+    "language": "ko",
+    "text": "검은 아디다스 배낭 흰 고양이 패치"
+  },
+  {
+    "id": "e3-d",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "e3",
+    "role": "document",
+    "language": "ko",
+    "text": "회색 나이키 백팩. 앞주머니가 찢어졌고 패치는 없다."
+  },
+  {
+    "id": "e3-en",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "e3",
+    "role": "query",
+    "language": "en",
+    "text": "Grey Nike backpack with a torn front pocket and no patches."
+  },
+  {
+    "id": "e3-ko",
+    "split": "evaluation",
+    "category": "bag",
+    "item": "e3",
+    "role": "query",
+    "language": "ko",
+    "text": "회색 나이키 배낭 앞주머니 찢어짐 패치없음"
+  },
+  {
+    "id": "e4-d",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "e4",
+    "role": "document",
+    "language": "ko",
+    "text": "남색 장우산. 나무 손잡이에 JH라는 이니셜이 있다."
+  },
+  {
+    "id": "e4-en",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "e4",
+    "role": "query",
+    "language": "en",
+    "text": "Navy long umbrella with JH initials on the wooden handle."
+  },
+  {
+    "id": "e4-ko",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "e4",
+    "role": "query",
+    "language": "ko",
+    "text": "남색 긴 우산 나무손잡이 JH 표시"
+  },
+  {
+    "id": "e5-d",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "e5",
+    "role": "document",
+    "language": "ko",
+    "text": "남색 장우산. 나무 손잡이에 MK라는 이니셜이 있다."
+  },
+  {
+    "id": "e5-en",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "e5",
+    "role": "query",
+    "language": "en",
+    "text": "Navy long umbrella with MK initials on the wooden handle."
+  },
+  {
+    "id": "e5-ko",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "e5",
+    "role": "query",
+    "language": "ko",
+    "text": "남색 긴우산 나무 손잡이 MK 이니셜"
+  },
+  {
+    "id": "e6-d",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "e6",
+    "role": "document",
+    "language": "ko",
+    "text": "남색 삼단 접이식 우산. 검정 플라스틱 손잡이에는 글자가 없다."
+  },
+  {
+    "id": "e6-en",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "e6",
+    "role": "query",
+    "language": "en",
+    "text": "Navy folding umbrella with a black plastic handle and no lettering."
+  },
+  {
+    "id": "e6-ko",
+    "split": "evaluation",
+    "category": "umbrella",
+    "item": "e6",
+    "role": "query",
+    "language": "ko",
+    "text": "남색 3단 우산 검정 플라스틱 손잡이 글자 없음"
+  }
+]

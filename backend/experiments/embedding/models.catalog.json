@@ -1,0 +1,9 @@
+[
+  {
+    "name": "catalog-match-embeddinggemma2-text",
+    "model": "jinwoo-cho/catalog-match-embeddinggemma2",
+    "revision": "993be26655d27a444c0d10fde2ce6b412da52713",
+    "use_model_prompt": true,
+    "dtype": "float32"
+  }
+]
