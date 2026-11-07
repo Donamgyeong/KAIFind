@@ -76,3 +76,17 @@ docker compose exec -T backend python -m scripts.test_backend tests/test_referen
 목록은 생성시각 내림차순·동률 ID 내림차순이다. `postedCount`는 요청 시 0건도 포함하고
 생략 또는 false이면 응답 필드에서 제외한다. 집계는 물품별 최대 revision_no를 먼저 선택한 후
 DROP_OFF·POSTED·비숨김·비삭제 조건을 적용한다. 실제 대규모 데이터 성능은 별도 검증 대상이다.
+
+## 메시지 API
+
+`test_message_contract.py`는 대화 생성·재사용·동시 생성 유일성, 참여자 권한과 관리자 접근 차단,
+메시지 전송·공백 정리·연락처 포함 본문 허용, 인증·CSRF·쿼리 검증, 페이지 정렬,
+숨김 이후 기존 대화 사용, 물품 종료·삭제와 전송 경합의 즉시 삭제를 검증한다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_message_contract.py -q
+```
+
+테스트 DB의 마이그레이션 이력이 현재 소스와 다르면 기존 DB 이력을 덮어쓰지 않고
+별도 `kaifind_test_*` DB를 `TEST_DATABASE_URL`로 지정한다.
+실제 부하와 폴링 주기, 클라이언트 HTML 렌더링은 검증 범위 밖이다.

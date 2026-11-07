@@ -27,6 +27,9 @@ MESSAGES = {
 
 
 MESSAGES.update({
+    'ITEM_CLOSED': ('종료된 물품입니다.', 'The item is closed.'),
+    'SELF_CONVERSATION': ('본인 물품에는 대화를 시작할 수 없습니다.', 'You cannot start a conversation about your own item.'),
+    'CONVERSATION_NOT_FOUND': ('대화를 찾을 수 없습니다.', 'Conversation not found.'),
     'PHOTO_TOO_LARGE': ('사진 크기 제한을 초과했습니다.', 'Photo exceeds the size limit.'),
     'PHOTO_ALREADY_ATTACHED': ('이미 연결된 사진입니다.', 'Photo is already attached.'),
     'INVALID_REFERENCE': ('유효하지 않은 참조입니다.', 'Invalid reference.'),

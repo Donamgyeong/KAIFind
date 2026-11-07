@@ -1,5 +1,9 @@
 # DB 모델·마이그레이션 사용법
 
+2026-11-06: revision `20261106_0005`는 found_items/lost_reports의 description_version과 자동 증가 트리거, 후보 의미 점수·판정 버전·근거 제약, Outbox lease_token을 추가한다. 기존 키워드 전용 후보는 비활성화하고 이력을 보존한다. 모델 차원 확정 전이므로 벡터 테이블·확장 활성화·생성 작업은 아직 추가하지 않는다. 상세 범위는 [임베딩 DB 구조](../design/embedding-db-schema.md)를 참고한다.
+
+현재 개발·테스트 명령은 [상위 개발 안내](../../README.md)를 따른다. 아래 과거 호스트 Python 예시 대신 실행 중인 backend 컨테이너의 /app에서 `docker compose exec -T backend ...`로 실행한다.
+
 2026-11-02 구현: SQLAlchemy 2 ORM 27개 테이블, PostgreSQL 17에서 검증한 Alembic 초기 revision `20261102_0001`.
 
 - 모델: `model/entities.py`, 공통 Base: `model/base.py`, 인덱스: `model/indexes.py`

@@ -1,43 +1,54 @@
-"""기능별 API 기본 구조. 상세 계약은 docs/api 참고."""
+"""Authenticated item conversations and messages."""
 
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Query, Request, Response
 
-router = APIRouter(tags=["messages"])
-
-
-@router.post('/conversations', summary='물품별 대화 시작·재사용', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def create_conversation():
-    """MSG-01: 물품별 대화 시작·재사용. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "MSG-01 구현 예정"},
-    )
+from library.protected_http import ProtectedRoute
+from schema.common import ErrorResponse
+from schema.message_params import ConversationParams, MessageParams
+from schema.messages import (
+    ConversationResponse, CreateConversationRequest, MessagePage,
+    MessageResponse, SendMessageRequest,
+)
+from service.messages import MessageService
 
 
-@router.get('/conversations', summary='내 대화 목록', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def list_conversations():
-    """MSG-02: 내 대화 목록. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "MSG-02 구현 예정"},
-    )
+router = APIRouter(
+    tags=['messages'], route_class=ProtectedRoute,
+    responses={code: {'model': ErrorResponse} for code in (400, 401, 403, 404, 409, 415, 500)},
+)
 
 
-@router.get('/conversations/{conversationId}/messages', summary='메시지 조회', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def list_messages(conversationId: UUID):
-    """MSG-03: 메시지 조회. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "MSG-03 구현 예정"},
-    )
+@router.post(
+    '/conversations', summary='물품별 대화 시작·재사용', status_code=201,
+    response_model=ConversationResponse, responses={200: {'model': ConversationResponse}},
+)
+async def create_conversation(request: Request, response: Response, body: CreateConversationRequest):
+    result, created = await MessageService(request).create(body.item_id)
+    response.status_code = 201 if created else 200
+    return result
 
 
-@router.post('/conversations/{conversationId}/messages', summary='메시지 전송', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def send_message(conversationId: UUID):
-    """MSG-04: 메시지 전송. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "MSG-04 구현 예정"},
-    )
+@router.get('/conversations', summary='내 대화 목록', response_model=MessagePage[ConversationResponse])
+async def list_conversations(request: Request, params: Annotated[ConversationParams, Query()]):
+    return await MessageService(request).conversations(params)
+
+
+@router.get(
+    '/conversations/{conversationId}/messages', summary='메시지 조회',
+    response_model=MessagePage[MessageResponse],
+)
+async def list_messages(
+    request: Request, conversationId: UUID, params: Annotated[MessageParams, Query()],
+):
+    return await MessageService(request).messages(conversationId, params)
+
+
+@router.post(
+    '/conversations/{conversationId}/messages', summary='메시지 전송',
+    status_code=201, response_model=MessageResponse,
+)
+async def send_message(request: Request, conversationId: UUID, body: SendMessageRequest):
+    return await MessageService(request).send(conversationId, body.content)
