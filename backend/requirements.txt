@@ -77,3 +77,17 @@ uvicorn==0.54.0
 uvloop==0.23.0
 watchfiles==1.3.0
 websockets==17.4
+
+# Resident Korean-to-English text analysis (CPU inference).
+torch==2.8.0
+transformers==5.19.0
+sentencepiece==0.2.1
+sacremoses==0.1.1
+safetensors==0.8.0
+huggingface-hub==1.33.0
+tokenizers==0.23.3
+
+# Linguistic keyword analysis and English synonym sets.
+spacy==3.8.11
+nltk==3.9.2
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl

@@ -1,0 +1,162 @@
+[
+  {
+    "name": "ko_wallet",
+    "description": "검은색 가죽 지갑입니다.",
+    "expected_keywords": [
+      "lemma:black",
+      "lemma:leather",
+      "lemma:wallet"
+    ]
+  },
+  {
+    "name": "ko_umbrella",
+    "description": "파란색 우산을 잃어버렸습니다.",
+    "expected_keywords": [
+      "lemma:blue",
+      "lemma:umbrella"
+    ]
+  },
+  {
+    "name": "ko_key",
+    "description": "빨간 가방 안에 열쇠가 있습니다.",
+    "expected_keywords": [
+      "lemma:red",
+      "lemma:bag",
+      "lemma:key"
+    ]
+  },
+  {
+    "name": "ko_case",
+    "description": "흰색 이어폰 케이스입니다.",
+    "expected_keywords": [
+      "lemma:white",
+      "wn:earphone.n.01",
+      "lemma:case"
+    ]
+  },
+  {
+    "name": "en_wallet",
+    "description": "Black leather wallet with a cat sticker.",
+    "expected_keywords": [
+      "lemma:black",
+      "lemma:leather",
+      "lemma:wallet",
+      "phrase:cat sticker"
+    ]
+  },
+  {
+    "name": "en_plural",
+    "description": "Two grey wallets.",
+    "expected_keywords": [
+      "lemma:grey",
+      "lemma:wallet"
+    ]
+  },
+  {
+    "name": "en_negation",
+    "description": "Red bag without a strap.",
+    "expected_keywords": [
+      "lemma:red",
+      "lemma:bag"
+    ],
+    "forbidden_keywords": [
+      "lemma:strap"
+    ]
+  },
+  {
+    "name": "en_contrast",
+    "description": "Not red but blue wallet.",
+    "expected_keywords": [
+      "lemma:blue",
+      "lemma:wallet"
+    ],
+    "forbidden_keywords": [
+      "lemma:red"
+    ]
+  },
+  {
+    "name": "mixed_brand",
+    "description": "검은 Sony WH-1000XM5 헤드폰입니다.",
+    "expected_keywords": [
+      "lemma:black",
+      "lemma:sony",
+      "identifier:wh1000xm5",
+      "wn:earphone.n.01"
+    ]
+  },
+  {
+    "name": "split_fields",
+    "title": "White wallet",
+    "description": "A star sticker inside.",
+    "expected_keywords": [
+      "lemma:white",
+      "lemma:wallet",
+      "phrase:star sticker"
+    ]
+  },
+  {
+    "name": "unsupported_japanese",
+    "description": "黒い財布です。",
+    "expected_keywords": [
+      "term:黒い財布です"
+    ]
+  },
+  {
+    "name": "unsupported_french",
+    "description": "portefeuille noir",
+    "expected_keywords": [
+      "lemma:portefeuille",
+      "lemma:noir"
+    ]
+  },
+  {
+    "name": "unsupported_chinese",
+    "description": "黑色钱包",
+    "expected_keywords": [
+      "term:黑色钱包"
+    ]
+  },
+  {
+    "name": "unsupported_arabic",
+    "description": "محفظة سوداء",
+    "expected_keywords": [
+      "term:محفظة",
+      "term:سوداء"
+    ]
+  },
+  {
+    "name": "identifier",
+    "description": "Apple A1234 phone.",
+    "expected_keywords": [
+      "lemma:apple",
+      "identifier:a1234",
+      "lemma:phone"
+    ]
+  },
+  {
+    "name": "numeric_mark",
+    "description": "!!! 1234 ???",
+    "expected_keywords": [
+      "number:1234"
+    ]
+  },
+  {
+    "name": "repeated_sentence_output_guard",
+    "description": "검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. 검은 지갑. ",
+    "expected_keywords": [],
+    "expected_error": "TRANSLATION_OUTPUT_LIMIT"
+  },
+  {
+    "name": "only_punctuation",
+    "description": "!!! ???",
+    "expected_keywords": []
+  },
+  {
+    "name": "long_natural_description",
+    "description": "검은색 지갑을 잃어버렸습니다. 앞면에 작은 별 모양 스티커가 붙어 있습니다. 지갑은 가죽으로 만들어졌고 지퍼는 은색입니다. 안쪽에는 파란색 카드가 있습니다. 겉면에는 특별한 무늬가 없고 모서리 부분이 조금 낡았습니다. 손바닥 정도의 크기이며 안쪽 주머니가 두 개 있습니다. 뒷면에는 영어로 이름이 적혀 있습니다. 카드와 동전을 넣을 수 있는 공간이 있고 손잡이는 없습니다. 가방 안에 넣고 다니던 물건이며 오늘 아침에 마지막으로 보았습니다.",
+    "expected_keywords": [
+      "lemma:wallet",
+      "lemma:black"
+    ]
+  }
+]

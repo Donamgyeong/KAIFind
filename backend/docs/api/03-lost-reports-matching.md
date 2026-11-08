@@ -452,7 +452,7 @@ LostReportSummary는 위 두 상태 필드를 포함하며 privateIdentifyingDet
 | 필수 조건2 | 습득물 foundAt의 KST 날짜 >= lostDateFrom |
 | 필수 조건3 | foundBuildingId가 possibleBuildingIds에 포함되거나 공개 제목·설명에 공통 키워드 존재 |
 | 날짜 상한 | lostDateTo를 발견일 상한으로 사용하지 않음. SRS FR-16에 해당 조건 없음 |
-| 키워드 비교 | 공개 한국어 제목·설명을 Helsinki-NLP/opus-mt_tiny_kor-eng로 영어 번역 후 정규화·구문/동의어 규칙으로 canonical 키워드 비교. 영어는 번역 생략. 비공개 정보 미사용. 일반 검색·구독 규칙은 변경하지 않음 |
+| 키워드 비교 | 공개 한국어 제목·설명을 Helsinki-NLP/opus-mt_tiny_kor-eng로 영어 번역 후 spaCy 표제어·품사·명사구와 WordNet 품사별 첫 synset으로 키워드 비교. 수동 단어 분류 사전은 사용하지 않음. 한글 없는 입력은 미지원 언어도 EN으로 간주해 원문에서 추출. 비공개 정보 미사용. 일반 검색·구독 규칙은 변경하지 않음 |
 | 비동기 실행 | 원본과 분석·재평가 요청은 같은 트랜잭션. 모델 추론은 요청 밖 전용 스레드. 현재 원본/분석/정책 버전을 확인한 결과만 노출 |
 | 후보 유일성 | reportId+itemId 유일. 재시도·동시 수정에도 후보와 신규 알림 중복 생성 방지 |
 | 수정 후 불일치 | 조건을 잃은 현재 후보 연결 제거 제안. 동일 쌍 재등장 알림은 최초 후보 발생 이력 기준 중복 억제 |

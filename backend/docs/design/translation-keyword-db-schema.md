@@ -78,7 +78,7 @@ found_item_text_features와 lost_report_text_features는 아래 공통 구조를
 
 UNIQUE(원본 FK, profile_id, text_version)를 둔다. READY는 translated_text·keywords·attributes·completed_at이 모두 NOT NULL이고 last_error_code가 NULL이다. attributes는 object, keywords는 1차원 또는 빈 배열이며 NULL 원소를 금지한다. READY가 아니면 결과 세 컬럼은 NULL이다. FAILED는 completed_at과 error code가 필수이며, SUPERSEDED는 completed_at 필수다. PENDING/PROCESSING은 completed_at이 NULL이다. READY 결과는 수정하지 않고 새 버전/프로필을 생성한다.
 
-빈 keywords 배열은 정상이다. source_language 분류는 서비스가 수행하며 미지원 언어는 임의 영어 처리하지 않고 FAILED로 남긴다. 원문 전체는 저장하지 않는다. 원본과 버전이 맞을 때 읽어 처리한다. 이전 버전 원문을 보관하지 않으므로 입력이 바뀐 미완료 작업은 SUPERSEDED로 종료한다. 이전 READY 행도 최신 버전 조인에서 제외한다.
+빈 keywords 배열은 정상이다. 2026-11-08 사용자 결정: 한글이 없는 미지원 언어도 EN으로 간주하고 원문 그대로 키워드를 추출한다. 한글만 있으면 KO, 한글과 다른 언어의 글자가 섞이면 MIXED로 분류해 한글 포함 필드를 번역한다. 이 정책의 EN은 실제 영어 판정이 아니라 영어 경로로 처리한다는 의미다. DB enum 변경은 없다. 원문 전체는 저장하지 않는다. 원본과 버전이 맞을 때 읽어 처리한다. 이전 버전 원문을 보관하지 않으므로 입력이 바뀐 미완료 작업은 SUPERSEDED로 종료한다. 이전 READY 행도 최신 버전 조인에서 제외한다.
 
 ## 5. Outbox 분석 작업
 

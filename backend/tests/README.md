@@ -1,5 +1,9 @@
 # 테스트 실행
 
+spaCy·WordNet v2: requirements.txt 설치 후 기존 backend에서 `python -m scripts.prepare_keyword_resources`를 실행해야 키워드 테스트를 실행할 수 있다. `test_wordnet_keywords.py`는 실제 영어 모델·WordNet으로 미등록어·표제어·명사구·동의어 일치·상위어 오탐 방지·부정·프로필 분리를 검증한다. 추출 테스트는 번역 모델이 없어도 가능하지만 NLP 자원은 필요하다. 자원이 없을 때 조용히 구 사전으로 fallback하지 않는다.
+
+번역 런타임: `test_text_analysis.py`는 언어 fallback·키워드·타임아웃/취소 제어를, `test_text_analysis_lifespan.py`는 비활성/실패/상주 상태를 검증한다. `test_translation_runtime_real.py` 및 실제 lifespan 검증은 모델 준비 후 `RUN_REAL_TEXT_ANALYSIS_TESTS=true`를 컨테이너 명령에 전달해 실행한다. 일반 HTTP 테스트는 모델을 비활성화하며, 실제 모델 테스트가 skip된 결과는 모델 검증 성공이 아니다. 명령과 합성 품질 평가 방법은 [런타임 안내](../docs/design/translation-runtime.md)를 참고한다.
+
 Python·pip·pytest·Alembic은 기존 Compose의 backend 컨테이너 안에서 실행한다.
 프로젝트 루트 `.env`를 설정하고 기존 `db`, `storage`, `backend` 서비스를 실행한 상태에서:
 

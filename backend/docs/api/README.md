@@ -23,3 +23,7 @@ Notion 최신 문서를 Markdown으로 내보낸 사본입니다. 인증을 포�
 DB 설계: [DB 스키마 초안](../db/README.md) — 테이블·관계·제약·인덱스·트랜잭션·보존 정책.
 
 2026-11-08 변경: [번역·키워드 비동기 매칭 구현 계획·API 팀 인계](../design/translation-keyword-implementation-plan.md). 물품·신고의 진행 상태, 후보 목록 완전성, 수거 대기 오류와 본문 없는 쓰기 계약을 관련 명세에 반영했다. 4단계 원본 API는 별도 팀원이 담당하며 공통 계약 구현과 기능 API 구현 완료를 구분한다.
+
+2단계 [번역 런타임](../design/translation-runtime.md)을 구현했다. 사용자 결정으로 한글 없는 미지원 언어도 EN으로 간주하고 그대로 키워드를 추출한다. 상주 런타임은 준비됐으며 DB 작업 처리·매칭/원본 API 연결은 후속 단계다.
+
+키워드 추출·비교는 [spaCy·WordNet v2](../design/spacy-wordnet-keywords.md)를 따른다. 수동 분류 사전 대신 표제어·명사구·단일 synset을 사용하며 기존 프로필과 혼용하지 않는다.

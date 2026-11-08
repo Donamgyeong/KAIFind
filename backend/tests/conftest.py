@@ -12,6 +12,13 @@ from sqlalchemy.pool import NullPool
 from service.auth import AuthRuntime, AuthSettings
 
 
+@pytest.fixture(autouse=True)
+def disable_model_in_http_tests(monkeypatch):
+    # Real-model tests construct the runtime explicitly. Ordinary API tests must
+    # remain runnable without model assets or heavy startup per TestClient.
+    monkeypatch.setenv('TEXT_ANALYSIS_ENABLED', 'false')
+
+
 class Clock:
     def __init__(self):
         self.now = datetime(2026, 11, 3, 1, tzinfo=timezone.utc)

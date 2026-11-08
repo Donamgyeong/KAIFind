@@ -1,5 +1,7 @@
 # KAIFind backend 개발
 
+번역·키워드 모델은 앱 startup에서 기본 활성화된다. 최초 실행/새 이미지 설치 후 기존 backend 컨테이너에서 `python -m scripts.prepare_translation_model`과 `python -m scripts.prepare_keyword_resources`로 로컬 번역 모델·WordNet을 준비한다. spaCy 영어 모델은 requirements.txt로 설치한다. 누락 시 startup은 실패하며 준비 후 backend를 재시작한다. 설치·환경설정·평가와 후속 연결 범위는 [런타임 안내](docs/design/translation-runtime.md)와 [spaCy·WordNet 설계](docs/design/spacy-wordnet-keywords.md)를 참고한다. 일반 API 테스트는 번역 모델을 비활성화하고 실제 모델 테스트는 별도 명시 실행한다.
+
 기존 상위 `docker-compose.yaml`의 세 서비스를 함께 사용한다.
 
 | 서비스 | 역할 | 컨테이너 내부 주소 |

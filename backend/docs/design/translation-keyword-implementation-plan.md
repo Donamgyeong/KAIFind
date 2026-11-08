@@ -9,7 +9,7 @@
 | 단계 | 범위 | 담당/상태 |
 | --- | --- | --- |
 | 1 | API 계약, 상태 DTO, 본문 없는 쓰기, 카테고리 잠금 함수 | 구현·검증 완료 |
-| 2 | 실제 모델 로딩·번역·키워드 추출, 고정 프로필 검증 | 후속 |
+| 2 | 실제 모델 로딩·번역·키워드 추출, 고정 프로필 검증 | 구현, 결과는 [런타임 안내](translation-runtime.md) 참고 |
 | 3 | 분석 요청 함수, outbox 소비, lease·재시도·복구 | 후속 |
 | 4 | 습득물·분실 신고 등록/수정/조회/종료 등 원본 API | 다른 팀원 |
 | 5 | generation 기반 재평가·후보 조회 MATCH-01 | 후속 |
@@ -67,7 +67,7 @@ async def request_report_reevaluation(db, *, report, now): ...
 
 이벤트 타입은 FOUND_ITEM_TEXT_ANALYSIS_REQUESTED / LOST_REPORT_TEXT_ANALYSIS_REQUESTED. aggregate_id=분석 행 UUID, aggregate_version=1. payload는 featureId, itemId 또는 reportId, profileId, textVersion만 허용한다. 원문·private details·번역문·키워드는 복제하지 않는다.
 
-활성 프로필이 아직 없는 상태의 등록 동작은 3단계에서 명세와 함께 확정한다. 유효한 프로필 없이 임의 profile ID를 넣거나 READY를 반환하지 않는다. source_language는 현재 DB에서 KO/EN/MIXED만 허용하므로 미지원 언어의 실패 기록 표현도 2~3단계에서 결정한다. 이 두 항목은 원본 API의 최종 통합 전 해결해야 한다.
+활성 프로필이 아직 없는 상태의 등록 동작은 3단계에서 명세와 함께 확정한다. 유효한 프로필 없이 임의 profile ID를 넣거나 READY를 반환하지 않는다. 2026-11-08 사용자 결정으로 한글이 없는 미지원 언어는 EN으로 간주하고 그대로 키워드를 추출한다. 따라서 언어 정책용 DB 변경은 필요 없다. 활성 정책 미설정 시 등록 계약만 원본 API 최종 통합 전 해결해야 한다.
 
 ## 변경 종류별 요청
 
@@ -104,3 +104,9 @@ async def request_report_reevaluation(db, *, report, now): ...
 2026-11-08: schema/matching.py·matching_params.py, library/matching_lock.py를 추가하고 ProtectedRoute의 body 모델 유무에 따른 검증·OpenAPI와 잠금 타임아웃의 409 CONCURRENT_MODIFICATION 처리를 반영했다. MATCHING_PENDING의 한영 오류 문구를 추가했다. 기능 라우터·원본 서비스·DB 스키마는 변경하지 않았다.
 
 기존 backend 컨테이너 /app에서 별도 kaifind_test_matching_contract_20261108 DB로 전체 테스트 363개가 통과했다. 이후 실제 잠금 타임아웃·MATCHING_PENDING 한영 오류 3개를 추가하고 관련 테스트 19개가 통과했다(전체 고유 테스트 366개). 수정한 습득물·신고 명세의 모든 JSON 예시도 파싱 검증했다. 모델 런타임·분석 요청 함수·진행 상태 집계·MATCH-01 라우터와 원본 API의 실제 연결은 아직 구현/검증하지 않았다. 기존 pytest-asyncio의 fixture loop scope 경고는 이번 범위에서 변경하지 않았다.
+
+## 2단계 적용 결과
+
+추가 변경: 키워드 추출·비교를 [spaCy·WordNet v2](spacy-wordnet-keywords.md)로 전환했다. 4단계 API 소유 경계와 DB 작업 서비스의 후속 범위는 유지한다.
+
+2026-11-08: 상주 번역·규칙 키워드 런타임, 모델 준비·평가 명령과 lifespan을 구현했다. 한글 없는 입력은 사용자 결정대로 EN으로 간주해 그대로 추출한다. 고정 모델 assets를 공유 .cache에 준비했고 CPU float32 전용 스레드에서 실제 추론을 검증했다. 전체392개 테스트와 pip check가 통과했다. 평가·메모리·제한 사례와 실행 명령은 [런타임 안내](translation-runtime.md)를 따른다. 런타임 프로필을 산출하지만 DB 등록·활성화와 작업 소비·원본 API 연결은 3단계 이후 범위다.

@@ -1,0 +1,7 @@
+{
+  "negators": ["no", "not", "without", "n't", "n’t"],
+  "negation_breaks": ["but", "however"],
+  "max_phrase_tokens": 6,
+  "wordnet_sense_policy": "first-pos-sense",
+  "wordnet_relations": ["synset-only"]
+}
