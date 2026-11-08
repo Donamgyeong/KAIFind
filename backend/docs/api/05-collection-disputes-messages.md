@@ -138,7 +138,7 @@
 | Request body | JSON |
 | Request model | CollectRequest |
 | 성공 | 201 CollectionResponse |
-| 추가 실패 | 403 COLLECTION\_RESTRICTED, 409 ITEM\_NOT\_POSTED / ALREADY\_COLLECTED |
+| 추가 실패 | 403 COLLECTION\_RESTRICTED, 409 ITEM\_NOT\_POSTED / ALREADY\_COLLECTED / MATCHING\_PENDING |
 
 ### Parameter
 
@@ -169,6 +169,8 @@
 3. 트랜잭션·조건부 갱신과 유일성 제약으로 활성 수거자는 물품당 한 명만 허용한다. 동시 요청 중 한 건만 성공하고 나머지는 409.
 4. 수거자 ID와 수거 시각을 서버가 기록하고 물품을 COLLECTED로 변경한다. 감사 로그를 기록한다.
 5. 해당 수거자의 분실 신고 중 이 물품이 매칭 후보로 연결된 신고를 모두 종료 상태로 만든다. OPEN 신고는 RESOLVED로 전환하고 이미 RESOLVED 또는 CLOSED이면 종료 상태를 유지한다. 타인의 신고는 종료하지 않는다. 종료한 신고의 private identifying details를 즉시 삭제하고 추가 매칭 알림을 중단한다.
+
+   비동기 매칭에서는 카테고리 잠금 후 현재 원본 집합·분석 버전을 검증한다. 필요한 분석이 준비되지 않았으면 409 MATCHING_PENDING으로 수거·종료·감사·알림 변경 전부를 롤백한다. 준비됐으면 최신 조건으로 직접 재평가하고 처리하며 저장 후보나 단일 READY 표시만으로 최신성을 가정하지 않는다. 번역은 수거 트랜잭션 안에서 실행하지 않는다.
 6. 물품 종료와 함께 모든 관련 대화·메시지·미리보기·서버 캐시를 삭제한다. 메시지 본문은 감사 로그에 남기지 않는다.
 7. 작성자 알림을 신뢰성 있게 예약한다. 이메일은 수신 설정을 반영하며 실패 시 재시도한다. 상태 변경·연동 종료·삭제·감사·알림 예약은 하나의 원자적 처리 또는 동등한 일관성 보장으로 수행한다.
 

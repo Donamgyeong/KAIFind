@@ -26,6 +26,10 @@ backend의 `MINIO_*` 환경변수를 사용한다. 자격증명은 로그·코�
 
 ## 인증·관리자·스키마
 
+- `test_protected_http.py`: 실세션으로 본문 없는 POST/DELETE의 인증·CSRF·Origin, 불필요 본문 거부, 기존 JSON 검증과 OpenAPI를 검증한다. 기능 API 대신 테스트 전용 라우트를 사용한다.
+- `test_matching_models.py`: 비동기 상태·후보 응답·완전성·KST·쿼리 계약과 비공개 필드 차단을 검증한다.
+- `test_matching_lock.py`: 기존 db의 전용 테스트 DB에서 카테고리 잠금의 유지·커밋/롤백 해제·역순 다중 잠금을 검증한다. 등록/수거 서비스의 실제 잠금 연동은 후속 검증이다.
+
 - `test_auth_models.py`: DB 없이 요청 필드·타입·추가 필드 거부와 응답 직렬화를 검증한다.
 - `test_auth_params.py`: 파라미터 누락 시 최종 인증 오류, OpenAPI 파라미터와 204 응답을 검증한다.
 - `test_auth_contract.py`: 실제 라우터로 로그인·CSRF·쿠키·로그아웃·언어별 오류 계약을 검증한다.

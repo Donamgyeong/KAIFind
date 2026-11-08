@@ -27,6 +27,8 @@ MESSAGES = {
 
 
 MESSAGES.update({
+    'MATCHING_PENDING': ('물품 비교가 진행 중입니다. 잠시 후 다시 시도해주세요.',
+                         'Item matching is in progress. Please try again shortly.'),
     'ITEM_CLOSED': ('종료된 물품입니다.', 'The item is closed.'),
     'SELF_CONVERSATION': ('본인 물품에는 대화를 시작할 수 없습니다.', 'You cannot start a conversation about your own item.'),
     'CONVERSATION_NOT_FOUND': ('대화를 찾을 수 없습니다.', 'Conversation not found.'),

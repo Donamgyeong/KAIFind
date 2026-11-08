@@ -52,8 +52,16 @@ class ProtectedRoute(APIRoute):
         kwargs['openapi_extra'] = extra
         super().__init__(*args, **kwargs)
 
+        # Only routes with a declared body require its media-type header.
+        if self.body_field is not None and ('Content-Type', 'header') not in existing:
+            parameters.append({
+                'name': 'Content-Type', 'in': 'header', 'required': True,
+                'schema': {'type': 'string', 'enum': ['application/json']},
+            })
+
     def get_route_handler(self):
         handler = super().get_route_handler()
+        has_body_model = self.body_field is not None
 
         async def handle(request):
             try:
@@ -87,12 +95,16 @@ class ProtectedRoute(APIRoute):
                             if origin is not None and origin not in rt.settings.allowed_origins:
                                 raise AuthError(403, 'ORIGIN_NOT_ALLOWED')
                             auth.require_csrf(session, request.headers.get('x-csrf-token'), now)
-                            if request.headers.get('content-type', '').split(';')[0].strip().lower() != 'application/json':
-                                raise AuthError(415, 'UNSUPPORTED_MEDIA_TYPE')
-                            try:
-                                await request.json()
-                            except (ValueError, UnicodeError):
-                                raise AuthError(400, 'MALFORMED_JSON') from None
+                            if has_body_model:
+                                media_type = request.headers.get('content-type', '').split(';')[0].strip().lower()
+                                if media_type != 'application/json':
+                                    raise AuthError(415, 'UNSUPPORTED_MEDIA_TYPE')
+                                try:
+                                    await request.json()
+                                except (ValueError, UnicodeError):
+                                    raise AuthError(400, 'MALFORMED_JSON') from None
+                            elif await request.body():
+                                raise AuthError(400, 'VALIDATION_ERROR')
                         session.last_activity_at = now
                         session.idle_expires_at = min(now + IDLE, session.absolute_expires_at)
                         request.state.db, request.state.user, request.state.now = db, user, now
@@ -111,7 +123,7 @@ class ProtectedRoute(APIRoute):
                     response = error_response(AuthError(500, 'INTERNAL_SERVER_ERROR'), request)
             except DBAPIError as exc:
                 state = getattr(exc.orig, 'sqlstate', None)
-                if state in {'40P01', '40001'}:
+                if state in {'40P01', '40001', '55P03'}:
                     response = error_response(AuthError(409, 'CONCURRENT_MODIFICATION'), request)
                 else:
                     logging.getLogger(__name__).error('Protected request database failure')

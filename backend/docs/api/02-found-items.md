@@ -531,6 +531,7 @@ PATCH는 최소 한 필드 필요, null 불가. status/hidden/finderId/collected
 | 필드 | 타입 | 필수 | 검증·설명 |
 | --- | --- | --- | --- |
 | description | string | 예 | 설명 |
+| analysisStatus | ProcessingStatus | 예 | 현재 공개 제목·설명의 분석 상태. PENDING / PROCESSING / READY / FAILED. 신고 집계 상태·번역문·키워드는 공개하지 않음 |
 | foundLocationDescription | string | 예 | 발견 지점 |
 | finder | FinderSummary | 예 | userId만 |
 | updatedAt | date-time | 예 | 수정 시각 |
@@ -758,6 +759,8 @@ PATCH는 최소 한 필드 필요, null 불가. status/hidden/finderId/collected
 
 FoundItemDetail은 ITEM-02/03/04/09에서 공통으로 사용한다.
 
+2026-11-08: analysisStatus를 필수로 추가한다. 공개 원본의 현재 제목·설명만 대상으로 PENDING / PROCESSING / READY / FAILED를 반환하며 내부 SUPERSEDED는 노출하지 않는다. 원본 등록·수정과 분석 요청은 같은 트랜잭션으로 저장하고 번역은 응답 후 실행한다. 다른 사용자의 신고 집계 상태, 번역문·키워드·모델 경로는 응답하지 않는다. [구현·인계 계약](../design/translation-keyword-implementation-plan.md)을 따른다.
+
 ```json
 {
   "itemId": "a4f534bf-f4e0-4f44-95ba-5e7aa85b3224",
@@ -789,6 +792,7 @@ FoundItemDetail은 ITEM-02/03/04/09에서 공통으로 사용한다.
   "sensitive": false,
   "hidden": false,
   "description": "검은 케이스의 무선 이어폰",
+  "analysisStatus": "PENDING",
   "foundLocationDescription": "1층 로비",
   "finder": {
     "userId": "c0f4c2d2-0e5c-4b41-bd40-7ec14f8bb8ed"

@@ -333,6 +333,8 @@
 | lostDateFrom / lostDateTo | string(date) | 각 예 | 분실 날짜 범위 |
 | privateIdentifyingDetails | string 또는 null | 예 | OPEN에서 본인·관리자만 조회. 종료 즉시 null |
 | status | LostReportStatus | 예 | OPEN, RESOLVED, CLOSED |
+| analysisStatus | ProcessingStatus | 예 | 현재 신고 공개 설명의 PENDING / PROCESSING / READY / FAILED |
+| matchingStatus | ProcessingStatus | 예 | 현재 신고의 비교 대상까지 포함한 매칭 진행 상태 |
 | createdAt / updatedAt / expiresAt | string(date-time) | 각 예 | 생성·수정·신고 유효기한 |
 | closedAt | string(date-time) 또는 null | 예 | 최초 종료 시각. OPEN이면 null |
 
@@ -349,6 +351,8 @@
   "lostDateTo": "2026-11-02",
   "privateIdentifyingDetails": "케이스 안쪽 별 모양 스티커",
   "status": "OPEN",
+  "analysisStatus": "PENDING",
+  "matchingStatus": "PENDING",
   "createdAt": "2026-11-02T15:00:00+09:00",
   "updatedAt": "2026-11-02T15:00:00+09:00",
   "expiresAt": "2026-12-02T15:00:00+09:00",
@@ -393,6 +397,8 @@ LostReportSummary는 LostReportResponse에서 privateIdentifyingDetails만 제�
 | MatchItemSummary | status | FoundItemStatus | 예 | POSTED, COLLECTED, EXPIRED |
 | MatchItemSummary | sensitive | boolean | 예 | 민감 물품 여부 |
 | MatchCandidatePage | items | MatchCandidateResponse\[\] | 예 | 후보 목록 |
+| MatchCandidatePage | analysisStatus / matchingStatus | ProcessingStatus | 각 예 | 신고 설명 분석 상태 / 비교 범위를 포함한 매칭 상태 |
+| MatchCandidatePage | isComplete | boolean | 예 | matchingStatus=READY일 때만 true. false인 목록·개수는 최종 결과가 아님 |
 | MatchCandidatePage | page / size / totalElements / totalPages | 페이지 모델과 동일 | 각 예 | LostReportPage와 동일한 페이지 필드 |
 
 MatchItemSummary는 습득물 공개 요약의 부분 집합이다. 사진·보관 위치는 별도 권한 경로로만 조회하며 타인의 비공개 신고 정보·연락처를 포함하지 않는다.
@@ -422,11 +428,22 @@ MatchItemSummary는 습득물 공개 요약의 부분 집합이다. 사진·보�
   "page": 0,
   "size": 20,
   "totalElements": 1,
-  "totalPages": 1
+  "totalPages": 1,
+  "analysisStatus": "READY",
+  "matchingStatus": "READY",
+  "isComplete": true
 }
 ```
 
 ## 서버 내부 매칭·자동 종료 계약
+
+### 비동기 진행 상태 (2026-11-08)
+
+ProcessingStatus는 PENDING(대기), PROCESSING(실행/재평가 중), READY(해당 범위 완료), FAILED(실패)다. 내부 SUPERSEDED를 외부에 반환하지 않는다. analysisStatus는 신고 자신의 현재 공개 설명만, matchingStatus는 현재 비교 범위의 분석·재평가까지 포함한다. 범위에 실패가 있으면 FAILED, 그 외 PROCESSING, PENDING, READY 순으로 집계한다. isComplete는 matchingStatus=READY일 때만 true다. 실패·대기 중 빈 목록을 확정된 일치 없음으로 표시하지 않는다.
+
+처리 중 items·totalElements·totalPages는 현재 유효한 결과 기준이며 최종 목록·총수가 아니다. 페이지와 후보 정렬은 기존 규칙을 유지한다. 후보 조회는 재평가·모델 실행·알림 생성의 부작용이 없다. 종료 신고는 새 분석을 요청하지 않고 보존 이력을 제공한다. 이 경우 matchingStatus=READY와 isComplete=true는 이력 조회 완료를 뜻하며 analysisStatus는 마지막 보존 상태를 유지한다. 숨김·삭제·인가 규칙은 이력에도 적용한다. 번역문·키워드·모델 경로·내부 오류를 응답하지 않는다.
+
+LostReportSummary는 위 두 상태 필드를 포함하며 privateIdentifyingDetails만 제외한다. 공통 DTO는 schema/matching.py, 쿼리 모델은 schema/matching_params.py다. 상태 집계 서비스와 실제 MATCH-01 라우터 연동은 아직 구현 전이다. 트랜잭션·이벤트 연결은 [API 팀 인계](../design/translation-keyword-implementation-plan.md)를 따른다.
 
 | 항목 | 규칙 |
 | --- | --- |
@@ -435,12 +452,14 @@ MatchItemSummary는 습득물 공개 요약의 부분 집합이다. 사진·보�
 | 필수 조건2 | 습득물 foundAt의 KST 날짜 >= lostDateFrom |
 | 필수 조건3 | foundBuildingId가 possibleBuildingIds에 포함되거나 공개 제목·설명에 공통 키워드 존재 |
 | 날짜 상한 | lostDateTo를 발견일 상한으로 사용하지 않음. SRS FR-16에 해당 조건 없음 |
-| 키워드 비교 제안 | 공개 제목·설명만 Unicode 정규화·영문 소문자화 후 문자·숫자 토큰 단위 비교. 비공개 식별 정보 미사용. 자동 이미지 인식 없음 |
+| 키워드 비교 | 공개 한국어 제목·설명을 Helsinki-NLP/opus-mt_tiny_kor-eng로 영어 번역 후 정규화·구문/동의어 규칙으로 canonical 키워드 비교. 영어는 번역 생략. 비공개 정보 미사용. 일반 검색·구독 규칙은 변경하지 않음 |
+| 비동기 실행 | 원본과 분석·재평가 요청은 같은 트랜잭션. 모델 추론은 요청 밖 전용 스레드. 현재 원본/분석/정책 버전을 확인한 결과만 노출 |
 | 후보 유일성 | reportId+itemId 유일. 재시도·동시 수정에도 후보와 신규 알림 중복 생성 방지 |
 | 수정 후 불일치 | 조건을 잃은 현재 후보 연결 제거 제안. 동일 쌍 재등장 알림은 최초 후보 발생 이력 기준 중복 억제 |
 | 후보와 가용성 | FR-16의 세 조건 자체에는 상태 조건을 추가하지 않음. 숨김·종료 물품은 검색 기본값·응답 권한·알림 발송 가능성을 별도로 처리 |
 | 신고 종료 후 | 기존 후보 조회 가능, 신규 매칭 알림 중단. 종료 신고에서 후보 계산 여부는 구현 정책으로 분리하되 사용자에게 추가 알림 없음 |
 | 수거 연동 FR-22 | 수거 트랜잭션에서 수거자 소유이며 수거 물품을 현재 후보로 가진 OPEN 신고 모두 RESOLVED 처리. 한 신고만 임의로 선택하지 않음 |
+| 수거 판정 대기 | 필요한 최신 분석 미완료면 409 MATCHING_PENDING으로 수거 전체를 거절. 최신 분석과 카테고리 잠금으로 현재 후보 집합을 다시 검증 |
 | 비수거자의 신고 | 같은 물품을 후보로 가진 다른 회원 신고는 자동 종료하지 않음 |
 | 취소 연동 | 잘못된 수거를 취소해도 종료 신고·삭제 개인정보를 자동 복구하지 않음. 새 신고가 필요한 정책은 제안사항 |
 | 자동 종료 FR-11 | 생성 후30일, 연장하면 변경된 expiresAt에 도달한 OPEN 신고를 CLOSED로 변경 |
