@@ -1,6 +1,8 @@
 # 테스트 실행
 
-3단계: `test_analysis_worker.py`는 실제 PostgreSQL에서 요청·롤백·중복·generation·lease·heartbeat·수정/삭제/종료 경합·재시도·정합성 복구를 검사한다. 실제 모델 → outbox → READY 테스트는 `RUN_REAL_TEXT_ANALYSIS_TESTS=true`로 실행한다. `test_analysis_migration.py`는 별도 임시 DB에서 감사 revision 0007 왕복과 이력 보존을 검증한다. 테스트 DB head는 `20261108_0007`이다. 운영 명령과 4단계 연결은 [작업 처리 안내](../docs/design/text-analysis-worker.md)를 따른다.
+3단계: `test_analysis_worker.py`는 실제 PostgreSQL에서 요청·롤백·중복·generation·lease·heartbeat·수정/삭제/종료 경합·재시도·정합성 복구를 검사한다. 실제 모델 → outbox → READY 테스트는 `RUN_REAL_TEXT_ANALYSIS_TESTS=true`로 실행한다. `test_analysis_migration.py`는 별도 임시 DB에서 감사 revision 0007 왕복과 이력 보존을 검증한다. 테스트 DB head는 `20261108_0008`이다. 운영 명령과 4단계 연결은 [작업 처리 안내](../docs/design/text-analysis-worker.md)를 따른다.
+
+5단계: `test_matching_service.py`는 실제 PostgreSQL에서 건물/키워드·KST 날짜·최신 버전·재등장·양쪽 동시 처리·generation·lease 만료 롤백·heartbeat·종료/삭제·복구/감사 재시도를 검증한다. `test_matching_contract.py`는 MATCH-01의 인증·소유권 은닉·관리자·페이지·숨김과 집계·GET 부작용 없음·비공개 정보 제외·OpenAPI를 검증한다. `test_matching_retry_migration.py`는 감사 revision 0008의 왕복과 이력 보존을 검증한다. `test_matching_real.py`는 RUN_REAL_TEXT_ANALYSIS_TESTS=true일 때 실제 한국어 분석에서 KEYWORD 후보 저장까지 검증한다. 원본 API HTTP 통합은 4단계 연결 후 검증한다. [matching 구현 안내](../docs/design/matching-api.md) 참고.
 
 spaCy·WordNet v2: requirements.txt 설치 후 기존 backend에서 `python -m scripts.prepare_keyword_resources`를 실행해야 키워드 테스트를 실행할 수 있다. `test_wordnet_keywords.py`는 실제 영어 모델·WordNet으로 미등록어·표제어·명사구·동의어 일치·상위어 오탐 방지·부정·프로필 분리를 검증한다. 추출 테스트는 번역 모델이 없어도 가능하지만 NLP 자원은 필요하다. 자원이 없을 때 조용히 구 사전으로 fallback하지 않는다.
 

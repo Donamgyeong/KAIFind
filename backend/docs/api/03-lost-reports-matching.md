@@ -275,6 +275,8 @@
 
 ## MATCH-01 내 신고의 매칭 후보 조회
 
+5단계의 비교 범위·최신성·generation 워커·팀 연결은 [matching API 구현 안내](../design/matching-api.md)를 따른다. 원본 API 등록·수정 연결은 4단계 담당이다.
+
 | 항목 | 내용 |
 | --- | --- |
 | Method / URL | GET /api/v1/lost-reports/\{reportId\}/matches |
@@ -443,7 +445,7 @@ ProcessingStatus는 PENDING(대기), PROCESSING(실행/재평가 중), READY(해
 
 처리 중 items·totalElements·totalPages는 현재 유효한 결과 기준이며 최종 목록·총수가 아니다. 페이지와 후보 정렬은 기존 규칙을 유지한다. 후보 조회는 재평가·모델 실행·알림 생성의 부작용이 없다. 종료 신고는 새 분석을 요청하지 않고 보존 이력을 제공한다. 이 경우 matchingStatus=READY와 isComplete=true는 이력 조회 완료를 뜻하며 analysisStatus는 마지막 보존 상태를 유지한다. 숨김·삭제·인가 규칙은 이력에도 적용한다. 번역문·키워드·모델 경로·내부 오류를 응답하지 않는다.
 
-LostReportSummary는 위 두 상태 필드를 포함하며 privateIdentifyingDetails만 제외한다. 공통 DTO는 schema/matching.py, 쿼리 모델은 schema/matching_params.py다. 상태 집계 서비스와 실제 MATCH-01 라우터 연동은 아직 구현 전이다. 트랜잭션·이벤트 연결은 [API 팀 인계](../design/translation-keyword-implementation-plan.md)를 따른다.
+LostReportSummary는 위 두 상태 필드를 포함하며 privateIdentifyingDetails만 제외한다. 공통 DTO는 schema/matching.py, 쿼리 모델은 schema/matching_params.py다. 상태 집계 서비스와 MATCH-01 라우터·generation 소비자는 5단계에서 구현했다. 원본 서비스는 service.matching.matching_progress(db, report=report, now=now)를 응답 생성에 연결한다. 트랜잭션·이벤트 연결은 [API 팀 인계](../design/translation-keyword-implementation-plan.md)를 따른다.
 
 | 항목 | 규칙 |
 | --- | --- |

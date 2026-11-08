@@ -12,7 +12,7 @@
 | 2 | 실제 모델 로딩·번역·키워드 추출, 고정 프로필 검증 | 구현, 결과는 [런타임 안내](translation-runtime.md) 참고 |
 | 3 | 분석 요청 함수, outbox 소비, lease·재시도·복구 | 구현, [작업 처리 안내](text-analysis-worker.md) 참고 |
 | 4 | 습득물·분실 신고 등록/수정/조회/종료 등 원본 API | 다른 팀원 |
-| 5 | generation 기반 재평가·후보 조회 MATCH-01 | 후속 |
+| 5 | generation 기반 재평가·후보 조회 MATCH-01 | [구현 안내](matching-api.md), 원본 API 통합은 4단계 연결 후 |
 | 6 | 최초 알림, 이메일, 수거 최신성·관리자 숨김·정리 | 후속 |
 
 4단계 소유 영역: `service/found_items.py`, `service/lost_reports.py`, `router/found_items.py`, `router/lost_reports.py`, 해당 요청/응답/쿼리 schema와 계약 테스트. 공통 소유 영역: `schema/matching.py`, `schema/matching_params.py`, `library/matching_lock.py`, `library/protected_http.py`, 이후 `service/text_analysis.py`·`service/matching.py`·워커. 충돌이 나면 기존 변경을 덮어쓰지 않고 이 경계에 맞춰 연결한다.
@@ -125,3 +125,18 @@ revision 20261108_0007을 추가했다. 4단계 원본 API 소유 파일은 변�
 pip check는 충돌 없음, alembic check는 스키마 차이 없음, git diff --check도 통과했다.
 개발 DB에 0007과 최초 프로필·정책을 적용하고 기존 데이터 행 수 보존, backend 재시작 후 루트 200을 확인했다.
 원본 HTTP API 연결·후보 계산/전체 matchingStatus·알림·수거 통합·운영 부하·이미지 재빌드는 아직 검증하지 않았다.
+
+## 5단계 적용 결과
+
+2026-11-08: MATCH-01의 ProtectedRoute·DTO·쿼리·인가와 단일 statement snapshot의 후보/전체 개수/상태 조회,
+generation 기반 재평가 소비자·카테고리 잠금·lease fencing·heartbeat·재시도,
+후보 비활성/재등장·최초 시각 보존, 누락 작업 복구·감사된 운영 재시도를 구현했다.
+진행 상태 연결 함수는 service.matching.matching_progress(db, report=report, now=now)다.
+4단계 소유 파일은 수정하지 않았다. 감사 action 추가 migration은 20261108_0008이다.
+
+기존 backend 컨테이너 /app에서 실제 모델 활성 전체 457개 테스트가 skip 없이 통과했다.
+별도로 실제 한국어 분석→KEYWORD 후보 저장 1개와 이전 generation 실패 후 신규 요청 보존 1개를
+추가 검증했다(고유 459개 검증). pip check·alembic check·git diff --check가 통과했다.
+개발 DB에 0008을 적용하고 사용자·물품·신고·사진 행 수 보존, 루트 200과 실행 중 MATCH-01 OpenAPI 반영을 확인했다.
+4단계 HTTP 등록/수정 전체 연결, 6단계 알림·수거·숨김 쓰기 연결, 운영 부하와 이미지 재빌드는 미검증이다.
+운영 명령과 상세 동작은 [matching 구현 안내](matching-api.md)를 따른다.

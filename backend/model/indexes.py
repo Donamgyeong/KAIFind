@@ -84,7 +84,8 @@ _audit.append_constraint(CheckConstraint(
     "'DROP_OFF_CHANGED','SENSITIVE_PHOTO_VIEWED','SENSITIVE_DROP_OFF_VIEWED',"
     "'LOST_REPORT_STATUS_CHANGED','PHOTO_ACCESS_URL_ISSUED','ROLE_CHANGED',"
     "'REFERENCE_CREATED','REFERENCE_UPDATED','POST_HIDDEN','POST_REPORT_REVIEWED',"
-    "'DISPUTE_REVIEWED','COLLECTION_RESTRICTION_CHANGED','TEXT_ANALYSIS_RETRIED')", name='action'))
+    "'DISPUTE_REVIEWED','COLLECTION_RESTRICTION_CHANGED','TEXT_ANALYSIS_RETRIED',"
+    "'MATCH_EVALUATION_RETRIED')", name='action'))
 _audit.append_constraint(CheckConstraint(
     "jsonb_typeof(metadata) = 'object' AND "
     "metadata - ARRAY['fromStatus','toStatus','collectionId','photoId','reportId',"

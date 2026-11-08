@@ -10,7 +10,7 @@ from test_matching_migration import migration_database, migrate
 
 def test_retry_audit_roundtrip_and_history_guard(migration_database):
     url = migration_database
-    migrate(url, 'upgrade', 'head')
+    migrate(url, 'upgrade', '20261108_0007')
     event_id, target = uuid4(), uuid4()
     with psycopg.connect(url.render_as_string(hide_password=False)) as db:
         db.execute("""INSERT INTO audit_logs

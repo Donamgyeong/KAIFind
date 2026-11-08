@@ -1211,6 +1211,8 @@ AuditAction 필수값: ITEM\_STATUS\_CHANGED, COLLECTION\_MARKED, COLLECTION\_UN
 
 운영 명령으로 실패 분석을 수동 재시도하면 SYSTEM/TEXT_ANALYSIS_RETRIED를 기록한다. 대상은 FOUND_ITEM 또는 LOST_REPORT이며 metadata에는 eventId(UUID)만 기록한다. 이 액션도 기존 감사 목록·action 필터에서 조회할 수 있다. 회원용 재시도 엔드포인트는 추가하지 않는다.
 
+실패한 generation 재평가를 수동 재시도하면 SYSTEM/MATCH_EVALUATION_RETRIED를 기록한다. 대상은 FOUND_ITEM 또는 LOST_REPORT, metadata.eventId는 재평가 작업 UUID다. 기존 감사 목록·action 필터를 사용하며 새로운 HTTP 엔드포인트는 없다. 감사 action 허용 목록은 revision 20261108_0008부터 적용된다.
+
 metadata 허용필드: fromStatus/toStatus(대상별 POSTED/COLLECTED/EXPIRED 또는 OPEN/RESOLVED/CLOSED), collectionId/photoId/reportId/disputeId/eventId(UUID), fromRole/toRole(MEMBER/ADMIN), restricted(boolean), decision(위 enum). 값이 없으면 키 생략. 위치 변경은 위치 원문 대신 targetId·행위·시각으로 추적한다. 카테고리·건물 이름이나 신고 사유 원문을 로그 metadata에 복제하지 않는다.
 
 ## 보존·검증 기준
