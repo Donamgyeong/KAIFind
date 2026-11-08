@@ -84,11 +84,11 @@ _audit.append_constraint(CheckConstraint(
     "'DROP_OFF_CHANGED','SENSITIVE_PHOTO_VIEWED','SENSITIVE_DROP_OFF_VIEWED',"
     "'LOST_REPORT_STATUS_CHANGED','PHOTO_ACCESS_URL_ISSUED','ROLE_CHANGED',"
     "'REFERENCE_CREATED','REFERENCE_UPDATED','POST_HIDDEN','POST_REPORT_REVIEWED',"
-    "'DISPUTE_REVIEWED','COLLECTION_RESTRICTION_CHANGED')", name='action'))
+    "'DISPUTE_REVIEWED','COLLECTION_RESTRICTION_CHANGED','TEXT_ANALYSIS_RETRIED')", name='action'))
 _audit.append_constraint(CheckConstraint(
     "jsonb_typeof(metadata) = 'object' AND "
     "metadata - ARRAY['fromStatus','toStatus','collectionId','photoId','reportId',"
-    "'disputeId','fromRole','toRole','restricted','decision']::text[] = '{}'::jsonb",
+    "'disputeId','fromRole','toRole','restricted','decision','eventId']::text[] = '{}'::jsonb",
     name='metadata_keys'))
 
 # Case-insensitive uniqueness also protects concurrent admin creates/renames.

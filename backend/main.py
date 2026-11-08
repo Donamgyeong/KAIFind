@@ -6,6 +6,9 @@ from fastapi import FastAPI
 from router import api_router
 from library.photo_http import install_photo_log_filter
 from library.translation_runtime import TranslationRuntime, TranslationSettings
+from library.database import session_factory
+from service.outbox_worker import AnalysisWorker
+from service.text_analysis_profiles import active_policy
 
 
 @asynccontextmanager
@@ -16,6 +19,7 @@ async def lifespan(app):
     app.state.text_analysis_runtime = None
     app.state.text_analysis_state = 'DISABLED'
     runtime = None
+    worker = None
     started = False
     try:
         if enabled == 'true':
@@ -23,6 +27,10 @@ async def lifespan(app):
             try:
                 runtime = TranslationRuntime(TranslationSettings.from_environment())
                 await runtime.start()
+                async with session_factory()() as db:
+                    await active_policy(db, runtime.profile)
+                worker = AnalysisWorker(runtime, session_factory())
+                worker.start()
             except BaseException:
                 app.state.text_analysis_state = 'FAILED'
                 raise
@@ -31,6 +39,8 @@ async def lifespan(app):
             started = True
         yield
     finally:
+        if worker is not None:
+            await worker.close()
         if runtime is not None:
             if started:
                 app.state.text_analysis_state = 'STOPPING'

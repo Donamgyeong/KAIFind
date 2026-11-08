@@ -27,3 +27,5 @@ DB 설계: [DB 스키마 초안](../db/README.md) — 테이블·관계·제약�
 2단계 [번역 런타임](../design/translation-runtime.md)을 구현했다. 사용자 결정으로 한글 없는 미지원 언어도 EN으로 간주하고 그대로 키워드를 추출한다. 상주 런타임은 준비됐으며 DB 작업 처리·매칭/원본 API 연결은 후속 단계다.
 
 키워드 추출·비교는 [spaCy·WordNet v2](../design/spacy-wordnet-keywords.md)를 따른다. 수동 분류 사전 대신 표제어·명사구·단일 synset을 사용하며 기존 프로필과 혼용하지 않는다.
+
+3단계 [분석 작업 처리·복구](../design/text-analysis-worker.md)를 구현했다. 활성 정책은 명시적으로 초기화하며 분석 활성 환경에서 정책 누락·모델 불일치는 startup 실패다. 원본 API 연결·전체 매칭 상태 집계·후보 계산은 후속 단계다. 관리자 감사에 TEXT_ANALYSIS_RETRIED와 eventId metadata를 추가했다.

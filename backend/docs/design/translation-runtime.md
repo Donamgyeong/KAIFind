@@ -1,6 +1,6 @@
 # 2단계: 상주 번역·키워드 런타임
 
-2026-11-08 구현. DB 작업 소비·재시도·프로필 등록/활성화는 3단계, 원본 API는 다른 팀원의 4단계다. [API 목록](../api/README.md)과 [신고·매칭 명세](../api/03-lost-reports-matching.md)의 공개 입력·진행 상태 계약을 따른다. 엔드포인트와 DB 스키마는 추가하지 않았다.
+2026-11-08 구현. DB 작업 소비·재시도·프로필 등록/최초 활성화는 [3단계](text-analysis-worker.md)에 구현했다. 원본 API는 다른 팀원의 4단계다. [API 목록](../api/README.md)과 [신고·매칭 명세](../api/03-lost-reports-matching.md)의 공개 입력·진행 상태 계약을 따른다. 2단계에서는 엔드포인트와 DB 스키마를 추가하지 않았다.
 
 키워드 추출은 사용자 결정으로 [spaCy·WordNet v2](spacy-wordnet-keywords.md)로 변경했다. 아래 실행·스레드 계약은 유지하며 이전 v1 측정은 이력이다.
 

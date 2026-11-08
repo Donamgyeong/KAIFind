@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | 1 | API 계약, 상태 DTO, 본문 없는 쓰기, 카테고리 잠금 함수 | 구현·검증 완료 |
 | 2 | 실제 모델 로딩·번역·키워드 추출, 고정 프로필 검증 | 구현, 결과는 [런타임 안내](translation-runtime.md) 참고 |
-| 3 | 분석 요청 함수, outbox 소비, lease·재시도·복구 | 후속 |
+| 3 | 분석 요청 함수, outbox 소비, lease·재시도·복구 | 구현, [작업 처리 안내](text-analysis-worker.md) 참고 |
 | 4 | 습득물·분실 신고 등록/수정/조회/종료 등 원본 API | 다른 팀원 |
 | 5 | generation 기반 재평가·후보 조회 MATCH-01 | 후속 |
 | 6 | 최초 알림, 이메일, 수거 최신성·관리자 숨김·정리 | 후속 |
@@ -52,9 +52,9 @@ ProtectedRoute가 제공하는 request.state.db/user/now를 사용하고 서비�
 
 카테고리 키는 UUID의 SHA-256 앞 4바이트 signed int와 고정 namespace(2-int advisory key space)를 사용하며 정렬은 실제 key 기준이다. 해시 충돌은 불필요한 직렬화만 늘리고 누락을 만들지 않는다. lock timeout·교착·직렬화 실패는 전체 트랜잭션 재시도 또는 공통 CONCURRENT_MODIFICATION 응답으로 처리한다.
 
-## 3단계에서 제공할 내부 함수 계약 — 아직 미구현
+## 3단계 내부 함수 계약
 
-아래 이름을 연결 지점으로 예약한다. 4단계에서 동일 파일을 별도 구현하거나 빈 성공 stub으로 대체하지 않는다. 함수가 준비되기 전 원본 API를 운영 완료로 표시하지 않는다.
+아래 함수를 service/text_analysis.py에서 제공한다. 4단계에서 같은 파일을 별도 구현하거나 빈 성공 stub으로 대체하지 않는다. 함수 구현과 원본 API의 실제 연결 완료를 구분한다.
 
 ```python
 async def request_found_item_analysis(db, *, item, now): ...
@@ -63,11 +63,11 @@ async def request_item_reevaluation(db, *, item, now): ...
 async def request_report_reevaluation(db, *, report, now): ...
 ```
 
-위 함수는 `service/text_analysis.py`에서 제공하며 트랜잭션·카테고리 잠금은 호출자 소유다. 함수는 commit·모델 호출을 하지 않는다. 검증된 활성 정책·프로필을 확인하고 idempotent UPSERT한다. 분석 요청 함수는 현재 text_version의 분석 행과 feature ID 기반 outbox를 보장하고 재평가도 요청한다. 재평가 전용 함수는 번역을 다시 만들지 않고 requested_generation만 증가시킨다. API DTO 생성은 원본 서비스가 담당하며 진행 상태 조회의 구체 함수는 3단계 구현 시 추가 문서화한다.
+트랜잭션·카테고리 잠금은 호출자 소유다. 함수는 commit·모델 호출을 하지 않는다. 검증된 활성 정책·프로필을 확인하고 idempotent UPSERT한다. 분석 요청 함수는 현재 text_version의 분석 행과 feature ID 기반 outbox를 보장하고 재평가도 요청한다. 재평가 전용 함수는 번역을 다시 만들지 않고 requested_generation을 증가시킨다. API DTO 생성은 원본 서비스가 담당한다. 읽기 전용 analysis_status(db, *, owner)가 공개 분석 상태를 제공하며 비교 범위 matchingStatus 집계는 5단계다. 상세 반환값·호출 조건은 [3단계 안내](text-analysis-worker.md)를 따른다.
 
 이벤트 타입은 FOUND_ITEM_TEXT_ANALYSIS_REQUESTED / LOST_REPORT_TEXT_ANALYSIS_REQUESTED. aggregate_id=분석 행 UUID, aggregate_version=1. payload는 featureId, itemId 또는 reportId, profileId, textVersion만 허용한다. 원문·private details·번역문·키워드는 복제하지 않는다.
 
-활성 프로필이 아직 없는 상태의 등록 동작은 3단계에서 명세와 함께 확정한다. 유효한 프로필 없이 임의 profile ID를 넣거나 READY를 반환하지 않는다. 2026-11-08 사용자 결정으로 한글이 없는 미지원 언어는 EN으로 간주하고 그대로 키워드를 추출한다. 따라서 언어 정책용 DB 변경은 필요 없다. 활성 정책 미설정 시 등록 계약만 원본 API 최종 통합 전 해결해야 한다.
+활성 정책은 명시적인 initialize 명령으로 준비한다. 분석 활성 환경에서는 활성 정책 누락·실제 모델 불일치 시 앱 startup을 실패시킨다. 요청 함수도 활성 정책을 검증하며 유효한 프로필 없이 임의 ID나 READY를 사용하지 않는다. 한글 없는 미지원 언어도 EN으로 간주하는 기존 정책은 유지한다.
 
 ## 변경 종류별 요청
 
@@ -110,3 +110,18 @@ async def request_report_reevaluation(db, *, report, now): ...
 추가 변경: 키워드 추출·비교를 [spaCy·WordNet v2](spacy-wordnet-keywords.md)로 전환했다. 4단계 API 소유 경계와 DB 작업 서비스의 후속 범위는 유지한다.
 
 2026-11-08: 상주 번역·규칙 키워드 런타임, 모델 준비·평가 명령과 lifespan을 구현했다. 한글 없는 입력은 사용자 결정대로 EN으로 간주해 그대로 추출한다. 고정 모델 assets를 공유 .cache에 준비했고 CPU float32 전용 스레드에서 실제 추론을 검증했다. 전체392개 테스트와 pip check가 통과했다. 평가·메모리·제한 사례와 실행 명령은 [런타임 안내](translation-runtime.md)를 따른다. 런타임 프로필을 산출하지만 DB 등록·활성화와 작업 소비·원본 API 연결은 3단계 이후 범위다.
+
+## 3단계 적용 결과
+
+2026-11-08: 분석 요청·분석 상태 조회·generation UPSERT, 프로필/정책의 명시적 최초 초기화,
+분석 outbox 소비·heartbeat·lease fencing·재시도·종료·정합성 복구·감사된 수동 재시도를 구현했다.
+활성 정책 누락·실제 모델 불일치는 startup 실패로 확정했다. 감사 action/metadata 확장을 위해
+revision 20261108_0007을 추가했다. 4단계 원본 API 소유 파일은 변경하지 않았다.
+호출 계약·운영 절차·후속 미구현 범위는 [3단계 안내](text-analysis-worker.md)를 따른다.
+
+기존 backend 컨테이너 /app에서 실제 모델을 활성화한 전체 426개 테스트가 통과했다(skip 없음).
+이후 추가한 실제 카테고리 이동·잠금 직전 이동 경합 2사례도 통과했다(관련 19개 통과,
+실제 모델 opt-in 1개는 이 추가 실행에서만 skip; 앞선 전체 실행에서 검증했다).
+pip check는 충돌 없음, alembic check는 스키마 차이 없음, git diff --check도 통과했다.
+개발 DB에 0007과 최초 프로필·정책을 적용하고 기존 데이터 행 수 보존, backend 재시작 후 루트 200을 확인했다.
+원본 HTTP API 연결·후보 계산/전체 matchingStatus·알림·수거 통합·운영 부하·이미지 재빌드는 아직 검증하지 않았다.

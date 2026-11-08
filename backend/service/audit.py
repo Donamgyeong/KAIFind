@@ -6,7 +6,7 @@ from model import AuditLog
 from schema.admin import AuditAction
 
 TARGETS = {'FOUND_ITEM', 'LOST_REPORT', 'COLLECTION', 'USER', 'BUILDING', 'CATEGORY', 'POST_REPORT', 'DISPUTE'}
-UUID_KEYS = {'collectionId', 'photoId', 'reportId', 'disputeId'}
+UUID_KEYS = {'collectionId', 'photoId', 'reportId', 'disputeId', 'eventId'}
 
 
 def one_year_after(now):

@@ -1209,7 +1209,9 @@ MOD-01은 로그인 회원 공통 API이고 나머지는 ADMIN만 사용한다. 
 
 AuditAction 필수값: ITEM\_STATUS\_CHANGED, COLLECTION\_MARKED, COLLECTION\_UNDONE, DROP\_OFF\_CHANGED, SENSITIVE\_PHOTO\_VIEWED, SENSITIVE\_DROP\_OFF\_VIEWED. 분실 신고 생성·수동 해결·자동 종료·수거에 따른 종료 등 모든 상태 전이는 LOST\_REPORT\_STATUS\_CHANGED로 기록한다. PHOTO\_ACCESS\_URL\_ISSUED는 사진 URL 발급을 추적하는 추가 이벤트이며 실제 민감 사진 열람 이벤트 SENSITIVE\_PHOTO\_VIEWED를 대체하지 않는다. 추가 운영값 제안: ROLE\_CHANGED, REFERENCE\_CREATED, REFERENCE\_UPDATED, POST\_HIDDEN, POST\_REPORT\_REVIEWED, DISPUTE\_REVIEWED, COLLECTION\_RESTRICTION\_CHANGED.
 
-metadata 허용필드: fromStatus/toStatus(대상별 POSTED/COLLECTED/EXPIRED 또는 OPEN/RESOLVED/CLOSED), collectionId/photoId/reportId/disputeId(UUID), fromRole/toRole(MEMBER/ADMIN), restricted(boolean), decision(위 enum). 값이 없으면 키 생략. 위치 변경은 위치 원문 대신 targetId·행위·시각으로 추적한다. 카테고리·건물 이름이나 신고 사유 원문을 로그 metadata에 복제하지 않는다.
+운영 명령으로 실패 분석을 수동 재시도하면 SYSTEM/TEXT_ANALYSIS_RETRIED를 기록한다. 대상은 FOUND_ITEM 또는 LOST_REPORT이며 metadata에는 eventId(UUID)만 기록한다. 이 액션도 기존 감사 목록·action 필터에서 조회할 수 있다. 회원용 재시도 엔드포인트는 추가하지 않는다.
+
+metadata 허용필드: fromStatus/toStatus(대상별 POSTED/COLLECTED/EXPIRED 또는 OPEN/RESOLVED/CLOSED), collectionId/photoId/reportId/disputeId/eventId(UUID), fromRole/toRole(MEMBER/ADMIN), restricted(boolean), decision(위 enum). 값이 없으면 키 생략. 위치 변경은 위치 원문 대신 targetId·행위·시각으로 추적한다. 카테고리·건물 이름이나 신고 사유 원문을 로그 metadata에 복제하지 않는다.
 
 ## 보존·검증 기준
 

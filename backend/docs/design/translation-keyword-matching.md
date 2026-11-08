@@ -1,10 +1,10 @@
 # 번역·키워드 기반 비동기 물품 매칭
 
-작성일: 2026-11-07 (KST). 상태: DB·번역 런타임 구현, 분석 작업·매칭 서비스 구현 전.
+작성일: 2026-11-07 (KST). 상태: DB·번역 런타임·분석 작업 구현, 후보 매칭 서비스 구현 전.
 
 2026-11-08: 단계별 작업·공통 API 계약·4단계 담당자 연결 규약은 [구현 계획과 인계 문서](translation-keyword-implementation-plan.md)를 따른다. 원본 API 구현은 다른 팀원이 담당하며 공통 기반과 별도로 진행한다.
 
-이 문서는 기존 다국어 임베딩 제안을 대체한다. DB·번역 모델 실행은 구현했으며 DB 작업 서비스·워커는 아직 구현하지 않았다. 물리 DB 구조와 트랜잭션 계약은 [DB 설계](translation-keyword-db-schema.md), 실행 방법은 [런타임 안내](translation-runtime.md)를 따른다.
+이 문서는 기존 다국어 임베딩 제안을 대체한다. DB·번역 모델 실행과 분석 작업 서비스·워커를 구현했다. 물리 DB 구조와 트랜잭션 계약은 [DB 설계](translation-keyword-db-schema.md), 실행 방법은 [런타임 안내](translation-runtime.md)와 [3단계 안내](text-analysis-worker.md)를 따른다.
 
 ## 목표와 범위
 

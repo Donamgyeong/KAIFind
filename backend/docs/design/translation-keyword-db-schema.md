@@ -1,6 +1,6 @@
 # 번역·키워드 매칭 DB 설계
 
-작성일: 2026-11-07 (KST). 상태: DB 모델·마이그레이션 구현. 서비스·워커는 미구현이다. 적용·검증 현황은 [DB 구현 안내](../db/IMPLEMENTATION.md)를 따른다.
+작성일: 2026-11-07 (KST). 상태: DB 모델·마이그레이션·분석 서비스·워커 구현. 후보 계산은 후속 단계다. 적용·검증 현황은 [DB 구현 안내](../db/IMPLEMENTATION.md)와 [3단계 안내](text-analysis-worker.md)를 따른다.
 
 상위 흐름은 [전체 구조](translation-keyword-matching.md)를 따른다. 기존 PostgreSQL과 outbox를 사용하며 신규 DB 서비스·확장은 필요하지 않다. 아래 timestamp는 모두 timestamptz다.
 

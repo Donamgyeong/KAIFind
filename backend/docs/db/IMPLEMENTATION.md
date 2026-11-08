@@ -1,5 +1,7 @@
 # DB 모델·마이그레이션 사용법
 
+2026-11-08: [3단계 분석 워커](../design/text-analysis-worker.md)와 revision `20261108_0007`을 추가했다. 새 revision은 감사 action의 TEXT_ANALYSIS_RETRIED와 metadata의 eventId 허용 목록만 확장한다. 기존 기록을 변경하지 않는다. 재시도 감사가 있으면 downgrade는 이력 보존을 위해 거절한다. 아래 0006 설명은 도입 당시 이력이며 분석 소비자는 이제 구현됐다. 후보 재평가 소비자·알림·수거 연결은 후속 단계다.
+
 2026-11-07: 개발 DB는 저장소에서 빠진 `20261106_0005`를 가리키고 있었다. Git 이력 `79af37a`의 원본 마이그레이션을 복원하고 새 revision `20261107_0006`을 연결했다. 번역·키워드 기반 비동기 매칭의 [상세 DB 설계](../design/translation-keyword-db-schema.md)를 DB 모델·마이그레이션에 반영했다. 과거 embedding-db-schema.md 링크는 유효하지 않다.
 
 ## 2026-11-07 번역·키워드 DB 기반

@@ -57,7 +57,7 @@ def seed(db):
 def test_schema_matches_migrated_database(db):
     names = set(db.execute(text("SELECT tablename FROM pg_tables WHERE schemaname='public'" )).scalars())
     assert set(Base.metadata.tables) <= names
-    assert db.execute(text('SELECT version_num FROM alembic_version')).scalar_one() == '20261107_0006'
+    assert db.execute(text('SELECT version_num FROM alembic_version')).scalar_one() == '20261108_0007'
 
 
 def test_single_active_collector_and_new_collection_after_undo(db, seed):
