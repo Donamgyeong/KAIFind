@@ -11,3 +11,4 @@ from .matching import (FoundItemTextFeature, LostReportTextFeature, MatchEvaluat
     MatchingPolicy, MatchingRuntime, TextAnalysisProfile)
 from .keyword_subscriptions import KeywordRegistrationEvent, KeywordSubscriptionFeature
 from . import indexes as _indexes
+from .backups import DatabaseBackup

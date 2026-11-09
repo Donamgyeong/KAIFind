@@ -31,7 +31,7 @@
 
 ## 연결 설정
 
-`DATABASE_URL` 또는 `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`를 환경변수로 전달한다. 후자는 `POSTGRES_HOST` 기본 localhost, `POSTGRES_PORT` 기본 5432다. `.env.example`은 참고용이며 애플리케이션이 `.env`를 자동으로 읽지는 않는다. 비밀번호에 특수문자가 있으면 URL 인코딩을 적용하거나 개별 POSTGRES 변수를 사용한다.
+`DATABASE_URL` 또는 `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`를 환경변수로 전달한다. 후자는 `POSTGRES_HOST` 기본 localhost, `POSTGRES_PORT` 기본 5432다. 실제 값은 backend 상위 프로젝트 루트 `.env`에서 관리하고 예시는 같은 루트 `example.env`를 따른다. 애플리케이션이 `.env`를 자동으로 읽지는 않는다. 비밀번호에 특수문자가 있으면 URL 인코딩을 적용하거나 개별 POSTGRES 변수를 사용한다.
 
 호스트에서 PostgreSQL 포워딩 포트에 연결할 때는 localhost, Compose backend에서 연결할 때는 서비스 이름 db를 사용한다. 연결 설정과 엔진은 지연 생성되며 모듈 import나 앱 시작만으로 테이블을 생성하지 않는다. 요청 세션의 commit/rollback은 서비스 트랜잭션에서 명시적으로 처리한다.
 

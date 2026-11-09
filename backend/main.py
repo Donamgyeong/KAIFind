@@ -8,6 +8,9 @@ from library.photo_http import install_photo_log_filter
 from library.translation_runtime import TranslationRuntime, TranslationSettings
 from library.database import session_factory
 from library.notification_settings import NotificationSettings
+from library.backup_settings import BackupSettings
+from service.backup_worker import BackupWorker
+from service.database_backup import DatabaseBackupService
 from service.email_worker import EmailWorker
 from service.notification_worker import NotificationWorker
 from service.keyword_worker import KeywordWorker
@@ -19,6 +22,7 @@ from service.text_analysis_profiles import active_policy
 @asynccontextmanager
 async def lifespan(app):
     email_settings = NotificationSettings.from_environment()
+    backup_settings = BackupSettings()
     enabled = os.getenv('TEXT_ANALYSIS_ENABLED', 'true').lower()
     if enabled not in {'true', 'false'}:
         raise ValueError('TEXT_ANALYSIS_ENABLED must be true or false')
@@ -30,6 +34,7 @@ async def lifespan(app):
     email_worker = None
     notification_worker = None
     keyword_worker = None
+    backup_worker = None
     started = False
     try:
         if enabled == 'true':
@@ -57,8 +62,13 @@ async def lifespan(app):
             email_worker = EmailWorker(session_factory(), email_settings)
             email_worker.start()
         app.state.notification_email_settings = email_settings
+        if backup_settings.enabled:
+            backup_worker = BackupWorker(DatabaseBackupService(backup_settings))
+            backup_worker.start()
         yield
     finally:
+        if backup_worker is not None:
+            await backup_worker.close()
         if email_worker is not None:
             await email_worker.close()
         if notification_worker is not None:

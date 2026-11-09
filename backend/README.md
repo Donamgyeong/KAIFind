@@ -22,7 +22,9 @@ docker compose exec backend sh
 # 컨테이너 안에서: python ..., python -m scripts.test_backend
 ```
 
-환경변수는 프로젝트 루트 `.env`에 설정한다. Compose가 backend에 전달한다.
+환경변수는 backend 상위 프로젝트 루트 `.env` 한 곳에서 관리한다.
+새 변수도 이 파일에 추가하고, 비밀정보 없는 예시는 같은 루트 `example.env`에 반영한다.
+backend 안에는 별도 환경변수 파일을 만들지 않는다. Compose가 backend에 전달한다.
 로컬 MinIO 접근 키를 생략하면 기존 `MINIO_ROOT_USER`/`MINIO_ROOT_PASSWORD`를 사용한다.
 운영 환경에는 전용 접근 키를 설정한다. Auth 사용 시 `AUTH_ENCRYPTION_KEY`가 필요하며,
 목업 로그인은 `APP_ENV=local`, `MOCK_AUTH_ENABLED=true`를 명시해야 활성화된다.
@@ -67,7 +69,8 @@ DB와 MinIO는 각각 `db-data`, `storage-data` 볼륨을 사용한다. 개발�
 수거·만료는 DB 상태 변경과 함께 이벤트를 기록하며 해당 도메인 HTTP API·만료 스케줄러 구현을 대체하지 않는다.
 키워드 등록 이벤트 생산자와 구독 API는 revision 20261109_0010에 연결했다.
 
-환경변수 예시는 `notification.env.example`을 참고한다. 기존 상위 프로젝트 `.env`에 필요한 값을 추가하고
+알림 환경변수는 상위 프로젝트 `.env`에 통합되어 있으며 예시는 같은 루트 `example.env`를 참고한다.
+값을 변경한 뒤
 `docker compose up -d --no-deps backend`로 기존 backend에 반영한다.
 `NOTIFICATION_EMAIL_ENABLED=false`가 기본이다. true여도 현재 제공자는 **mock만 지원**하며 외부 메일을 보내지 않는다.
 mock 수신 확인은 `mock_email_receipts`와 `email_deliveries`에 저장하고 본문·수신 주소는 복제하지 않는다.
@@ -112,3 +115,12 @@ docker compose exec -T -w /app backend python -m scripts.manage_keyword_subscrip
 
 다른 프로필로 전환하기 전에 이전 프로필의 미완료·실패 등록 이벤트를 처리해야 한다.
 DB 트리거가 미처리 이벤트가 있는 프로필 교체를 거부한다. 외부 이메일은 여전히 mock만 지원한다.
+
+## DB 일일 백업
+
+매일 04:00 KST에 기존 backend에서 `pg_dump -Fc`를 실행해 기존 MinIO의 비공개
+`kaifind-db-backups` 버킷에 저장하고, 성공 이후 7일 지난 백업을 정리한다.
+정책은 상위 프로젝트 `.env`의 `BACKUP_*` 환경변수로 조정하며 예시는 같은 루트 `example.env`를 참고한다.
+revision `20261109_0011` 적용과 PostgreSQL 17 클라이언트를 포함한 이미지 빌드 후 사용한다.
+설정·적용 순서·수동 실행·복구 절차 및 만료 검사 연동의 미완료 범위는
+[백업 운영 안내](docs/design/database-backups.md)를 따른다.

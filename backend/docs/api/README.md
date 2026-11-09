@@ -39,3 +39,7 @@ DB 설계: [DB 스키마 초안](../db/README.md) — 테이블·관계·제약�
 3단계 [분석 작업 처리·복구](../design/text-analysis-worker.md)를 구현했다. 활성 정책은 명시적으로 초기화하며 분석 활성 환경에서 정책 누락·모델 불일치는 startup 실패다. 원본 API 연결·전체 매칭 상태 집계·후보 계산은 후속 단계다. 관리자 감사에 TEXT_ANALYSIS_RETRIED와 eventId metadata를 추가했다.
 
 5단계 [matching API·generation 소비자](../design/matching-api.md)를 구현했다. MATCH-01과 비교 범위 진행 상태 집계, 최신 후보 판정·중복 억제·lease 복구를 제공한다. 관리자 감사에 MATCH_EVALUATION_RETRIED를 추가했다(revision 20261108_0008). 4단계 원본 서비스 연결 및 6단계 알림·수거 통합은 별도다.
+
+2026-11-09 DB 백업: [운영 안내](../design/database-backups.md).
+매일 04:00 KST·기존 MinIO·7일 보관을 BACKUP_* 환경변수로 설정한다.
+공개 API 변경은 없으며 일일 만료 검사 후 실행 연동은 후속 범위다(revision 20261109_0011).

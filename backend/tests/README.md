@@ -161,3 +161,20 @@ docker compose exec -T -w /app -e RUN_REAL_TEXT_ANALYSIS_TESTS=true backend pyth
 2026-11-09 구독 구현 검증: 전체641개 통과·실제 모델 관련5개 skip.
 최종 구독·실제 모델 선택 실행은31개 통과(skip 없음)했다.
 개발 DB0010 적용 전후 기존37개 테이블 행 수 보존과 alembic check·루트/OpenAPI200을 확인했다.
+
+## PostgreSQL 백업
+
+`test_database_backup.py`는 설정·04:00 KST 경계·보충 정책·워커 종료를 검증하고,
+기존 db/storage의 전용 임시 DB·버킷에서 실제 pg_dump·MinIO 업로드·체크섬·pg_restore,
+중복 실행·실패 재시도 한도·중단 복구·7일 보관 경계·공개 버킷 차단을 확인한다.
+PostgreSQL 17 클라이언트가 필요하며 `python -m scripts.test_backend tests/test_database_backup.py -q`로
+기존 backend에서 실행한다. HTTP 테스트는 자동 백업을 비활성화해 개발 DB 백업을 실행하지 않는다.
+
+2026-11-09 백업 구현 검증: 새 전용 `kaifind_test_backup_regression_20261109` DB에서
+전체 655개 통과·실제 모델 관련 5개 skip. 기존 공용 테스트 DB에는 과거 마이그레이션 상태에서
+`keyword_profile_drain` 함수가 없어 새 DB를 사용했으며 기존 DB를 초기화하거나 이력을 덮어쓰지 않았다.
+`test_backup_migration.py`에서 0010→0011 왕복과 기존 테이블 보존을 확인했다.
+개발 DB는 기존 39개 테이블 행 수를 보존하며0011로 업그레이드했고 alembic check가 통과했다.
+첫 실제 MinIO 백업을 별도 임시 DB에 복원하여 SHA-256·전체 스키마·39개 테이블 행 수도 확인했다.
+새 backend 이미지 빌드·재생성 후 healthcheck 정상, 자동 백업 활성화·04:00 Asia/Seoul·7일 보관
+환경변수 적용과 루트/OpenAPI 200도 확인했다. 실제 다음 04:00의 예약 실행은 아직 관찰하지 않았다.

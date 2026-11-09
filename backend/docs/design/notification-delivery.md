@@ -2,7 +2,7 @@
 
 2026-11-09 KST. 아래는 설계 당시 계약이다. 환경변수 파서·mock 전달 워커·digest·날짜 정책·revision 0009를 구현했다.
 실제 외부 발송과 키워드 생산자는 구현하지 않았다. 수거·만료는 DB 상태 변경 outbox로 연결했다.
-현재 지원하는 설정은 `notification.env.example`을 따른다. FROM·TEST_RECIPIENT는 실제 제공자용 예약 설계이며 mock에서 사용하지 않는다.
+현재 지원하는 설정은 backend 상위 프로젝트 루트 `.env`에서 관리하며 예시는 같은 루트 `example.env`를 따른다. FROM·TEST_RECIPIENT는 실제 제공자용 예약 설계이며 mock에서 사용하지 않는다.
 [API 목차](../api/README.md), [알림 API](../api/04-profile-notifications.md),
 [기존 설계](notification-api.md), [DB 설계](../db/README.md)를 기준으로 한다.
 NOTI-01~04의 공개 계약은 유지한다. 기존 숫자 20통·19통·20시는 아래 환경변수의 기본값으로 바꾼다.

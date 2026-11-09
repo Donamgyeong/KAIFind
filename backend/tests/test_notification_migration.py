@@ -33,4 +33,4 @@ def test_delivery_policy_backfill_and_roundtrip(migration_database):
         migrate(url, 'downgrade', '20261108_0008')
     with psycopg.connect(url.render_as_string(hide_password=False)) as db:
         assert db.execute('SELECT delivery_id FROM mock_email_receipts').fetchone() == (delivery_id,)
-        assert db.execute('SELECT version_num FROM alembic_version').fetchone() == ('20261109_0010',)
+        assert db.execute('SELECT version_num FROM alembic_version').fetchone() == ('20261109_0011',)

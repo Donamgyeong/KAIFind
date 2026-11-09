@@ -17,6 +17,7 @@ def disable_model_in_http_tests(monkeypatch):
     # Real-model tests construct the runtime explicitly. Ordinary API tests must
     # remain runnable without model assets or heavy startup per TestClient.
     monkeypatch.setenv('TEXT_ANALYSIS_ENABLED', 'false')
+    monkeypatch.setenv('BACKUP_ENABLED', 'false')
 
 
 class Clock:
