@@ -7,7 +7,7 @@
 `test_notification_models.py`는 다섯 설정 필드의 필수·엄격 boolean과 read=true 제한을 검사한다.
 두 파일을 함께 실행한 결과 90개 테스트가 통과했다(2026-11-09).
 `docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_notification_contract.py -q`로 실행한다.
-이벤트 생성·이메일 전달·rate limit은 후속 구현 및 검증 대상이다.
+이벤트 생성·mock 이메일 전달·rate limit 검증은 아래 알림 전달 절을 참고한다.
 
 3단계: `test_analysis_worker.py`는 실제 PostgreSQL에서 요청·롤백·중복·generation·lease·heartbeat·수정/삭제/종료 경합·재시도·정합성 복구를 검사한다. 실제 모델 → outbox → READY 테스트는 `RUN_REAL_TEXT_ANALYSIS_TESTS=true`로 실행한다. `test_analysis_migration.py`는 별도 임시 DB에서 감사 revision 0007 왕복과 이력 보존을 검증한다. 테스트 DB head는 `20261108_0008`이다. 운영 명령과 4단계 연결은 [작업 처리 안내](../docs/design/text-analysis-worker.md)를 따른다.
 
@@ -124,4 +124,19 @@ docker compose exec -T -w /app backend python -m scripts.test_backend tests/test
 
 ```sh
 docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_dispute_contract.py tests/test_admin_contract.py tests/test_schema.py -q
+```
+
+## 알림 전달·환경변수
+
+`test_notification_settings.py`는 환경변수 형식·범위·상호 제약을 검사한다.
+`test_notification_delivery.py`는 기존 PostgreSQL에서 개별 한도·digest·정각/자정·다음 날짜 정책,
+동시 워커·재시도·불명확 결과 복구·오래된 lease·수신 거부·안전한 메일 본문·이벤트 원자성을 검사한다.
+`test_notification_migration.py`는 별도 임시 DB에서 0008→0009 backfill과 왕복·이력 보존을 확인한다.
+현재 head는 `20261109_0009`다. 외부 이메일은 보내지 않으며 실제 제공자 연동은 미검증이다.
+
+2026-11-09 최종 전체 회귀: 596개 통과, 실제 모델 관련 4개 skip.
+개발 DB 0009 적용 전후 기존 행 수 보존, alembic check·pip check·Compose 문법·루트/OpenAPI 200을 확인했다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_notification_delivery.py tests/test_notification_settings.py tests/test_notification_migration.py -q
 ```

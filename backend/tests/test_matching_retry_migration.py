@@ -21,7 +21,7 @@ def test_matching_retry_audit_preserved_on_downgrade(migration_database):
     with pytest.raises(subprocess.CalledProcessError):
         migrate(url, 'downgrade', '20261108_0007')
     with psycopg.connect(url.render_as_string(hide_password=False)) as db:
-        assert db.execute('SELECT version_num FROM alembic_version').fetchone() == ('20261108_0008',)
+        assert db.execute('SELECT version_num FROM alembic_version').fetchone() == ('20261109_0009',)
         assert db.execute('SELECT action FROM audit_logs WHERE id=%s', (key,)).fetchone() == ('MATCH_EVALUATION_RETRIED',)
         db.execute('DELETE FROM audit_logs WHERE id=%s', (key,))
     migrate(url, 'downgrade', '20261108_0007')

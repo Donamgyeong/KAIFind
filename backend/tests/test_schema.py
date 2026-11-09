@@ -4,7 +4,7 @@ TEST_DATABASE_URL must name a database beginning with kaifind_test_.
 All test data is rolled back. No create_all or SQLite substitutes are used.
 """
 import os
-from datetime import datetime, timedelta, timezone, date
+from datetime import datetime, timedelta, timezone, date, time
 from uuid import uuid4
 
 import pytest
@@ -13,7 +13,7 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.exc import IntegrityError
 
 from model import (Base, Building, Category, Collection, Conversation, DropOffVersion,
-                   EmailDelivery, FoundItem, LostReport, LostReportPrivateDetail,
+                   EmailDelivery, EmailDeliveryPolicy, FoundItem, LostReport, LostReportPrivateDetail,
                    Message, Photo, PhotoAttachment, User)
 
 NOW = datetime.now(timezone.utc)
@@ -57,7 +57,7 @@ def seed(db):
 def test_schema_matches_migrated_database(db):
     names = set(db.execute(text("SELECT tablename FROM pg_tables WHERE schemaname='public'" )).scalars())
     assert set(Base.metadata.tables) <= names
-    assert db.execute(text('SELECT version_num FROM alembic_version')).scalar_one() == '20261108_0008'
+    assert db.execute(text('SELECT version_num FROM alembic_version')).scalar_one() == '20261109_0009'
 
 
 def test_single_active_collector_and_new_collection_after_undo(db, seed):
@@ -73,13 +73,19 @@ def test_single_active_collector_and_new_collection_after_undo(db, seed):
 
 
 def test_email_slot_and_digest_limits(db, seed):
+    db.execute(insert(EmailDeliveryPolicy).values(
+        delivery_date=date.today(), daily_limit=50, digest_time=time(20),
+    ))
     values = dict(recipient_id=seed['member'], delivery_date=date.today(), kind='INDIVIDUAL', slot_no=1)
     db.execute(insert(EmailDelivery).values(id=uuid4(), **values))
     with pytest.raises(IntegrityError), db.begin_nested():
         db.execute(insert(EmailDelivery).values(id=uuid4(), **values))
     with pytest.raises(IntegrityError), db.begin_nested():
-        db.execute(insert(EmailDelivery).values(id=uuid4(), **{**values, 'slot_no':20}))
+        db.execute(insert(EmailDelivery).values(id=uuid4(), **{**values, 'slot_no':0}))
+    db.execute(insert(EmailDelivery).values(id=uuid4(), **{**values, 'slot_no':49}))
     db.execute(insert(EmailDelivery).values(id=uuid4(), **{**values, 'slot_no':20, 'kind':'DIGEST'}))
+    with pytest.raises(IntegrityError), db.begin_nested():
+        db.execute(insert(EmailDelivery).values(id=uuid4(), **{**values, 'slot_no':50, 'kind':'DIGEST'}))
 
 
 def report(db, seed):

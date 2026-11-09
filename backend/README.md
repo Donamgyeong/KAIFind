@@ -60,3 +60,32 @@ docker compose exec -T backend python -m scripts.test_backend tests/test_photo_c
 
 DB와 MinIO는 각각 `db-data`, `storage-data` 볼륨을 사용한다. 개발을 마칠 때는
 `docker compose stop`을 사용하고, 데이터를 삭제하는 `docker compose down -v`는 실행하지 않는다.
+
+## 알림·이메일
+
+기존 backend 프로세스에서 매칭 최초 후보와 수거/만료 outbox를 인앱 알림·이메일 대기로 변환한다.
+수거·만료는 DB 상태 변경과 함께 이벤트를 기록하며 해당 도메인 HTTP API·만료 스케줄러 구현을 대체하지 않는다.
+키워드 이벤트 생산자는 구독 기능 연결 시 구현한다.
+
+환경변수 예시는 `notification.env.example`을 참고한다. 기존 상위 프로젝트 `.env`에 필요한 값을 추가하고
+`docker compose up -d --no-deps backend`로 기존 backend에 반영한다.
+`NOTIFICATION_EMAIL_ENABLED=false`가 기본이다. true여도 현재 제공자는 **mock만 지원**하며 외부 메일을 보내지 않는다.
+mock 수신 확인은 `mock_email_receipts`와 `email_deliveries`에 저장하고 본문·수신 주소는 복제하지 않는다.
+
+일일 한도는 `NOTIFICATION_EMAIL_DAILY_LIMIT`(기본 20), digest 시각은
+`NOTIFICATION_EMAIL_DIGEST_TIME`(기본 20:00 KST)이다. 개별 최대 한도는 일일 한도-1이다.
+초과분은 digest로 묶고 마감 이후 초과분은 다음 날로 이월한다. 빈 digest는 보내지 않는다.
+한도와 시각 변경은 재시작 이후 새로 확정되는 다음 KST 날짜 정책부터 적용한다.
+전송 전역 중지는 대기를 보존하며 사용자 수신 거부는 해당 항목을 취소한다.
+
+새 revision `20261109_0009` 적용 후 사용한다.
+
+```sh
+docker compose exec -T -w /app backend python -m alembic upgrade head
+docker compose exec -T -w /app backend python -m scripts.manage_notifications failures
+docker compose exec -T -w /app backend python -m scripts.manage_notifications retry <delivery-uuid>
+docker compose exec -T -w /app backend python -m scripts.manage_notifications retry-event <event-uuid>
+```
+
+UNKNOWN은 결과 확인 대상으로 남기며 수동 retry로 강제 재발송하지 않는다.
+기존 DB·MinIO 볼륨을 삭제하거나 별도 서비스 컨테이너를 만들 필요는 없다.

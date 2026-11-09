@@ -57,6 +57,10 @@ index('match_evaluation_jobs', 'ix_match_evaluation_jobs_pending', 'next_attempt
       where='completed_generation < requested_generation AND failed_at IS NULL')
 index('email_deliveries', 'ix_email_deliveries_pending', 'next_attempt_at', 'id',
       where="status IN ('PENDING','RETRY')")
+index('email_deliveries', 'uq_email_deliveries_digest', 'recipient_id', 'delivery_date',
+      unique=True, where="kind = 'DIGEST'")
+index('email_delivery_items', 'ix_email_delivery_items_pending', 'created_at', 'id',
+      where="status = 'PENDING'")
 for table in ('disputes', 'post_reports'):
     index(table, f'ix_{table}_review', 'status', 'created_at DESC', 'id DESC')
 index('audit_logs', 'ix_audit_logs_time', 'occurred_at DESC', 'id DESC')

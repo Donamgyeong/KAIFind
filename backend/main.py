@@ -7,6 +7,9 @@ from router import api_router
 from library.photo_http import install_photo_log_filter
 from library.translation_runtime import TranslationRuntime, TranslationSettings
 from library.database import session_factory
+from library.notification_settings import NotificationSettings
+from service.email_worker import EmailWorker
+from service.notification_worker import NotificationWorker
 from service.outbox_worker import AnalysisWorker
 from service.matching_worker import MatchingWorker
 from service.text_analysis_profiles import active_policy
@@ -14,6 +17,7 @@ from service.text_analysis_profiles import active_policy
 
 @asynccontextmanager
 async def lifespan(app):
+    email_settings = NotificationSettings.from_environment()
     enabled = os.getenv('TEXT_ANALYSIS_ENABLED', 'true').lower()
     if enabled not in {'true', 'false'}:
         raise ValueError('TEXT_ANALYSIS_ENABLED must be true or false')
@@ -22,6 +26,8 @@ async def lifespan(app):
     runtime = None
     worker = None
     matching_worker = None
+    email_worker = None
+    notification_worker = None
     started = False
     try:
         if enabled == 'true':
@@ -41,8 +47,18 @@ async def lifespan(app):
             app.state.text_analysis_runtime = runtime
             app.state.text_analysis_state = 'READY'
             started = True
+        notification_worker = NotificationWorker(session_factory())
+        notification_worker.start()
+        if email_settings.enabled:
+            email_worker = EmailWorker(session_factory(), email_settings)
+            email_worker.start()
+        app.state.notification_email_settings = email_settings
         yield
     finally:
+        if email_worker is not None:
+            await email_worker.close()
+        if notification_worker is not None:
+            await notification_worker.close()
         if matching_worker is not None:
             await matching_worker.close()
         if worker is not None:

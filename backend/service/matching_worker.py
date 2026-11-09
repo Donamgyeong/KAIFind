@@ -16,6 +16,7 @@ from model import (
     LostReportTextFeature, MatchCandidate, MatchEvaluationJob,
 )
 from service.matching import KST, candidate_evidence
+from service.notification_events import create_notification
 from service.outbox_worker import utcnow
 from service.text_analysis import eligible
 from service.text_analysis_profiles import active_policy
@@ -169,6 +170,18 @@ class MatchingWorker:
         await db.execute(insert(MatchCandidate).values(
             report_id=report.id, item_id=item.id, matched_at=now, **values,
         ).on_conflict_do_update(index_elements=['report_id', 'item_id'], set_=values))
+
+        candidate = await db.scalar(select(MatchCandidate).where(
+            MatchCandidate.item_id == item.id, MatchCandidate.report_id == report.id,
+        ).with_for_update())
+        if (candidate.first_notified_at is None and item.status == 'POSTED'
+                and not item.hidden and item.deleted_at is None and report.status == 'OPEN'
+                and report.expires_at > now):
+            await create_notification(
+                db, event_id=candidate.id, recipient_id=report.owner_id,
+                kind='MATCH_CANDIDATE', item_id=item.id, report_id=report.id, now=now,
+            )
+            candidate.first_notified_at = now
 
     async def finish(self, db, job, now, *, complete):
         result = await db.execute(update(MatchEvaluationJob).where(*self.fence(job)).values(

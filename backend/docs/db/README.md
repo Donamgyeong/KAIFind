@@ -201,6 +201,12 @@ member_id≠finder_id와 sender가 두 참여자 중 한 명이라는 조건은 
 
 ## 6. 알림·구독·외부 작업
 
+2026-11-09 후속 설계: [이메일 환경변수·날짜 정책](../design/notification-delivery.md).
+아래 고정 슬롯 1~19/20은 현재 스키마와 기본값이다. 후속 migration에서 숫자 CHECK를 제거하고
+email_delivery_policies의 날짜별 한도·시각과 서비스 잠금으로 검사한다.
+revision 20261109_0009로 날짜 정책·가변 슬롯·lease_token·UNKNOWN 상태·digest 유일 인덱스를 적용했다.
+수거 INSERT·물품 EXPIRED 전환은 같은 트랜잭션에서 알림 outbox를 생성한다. 기존 고정 슬롯 설명은 도입 당시 기록이다.
+
 | 테이블 | 주요 컬럼 | 제약·설명 |
 | --- | --- | --- |
 | `keyword_subscriptions` | id, user_id uuid FK, keyword varchar(50), normalized_keyword text, created_at | UNIQUE(user_id,normalized_keyword). trim·Unicode 정규화·영문 소문자 적용 |

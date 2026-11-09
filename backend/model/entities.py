@@ -1,10 +1,10 @@
 """KAIFind ORM models. Cross-resource authorization belongs in services."""
-from datetime import date, datetime
+from datetime import date, datetime, time
 from uuid import UUID
 from typing import Any
 
 from sqlalchemy import (BigInteger, Boolean, CheckConstraint, Date, DateTime,
-    FetchedValue, ForeignKey, ForeignKeyConstraint, Integer, String, Text, UniqueConstraint,
+    FetchedValue, ForeignKey, ForeignKeyConstraint, Integer, String, Text, Time, UniqueConstraint,
     Uuid, text)
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
@@ -366,26 +366,45 @@ class NotificationKeywordSource(Base):
     notification_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("notifications.id", ondelete="CASCADE"), primary_key=True)
     subscription_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("keyword_subscriptions.id", ondelete="CASCADE"), primary_key=True)
 
+class EmailDeliveryPolicy(Base):
+    __tablename__ = 'email_delivery_policies'
+    __table_args__ = (CheckConstraint('daily_limit >= 1', name='daily_limit'),)
+
+    delivery_date: Mapped[date] = mapped_column(Date, primary_key=True)
+    daily_limit: Mapped[int] = mapped_column(Integer)
+    digest_time: Mapped[time] = mapped_column(Time)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=text('now()'))
+
+
 class EmailDelivery(UUIDPrimaryKey, Base):
     __tablename__ = "email_deliveries"
     __table_args__ = (
-        CheckConstraint("(kind = 'INDIVIDUAL' AND slot_no BETWEEN 1 AND 19) OR (kind = 'DIGEST' AND slot_no = 20)", name='slot'),
-        CheckConstraint("status IN ('PENDING','SENDING','SENT','RETRY','FAILED','CANCELLED')", name='status'),
+        CheckConstraint("kind IN ('INDIVIDUAL','DIGEST') AND slot_no >= 1", name='slot'),
+        CheckConstraint("status IN ('PENDING','SENDING','SENT','RETRY','FAILED','CANCELLED','UNKNOWN')", name='status'),
         CheckConstraint('attempts >= 0', name='attempts'),
         UniqueConstraint('recipient_id', 'delivery_date', 'slot_no'),
     )
     recipient_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("users.id", ondelete="RESTRICT"))
-    delivery_date: Mapped[date] = mapped_column(Date)
+    delivery_date: Mapped[date] = mapped_column(Date, ForeignKey('email_delivery_policies.delivery_date'))
     kind: Mapped[str] = mapped_column(Text)
     slot_no: Mapped[int] = mapped_column(Integer)
     status: Mapped[str] = mapped_column(Text, server_default='PENDING')
     attempts: Mapped[int] = mapped_column(Integer, server_default=text('0'))
     next_attempt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=text("now()"))
     lease_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    lease_token: Mapped[UUID | None] = mapped_column(Uuid, nullable=True)
     provider_message_id: Mapped[str | None] = mapped_column(Text, nullable=True)
     last_error_code: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=text("now()"))
     sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class MockEmailReceipt(Base):
+    """Durable mock-provider idempotency ledger; no recipient or message copy."""
+    __tablename__ = 'mock_email_receipts'
+
+    delivery_id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
+    accepted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 class EmailDeliveryItem(UUIDPrimaryKey, Base):
     __tablename__ = "email_delivery_items"

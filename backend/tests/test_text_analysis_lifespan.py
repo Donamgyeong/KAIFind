@@ -9,6 +9,23 @@ from library.text_analysis_types import AnalysisError
 from main import lifespan
 
 
+@pytest.fixture(autouse=True)
+def isolate_notification_worker(monkeypatch):
+    # This module tests analysis startup, including startup without any DB factory.
+    # Notification lifecycle and real DB consumption have their own acceptance tests.
+    class Worker:
+        def __init__(self, factory):
+            pass
+
+        def start(self):
+            pass
+
+        async def close(self):
+            pass
+
+    monkeypatch.setattr('main.NotificationWorker', Worker)
+
+
 def test_disabled_runtime_does_not_load_model():
     app = FastAPI(lifespan=lifespan)
     with TestClient(app):
