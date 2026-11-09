@@ -140,3 +140,24 @@ docker compose exec -T -w /app backend python -m scripts.test_backend tests/test
 ```sh
 docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_notification_delivery.py tests/test_notification_settings.py tests/test_notification_migration.py -q
 ```
+
+## 키워드 구독
+
+`test_keyword_subscriptions.py`는 전체 단어 포함·명사구/동의어 제외, 생성·목록·삭제·중복·페이지·계정 격리,
+엄격한 입력·인증·CSRF·Origin·503 무저장, 분석 중 DB 잠금 해제와 세션 재검증,
+등록 스냅샷·소급/수정 제외·복수 구독 통합·구독 삭제·이메일 off,
+동시 워커·재실행 중복 억제·lease 만료 롤백·실패 복구·보존 정리를 검사한다.
+`test_keyword_migration.py`는 별도 임시 DB에서0009→0010 왕복과 기존 구독·등록 이력 보존을 검사한다.
+현재 head는 `20261109_0010`이다.
+`test_keyword_real.py`는 실제 모델로 한국어·영어 검은 지갑/검은 가방/검은 동전 지갑 예시를 검사한다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_keyword_subscriptions.py tests/test_keyword_migration.py -q
+docker compose exec -T -w /app -e RUN_REAL_TEXT_ANALYSIS_TESTS=true backend python -m pytest tests/test_keyword_real.py -q
+```
+
+실제 습득물 등록 HTTP API와 대규모 구독 부하는 아직 미검증이다.
+
+2026-11-09 구독 구현 검증: 전체641개 통과·실제 모델 관련5개 skip.
+최종 구독·실제 모델 선택 실행은31개 통과(skip 없음)했다.
+개발 DB0010 적용 전후 기존37개 테이블 행 수 보존과 alembic check·루트/OpenAPI200을 확인했다.

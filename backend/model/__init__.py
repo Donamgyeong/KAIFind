@@ -9,4 +9,5 @@ from .entities import (AuditLog, AuthLoginRate, Building, Category, Collection, 
     PhotoAccessGrant, PhotoAttachment, PhotoUploadIntent, PostReport, Session, User)
 from .matching import (FoundItemTextFeature, LostReportTextFeature, MatchEvaluationJob,
     MatchingPolicy, MatchingRuntime, TextAnalysisProfile)
+from .keyword_subscriptions import KeywordRegistrationEvent, KeywordSubscriptionFeature
 from . import indexes as _indexes

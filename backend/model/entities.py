@@ -320,6 +320,7 @@ class KeywordSubscription(UUIDPrimaryKey, Base):
     user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("users.id", ondelete="RESTRICT"))
     keyword: Mapped[str] = mapped_column(String(50))
     normalized_keyword: Mapped[str] = mapped_column(Text)
+    registration_order: Mapped[int] = mapped_column(BigInteger, server_default=text("nextval('keyword_registration_order')"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=text("now()"))
 
 class OutboxEvent(UUIDPrimaryKey, Base):

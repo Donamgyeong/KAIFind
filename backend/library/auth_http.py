@@ -8,6 +8,10 @@ from starlette.responses import JSONResponse
 from service.auth import AuthError, AuthService, clear_cookie, runtime
 
 MESSAGES = {
+    'KEYWORD_ALREADY_SUBSCRIBED': ('이미 구독한 키워드입니다.', 'This keyword is already subscribed.'),
+    'KEYWORD_SUBSCRIPTION_NOT_FOUND': ('키워드 구독을 찾을 수 없습니다.', 'Keyword subscription not found.'),
+    'KEYWORD_ANALYSIS_UNAVAILABLE': ('키워드 분석을 사용할 수 없습니다. 잠시 후 다시 시도해주세요.', 'Keyword analysis is unavailable. Please retry shortly.'),
+    'NO_MATCHABLE_TERMS': ('비교할 수 있는 단어를 입력해주세요.', 'Enter at least one matchable word.'),
     'AUTH_REQUIRED': ('로그인이 필요합니다.', 'Please sign in.'),
     'SESSION_EXPIRED': ('세션이 만료되었습니다.', 'Your session has expired.'),
     'CSRF_INVALID': ('유효하지 않은 CSRF 토큰입니다.', 'Invalid CSRF token.'),

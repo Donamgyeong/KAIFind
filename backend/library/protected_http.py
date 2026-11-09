@@ -14,6 +14,7 @@ from service.auth import AuthError, AuthService, IDLE, runtime
 # Acquire before session/user locks so revocation cannot race an authorized action.
 ROLE_LOCK = 73011801
 CONFLICTS = {
+    'uq_keyword_subscriptions_user_id': 'KEYWORD_ALREADY_SUBSCRIBED',
     'uq_collections_active_item': 'ALREADY_COLLECTED',
     'uq_buildings_code_normalized': 'BUILDING_CODE_EXISTS',
     'uq_buildings_code': 'BUILDING_CODE_EXISTS',
@@ -33,6 +34,9 @@ def constraint_name(exc):
 
 
 class ProtectedRoute(APIRoute):
+    # Optional two-phase endpoints authenticate both before and after slow work.
+    prepare_outside_transaction = None
+
     def __init__(self, *args, **kwargs):
         extra = dict(kwargs.get('openapi_extra') or {})
         parameters = list(extra.get('parameters', []))
@@ -86,6 +90,9 @@ class ProtectedRoute(APIRoute):
                     if error:
                         response = error_response(error, request)
                     else:
+                        initial_session = getattr(request.state, 'prepared_session_id', None)
+                        if initial_session is not None and initial_session != session.id:
+                            raise AuthError(401, 'AUTH_REQUIRED')
                         user = await db.scalar(select(User).where(User.id == session.user_id))
                         if user is None:
                             raise AuthError(401, 'AUTH_REQUIRED', clear_cookie=True)
@@ -110,9 +117,19 @@ class ProtectedRoute(APIRoute):
                         session.idle_expires_at = min(now + IDLE, session.absolute_expires_at)
                         request.state.db, request.state.user, request.state.now = db, user, now
                         try:
-                            response = await handler(request)
+                            if (self.prepare_outside_transaction is not None
+                                    and initial_session is None):
+                                await self.prepare_request(request)
+                                request.state.prepared_session_id = session.id
+                                response = None
+                            else:
+                                response = await handler(request)
                         except RequestValidationError as exc:
                             raise validation_error(exc) from None
+                if response is None:
+                    # The first transaction and all its locks are closed here.
+                    await self.prepare_outside_transaction(request)
+                    return await handle(request)
             except AuthError as exc:
                 response = error_response(exc, request)
             except IntegrityError as exc:

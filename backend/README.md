@@ -65,7 +65,7 @@ DB와 MinIO는 각각 `db-data`, `storage-data` 볼륨을 사용한다. 개발�
 
 기존 backend 프로세스에서 매칭 최초 후보와 수거/만료 outbox를 인앱 알림·이메일 대기로 변환한다.
 수거·만료는 DB 상태 변경과 함께 이벤트를 기록하며 해당 도메인 HTTP API·만료 스케줄러 구현을 대체하지 않는다.
-키워드 이벤트 생산자는 구독 기능 연결 시 구현한다.
+키워드 등록 이벤트 생산자와 구독 API는 revision 20261109_0010에 연결했다.
 
 환경변수 예시는 `notification.env.example`을 참고한다. 기존 상위 프로젝트 `.env`에 필요한 값을 추가하고
 `docker compose up -d --no-deps backend`로 기존 backend에 반영한다.
@@ -89,3 +89,26 @@ docker compose exec -T -w /app backend python -m scripts.manage_notifications re
 
 UNKNOWN은 결과 확인 대상으로 남기며 수동 retry로 강제 재발송하지 않는다.
 기존 DB·MinIO 볼륨을 삭제하거나 별도 서비스 컨테이너를 만들 필요는 없다.
+
+## 키워드 구독
+
+revision `20261109_0010`에서 KEYWORD-01~03과 습득물 INSERT→등록 스냅샷→키워드 알림을 연결했다.
+구독과 공개 제목·설명을 같은 번역·분석기로 처리한 후 구독의 모든 단어 특징이 포함될 때 알린다.
+명사구와 WordNet 동의어 특징은 필수 조건에서 제외하며 기존 분실 신고 매칭은 유지한다.
+상세 계약·경합·프로필 변경·한계는 [구현 설계](docs/design/keyword-subscriptions.md)를 따른다.
+
+`TEXT_ANALYSIS_ENABLED=true`와 준비된 활성 프로필이 필요하다. 구독 생성은 분석 성공 후201이며,
+모델 비활성·busy·timeout은503과 Retry-After: 5다. 습득물 등록 HTTP API는 아직 별도 구현 영역이다.
+DB 등록 이벤트는 분석 비활성 중에도 저장되며 등록 후 수정·늦게 만든 구독으로 소급 통지하지 않는다.
+기존 알림 워커가 분석 활성 여부와 무관하게 매시간 보존 정리를 실행한다.
+미분석 원문은30일 경과 후 다음 정리에서 삭제하고, 완료7일 후 분석 특징을 정리한다.
+이미 생성된 인앱 알림과 중복 억제 표식은 유지한다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.manage_keyword_subscriptions failures
+docker compose exec -T -w /app backend python -m scripts.manage_keyword_subscriptions retry <event-uuid>
+docker compose exec -T -w /app backend python -m scripts.manage_keyword_subscriptions cleanup
+```
+
+다른 프로필로 전환하기 전에 이전 프로필의 미완료·실패 등록 이벤트를 처리해야 한다.
+DB 트리거가 미처리 이벤트가 있는 프로필 교체를 거부한다. 외부 이메일은 여전히 mock만 지원한다.

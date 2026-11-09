@@ -10,6 +10,7 @@ from library.database import session_factory
 from library.notification_settings import NotificationSettings
 from service.email_worker import EmailWorker
 from service.notification_worker import NotificationWorker
+from service.keyword_worker import KeywordWorker
 from service.outbox_worker import AnalysisWorker
 from service.matching_worker import MatchingWorker
 from service.text_analysis_profiles import active_policy
@@ -28,6 +29,7 @@ async def lifespan(app):
     matching_worker = None
     email_worker = None
     notification_worker = None
+    keyword_worker = None
     started = False
     try:
         if enabled == 'true':
@@ -41,6 +43,8 @@ async def lifespan(app):
                 worker.start()
                 matching_worker = MatchingWorker(session_factory())
                 matching_worker.start()
+                keyword_worker = KeywordWorker(runtime, session_factory())
+                keyword_worker.start()
             except BaseException:
                 app.state.text_analysis_state = 'FAILED'
                 raise
@@ -61,6 +65,8 @@ async def lifespan(app):
             await notification_worker.close()
         if matching_worker is not None:
             await matching_worker.close()
+        if keyword_worker is not None:
+            await keyword_worker.close()
         if worker is not None:
             await worker.close()
         if runtime is not None:

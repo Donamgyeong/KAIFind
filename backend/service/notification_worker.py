@@ -9,6 +9,7 @@ from sqlalchemy import select
 
 from model import Collection, FoundItem, OutboxEvent
 from service.notification_events import create_notification
+from service.keyword_maintenance import cleanup as cleanup_keyword_events
 from service.outbox_worker import utcnow
 
 
@@ -21,6 +22,17 @@ class NotificationWorker:
         self.factory, self.clock, self.poll_seconds = factory, clock, poll_seconds
         self.stop = asyncio.Event()
         self.task = None
+        self.next_keyword_cleanup = self.clock()
+
+    async def cleanup_keywords(self):
+        now = self.clock()
+        if now < self.next_keyword_cleanup:
+            return
+        async with self.factory() as db, db.begin():
+            expired = await cleanup_keyword_events(db, now=now)
+        self.next_keyword_cleanup = now + timedelta(hours=1)
+        if expired:
+            logger.warning('KEYWORD_SNAPSHOTS_EXPIRED count=%s', expired)
 
     async def run_once(self):
         async with self.factory() as db, db.begin():
@@ -71,6 +83,7 @@ class NotificationWorker:
     async def run(self):
         while not self.stop.is_set():
             try:
+                await self.cleanup_keywords()
                 if await self.run_once():
                     continue
             except Exception:

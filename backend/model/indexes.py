@@ -101,3 +101,7 @@ Index('uq_buildings_code_normalized', func.lower(func.btrim(Base.metadata.tables
 for lang in ('ko', 'en'):
     Index(f'uq_categories_name_{lang}_normalized',
           func.lower(func.btrim(Base.metadata.tables['categories'].c[f'name_{lang}'])), unique=True)
+
+index('keyword_registration_events', 'ix_keyword_registration_events_pending', 'next_attempt_at', 'id',
+      where="status IN ('PENDING','READY')")
+index('keyword_subscriptions', 'ix_keyword_subscriptions_owner', 'user_id', 'created_at DESC', 'id DESC')

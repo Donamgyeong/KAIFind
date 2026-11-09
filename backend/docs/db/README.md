@@ -333,3 +333,20 @@ KST 날짜 필터는 found_at에 날짜 함수를 씌우기보다 KST 시작/종
 - 영구 삭제가 독립 보존 중인 수거·감사를 조기 삭제하거나 기간을 연장하지 않는다.
 
 이번 작업은 문서 초안 작성과 로컬 API 요구사항 대조까지다. DB 실행·마이그레이션·동시성·성능·복구 테스트는 아직 수행하지 않았다.
+
+### 2026-11-09 키워드 구독 구현
+
+revision `20261109_0010`: [키워드 구독 설계](../design/keyword-subscriptions.md).
+`keyword_subscriptions.registration_order`와 `keyword_registration_order` 시퀀스를 추가했다.
+구독·물품 INSERT 트리거가 같은 advisory lock 아래 순번을 부여하여 구독 순번이 앞서는 물품만 통지한다.
+기존 구독·물품은 유지하며 기존 물품 등록 이벤트를 backfill하지 않는다.
+
+| 테이블 | 주요 필드 | 제약·용도 |
+| --- | --- | --- |
+| keyword_subscription_features | subscription_id, profile_id, rule_version, status, terms, source_hash, completed_at, last_error_code | 구독·프로필·규칙 UNIQUE, READY는 비어 있지 않은 단어 집합, 구독 삭제 CASCADE |
+| keyword_registration_events | item_id, registered_at, registration_order, profile_id, rule_version, source_title/description/hash, terms, status, cursor_user_id, attempts, next_attempt_at, lease_token/until, completed_at, failed_at, last_error_code | 물품당 UNIQUE. 등록 스냅샷 겸 영속 큐, 물품 영구 삭제 CASCADE |
+
+분석 성공 시 원문을 제거한다. 숨김·삭제·상태 종료 시 트리거가 미완료 이벤트를 취소하고 원문을 지운다.
+알림 워커는 매시간30일 경과 미분석 원문과 완료7일 경과 terms·커서를 정리한다.
+이벤트 ID와 물품별 완료 표식은 중복 통지 방지를 위해 물품 생존 기간 유지한다.
+키워드 큐는 outbox에 중복 기록하지 않는다. 프로필 교체는 이전 프로필의 미처리·실패 이벤트가 있으면 거부한다.
