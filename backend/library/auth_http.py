@@ -27,6 +27,10 @@ MESSAGES = {
 
 
 MESSAGES.update({
+    'COLLECTION_RESTRICTED': ('수거 권한이 제한되어 있습니다.', 'Collection permission is restricted.'),
+    'COLLECTION_NOT_FOUND': ('현재 수거 기록을 찾을 수 없습니다.', 'Current collection not found.'),
+    'ALREADY_COLLECTED': ('이미 수거된 물품입니다.', 'The item is already collected.'),
+    'ITEM_NOT_POSTED': ('게시 중인 물품만 수거할 수 있습니다.', 'Only posted items can be collected.'),
     'NOTIFICATION_NOT_FOUND': ('알림을 찾을 수 없습니다.', 'Notification not found.'),
     'LOST_REPORT_NOT_FOUND': ('분실 신고를 찾을 수 없습니다.', 'Lost report not found.'),
     'MATCHING_PENDING': ('물품 비교가 진행 중입니다. 잠시 후 다시 시도해주세요.',

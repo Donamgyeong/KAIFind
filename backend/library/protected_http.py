@@ -14,6 +14,7 @@ from service.auth import AuthError, AuthService, IDLE, runtime
 # Acquire before session/user locks so revocation cannot race an authorized action.
 ROLE_LOCK = 73011801
 CONFLICTS = {
+    'uq_collections_active_item': 'ALREADY_COLLECTED',
     'uq_buildings_code_normalized': 'BUILDING_CODE_EXISTS',
     'uq_buildings_code': 'BUILDING_CODE_EXISTS',
     'uq_categories_name_ko_normalized': 'CATEGORY_NAME_EXISTS',
