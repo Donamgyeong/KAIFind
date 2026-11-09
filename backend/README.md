@@ -121,6 +121,8 @@ DB 트리거가 미처리 이벤트가 있는 프로필 교체를 거부한다. 
 매일 04:00 KST에 기존 backend에서 `pg_dump -Fc`를 실행해 기존 MinIO의 비공개
 `kaifind-db-backups` 버킷에 저장하고, 성공 이후 7일 지난 백업을 정리한다.
 정책은 상위 프로젝트 `.env`의 `BACKUP_*` 환경변수로 조정하며 예시는 같은 루트 `example.env`를 참고한다.
-revision `20261109_0011` 적용과 PostgreSQL 17 클라이언트를 포함한 이미지 빌드 후 사용한다.
-설정·적용 순서·수동 실행·복구 절차 및 만료 검사 연동의 미완료 범위는
+revision `20261109_0012` 적용과 PostgreSQL 17 클라이언트를 포함한 이미지 빌드 후 사용한다.
+04:00 작업은 습득물·분실 신고 만료 검사를 완료한 뒤 백업한다. 만료 정책은 상위 `.env`의
+`EXPIRY_*`로 관리하며 [일일 만료 안내](docs/design/daily-expiry.md)를 참고한다.
+설정·적용 순서·수동 실행·복구 절차는
 [백업 운영 안내](docs/design/database-backups.md)를 따른다.

@@ -12,6 +12,7 @@ from sqlalchemy import or_, select, text, update
 from sqlalchemy.dialects.postgresql import insert
 
 from library.email_provider import DeliveryError, EmailMessage, MockEmailProvider
+from library.expiry import report_is_open
 from model import (
     Collection, EmailDelivery, EmailDeliveryItem, EmailDeliveryPolicy, FoundItem,
     LostReport, Notification, NotificationKeywordSource, OutboxEvent, User,
@@ -56,8 +57,8 @@ class EmailWorker:
             return False
         if notification.type == 'MATCH_CANDIDATE':
             report = await db.get(LostReport, notification.report_id) if notification.report_id else None
-            return (item.status == 'POSTED' and report is not None and report.status == 'OPEN'
-                    and report.expires_at > now and report.owner_id == notification.recipient_id)
+            return (item.status == 'POSTED' and report is not None and report_is_open(report, now)
+                    and report.owner_id == notification.recipient_id)
         if notification.type == 'ITEM_COLLECTED':
             event = await db.get(OutboxEvent, notification.event_id)
             collection = await db.get(Collection, event.aggregate_id) if event else None

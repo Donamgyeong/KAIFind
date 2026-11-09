@@ -9,6 +9,7 @@ from library.translation_runtime import TranslationRuntime, TranslationSettings
 from library.database import session_factory
 from library.notification_settings import NotificationSettings
 from library.backup_settings import BackupSettings
+from library.expiry_settings import ExpirySettings
 from service.backup_worker import BackupWorker
 from service.database_backup import DatabaseBackupService
 from service.email_worker import EmailWorker
@@ -23,6 +24,7 @@ from service.text_analysis_profiles import active_policy
 async def lifespan(app):
     email_settings = NotificationSettings.from_environment()
     backup_settings = BackupSettings()
+    expiry_settings = ExpirySettings()
     enabled = os.getenv('TEXT_ANALYSIS_ENABLED', 'true').lower()
     if enabled not in {'true', 'false'}:
         raise ValueError('TEXT_ANALYSIS_ENABLED must be true or false')
@@ -63,7 +65,9 @@ async def lifespan(app):
             email_worker.start()
         app.state.notification_email_settings = email_settings
         if backup_settings.enabled:
-            backup_worker = BackupWorker(DatabaseBackupService(backup_settings))
+            backup_worker = BackupWorker(DatabaseBackupService(
+                backup_settings, expiry_settings=expiry_settings,
+            ))
             backup_worker.start()
         yield
     finally:

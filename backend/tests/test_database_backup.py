@@ -9,13 +9,12 @@ from uuid import uuid4
 import psycopg
 from psycopg import sql
 import pytest
-from sqlalchemy import create_engine
 from sqlalchemy.engine import make_url
 
 from library.backup_settings import BackupSettings
 from library.photo_storage import PhotoStorage, StorageSettings
-from model.backups import DatabaseBackup
 from service.database_backup import DatabaseBackupService, due_date
+from test_matching_migration import migrate
 
 
 @pytest.mark.parametrize('name,value', [
@@ -79,9 +78,7 @@ def backup_service(tmp_path):
         for name in names:
             admin.execute(sql.SQL('CREATE DATABASE {}').format(sql.Identifier(name)))
     url = base.set(database=names[0])
-    engine = create_engine(url.set(drivername='postgresql+psycopg'))
-    DatabaseBackup.__table__.create(engine)
-    engine.dispose()
+    migrate(url, 'upgrade', 'head')
     with psycopg.connect(url.render_as_string(hide_password=False), autocommit=True) as db:
         db.execute('CREATE TABLE backup_marker (id integer PRIMARY KEY, value text NOT NULL)')
         db.execute("INSERT INTO backup_marker VALUES (1, 'restore-proof')")

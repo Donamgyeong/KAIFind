@@ -19,7 +19,8 @@ def main():
             raise SystemExit(0 if result == 'SUCCEEDED' else 1)
         with service.connect() as db:
             rows = db.execute('SELECT * FROM database_backups ORDER BY scheduled_date DESC LIMIT 30').fetchall()
-        print(json.dumps(rows, default=str, indent=2))
+            expiry = db.execute('SELECT * FROM daily_expiry_runs ORDER BY scheduled_date DESC LIMIT 30').fetchall()
+        print(json.dumps({'backups': rows, 'expiry': expiry}, default=str, indent=2))
     except Exception:
         raise SystemExit('BACKUP_COMMAND_FAILED: check configuration and service availability') from None
 

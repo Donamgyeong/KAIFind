@@ -12,3 +12,4 @@ from .matching import (FoundItemTextFeature, LostReportTextFeature, MatchEvaluat
 from .keyword_subscriptions import KeywordRegistrationEvent, KeywordSubscriptionFeature
 from . import indexes as _indexes
 from .backups import DatabaseBackup
+from .expiry import DailyExpiryRun

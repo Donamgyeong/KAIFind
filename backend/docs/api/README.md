@@ -42,4 +42,6 @@ DB 설계: [DB 스키마 초안](../db/README.md) — 테이블·관계·제약�
 
 2026-11-09 DB 백업: [운영 안내](../design/database-backups.md).
 매일 04:00 KST·기존 MinIO·7일 보관을 BACKUP_* 환경변수로 설정한다.
-공개 API 변경은 없으며 일일 만료 검사 후 실행 연동은 후속 범위다(revision 20261109_0011).
+공개 API 변경은 없다. revision 20261109_0012에서 습득물 EXPIRED·분실 신고 CLOSED 처리와
+삭제·감사·알림을 연결하고 만료 검사 완료 후 백업을 실행한다.
+[일일 만료 안내](../design/daily-expiry.md). 분실 신고 원본 HTTP API의 501 구현은 별도 범위다.

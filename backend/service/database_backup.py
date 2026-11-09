@@ -15,6 +15,8 @@ from minio.error import S3Error
 
 from library.database import database_url
 from library.photo_storage import PhotoStorage, StorageSettings
+from library.expiry_settings import ExpirySettings
+from service.expiry import ExpiryService
 
 
 logger = logging.getLogger(__name__)
@@ -36,10 +38,11 @@ def due_date(settings, now, startup):
 
 
 class DatabaseBackupService:
-    def __init__(self, settings, *, url=None, storage=None, clock=utcnow):
+    def __init__(self, settings, *, url=None, storage=None, clock=utcnow, expiry_settings=None):
         self.settings = settings
         self.url = url or database_url()
         self.clock = clock
+        self.expiry = ExpiryService(expiry_settings or ExpirySettings(), clock)
         config = StorageSettings.from_env()
         if settings.minio_bucket == config.bucket:
             raise ValueError('Backup bucket must differ from the photo bucket')
@@ -136,14 +139,22 @@ class DatabaseBackupService:
         with self.connect() as db:
             if not db.execute('SELECT pg_try_advisory_lock(%s) AS locked', (LOCK_KEY,)).fetchone()['locked']:
                 return 'BUSY'
+            expiry = self.expiry.run(db, day, manual=manual)
+            if expiry is None:
+                return 'EXPIRY_BLOCKED'
+
             row = db.execute('SELECT * FROM database_backups WHERE scheduled_date=%s', (day,)).fetchone()
+            if row and row['expiry_run_id'] != expiry['run_id']:
+                # Earlier backups predate this expiry run and cannot satisfy its ordering.
+                row = None
+            key = f"{self.prefix}{day.isoformat()}-{expiry['run_id']}.dump"
             if row and row['status'] == 'SUCCEEDED':
                 self.check_bucket()
                 self.cleanup()
                 return 'SUCCEEDED'
             if row and row['status'] == 'RUNNING' and row['attempts'] >= self.settings.max_attempts:
                 self.check_bucket()
-                result = self.existing(f'{self.prefix}{day.isoformat()}.dump')
+                result = self.existing(key)
                 if result is None:
                     db.execute("""UPDATE database_backups SET status='FAILED',
                         last_error_code='BACKUP_INTERRUPTED' WHERE scheduled_date=%s""", (day,))
@@ -156,13 +167,16 @@ class DatabaseBackupService:
 
             # RUNNING without the session lock means the previous process died.
             # Reconcile a completed PUT before incrementing another attempt.
-            key = f'{self.prefix}{day.isoformat()}.dump'
             attempts = min((row['attempts'] if row else 0) + 1, self.settings.max_attempts)
             db.execute('''INSERT INTO database_backups
-                (scheduled_date, status, attempts, started_at) VALUES (%s, 'RUNNING', %s, %s)
+                (scheduled_date, status, attempts, started_at,expiry_run_id)
+                VALUES (%s, 'RUNNING', %s, %s,%s)
                 ON CONFLICT (scheduled_date) DO UPDATE SET status='RUNNING',
                 attempts=EXCLUDED.attempts, started_at=EXCLUDED.started_at,
-                next_attempt_at=NULL, last_error_code=NULL''', (day, attempts, now))
+                expiry_run_id=EXCLUDED.expiry_run_id, completed_at=NULL,
+                object_key=NULL,sha256=NULL,size_bytes=NULL,
+                next_attempt_at=NULL, last_error_code=NULL''',
+                (day, attempts, now, expiry['run_id']))
             try:
                 self.check_bucket()
                 result = self.existing(key) or self.archive(key)

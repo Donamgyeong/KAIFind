@@ -1,8 +1,9 @@
 """Durable daily backup execution history."""
 
 from datetime import date, datetime
+from uuid import UUID
 
-from sqlalchemy import BigInteger, Date, DateTime, Integer, Text
+from sqlalchemy import BigInteger, Date, DateTime, Integer, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
@@ -21,3 +22,4 @@ class DatabaseBackup(Base):
     sha256: Mapped[str | None] = mapped_column(Text)
     size_bytes: Mapped[int | None] = mapped_column(BigInteger)
     last_error_code: Mapped[str | None] = mapped_column(Text)
+    expiry_run_id: Mapped[UUID | None] = mapped_column(Uuid)

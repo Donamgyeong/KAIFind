@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import insert
 
 from library.text_analysis_types import AnalysisInput
 from library.text_input import source_language
+from library.expiry import report_is_open
 from model import (
     FoundItem, FoundItemTextFeature, LostReport, LostReportTextFeature,
     MatchEvaluationJob, OutboxEvent,
@@ -24,7 +25,7 @@ def analysis_input(owner):
 def eligible(owner, now):
     if isinstance(owner, FoundItem):
         return owner.deleted_at is None
-    return owner.status == 'OPEN' and owner.expires_at > now
+    return report_is_open(owner, now)
 
 
 async def enqueue_reevaluation(db, *, owner, policy_id, now):
