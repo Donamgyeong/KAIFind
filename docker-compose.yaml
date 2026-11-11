@@ -113,6 +113,16 @@ services:
       timeout: 3s
       retries: 10
 
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: tunnel
+    command: tunnel --no-autoupdate run
+    restart: unless-stopped
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?Set TUNNEL_TOKEN in .env}
+    networks:
+      - app-net
+
 networks:
   app-net:
     driver: bridge
