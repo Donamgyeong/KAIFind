@@ -233,3 +233,17 @@ docker compose exec -T -w /app -e RUN_REAL_TEXT_ANALYSIS_TESTS=true backend pyth
 테스트는 워커를 명시적으로 실행하며 운영 서버 lifespan 자동 소비·실제 외부 이메일 발송·부하 성능은 미검증이다.
 같은 전용 DB의 전체 회귀는 735개 통과·실제 모델 opt-in 8개 skip이었다.
 이 중 새 습득물 실제 모델 2개는 앞선 실제 모델 활성 실행에서 모두 통과했다.
+
+## 키워드 프로필 전환 가드 복구
+
+2026-11-13 revision `20261113_0013`으로 기본 `kaifind_test_backend`의 누락된 가드를 복구했다.
+앞서 기록한 기본 테스트 DB의 keyword_profile_drain 누락은 이 보정으로 해소했다.
+`test_keyword_profile_guard_migration.py`는 함수 누락·트리거 누락·비활성·정상 4가지에서
+이벤트 보존·동일 정책 유지·미처리 이벤트의 전환 차단·완료 후 전환 허용과 왕복을 검사한다.
+기존 실패 테스트를 포함한 관련 5개가 기본 테스트 DB에서 통과했다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_keyword_profile_guard_migration.py tests/test_keyword_subscriptions.py::test_profile_switch_drains_events_and_create_rejects_mismatch -q
+```
+보정 적용 후 기본 `kaifind_test_backend`에서 전체 회귀 739개 통과·실제 모델 opt-in 8개 skip.
+이번 변경은 프로필 전환 DB 가드와 migration 검증이며 실제 모델 테스트는 재실행하지 않았다.

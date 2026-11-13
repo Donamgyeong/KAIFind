@@ -56,3 +56,7 @@ DB 설계: [DB 스키마 초안](../db/README.md) — 테이블·관계·제약�
 
 2026-11-13 습득물 등록 구현: ITEM-03 POST /found-items를 인증·사진·최초 보관 이력·분석 요청과 연결했다.
 [구현·검증 안내](../design/found-items.md). 나머지 ITEM API의 501은 이번 범위에서 변경하지 않았다.
+
+2026-11-13 키워드 프로필 전환 가드 복구: revision `20261113_0013`은 누락된
+keyword_profile_drain 함수·트리거를 데이터 보존 방식으로 복구한다.
+[보정 안내](../design/keyword-subscriptions.md). 공개 API 계약 변경은 없다.
