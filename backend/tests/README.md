@@ -216,3 +216,20 @@ docker compose exec -T -w /app -e RUN_REAL_TEXT_ANALYSIS_TESTS=true backend pyth
 같은 새 DB에서 RUN_REAL_TEXT_ANALYSIS_TESTS=true로 분실 신고 모델·HTTP 테스트를 실행한 결과
 29개가 모두 통과했다. 실제 한국어 번역→키워드 후보 생성까지 포함한다.
 최대 페이지·대량 후보 데이터의 부하 성능과 다음 정기 만료 실행은 이번에 관찰하지 않았다.
+
+## 습득물 등록 (ITEM-03)
+
+`test_found_item_models.py`와 `test_found_item_contract.py`는 등록 모델, 실제 사진 업로드·MinIO,
+최초 보관 이력·보호 라벨, 인증·권한·참조·사진 재사용, 실패 롤백과 동시 재사용을 검사한다.
+두 실제 HTTP 등록 순서에서 다른 건물의 KEYWORD 전용 후보와 최초 알림 중복 방지도 검사한다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_found_item_models.py tests/test_found_item_contract.py -q
+docker compose exec -T -w /app -e RUN_REAL_TEXT_ANALYSIS_TESTS=true backend python -m scripts.test_backend tests/test_found_item_models.py tests/test_found_item_contract.py -q
+```
+
+2026-11-13: 기존 db 서비스의 새 전용 `kaifind_test_found_items_20261113` DB와
+기존 storage의 임시 `kaifind-test-*` 버킷에서 실제 모델 활성 신규 34개가 모두 통과했다.
+테스트는 워커를 명시적으로 실행하며 운영 서버 lifespan 자동 소비·실제 외부 이메일 발송·부하 성능은 미검증이다.
+같은 전용 DB의 전체 회귀는 735개 통과·실제 모델 opt-in 8개 skip이었다.
+이 중 새 습득물 실제 모델 2개는 앞선 실제 모델 활성 실행에서 모두 통과했다.
