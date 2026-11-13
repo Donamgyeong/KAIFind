@@ -2,12 +2,27 @@
 
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, HTTPException, Request, Response, status
 
 from library.protected_http import ProtectedRoute
 from schema.admin import CreatePostReportRequest, PostReportResponse
 from schema.common import ErrorResponse
+from schema.found_items import CreateFoundItemRequest, FoundItemDetail
 from service.admin import AdminService
+from service.found_items import FoundItemService
+
+
+class FoundItemWriteRoute(ProtectedRoute):
+    def get_route_handler(self):
+        handler = super().get_route_handler()
+
+        async def handle(request):
+            response = await handler(request)
+            response.headers['Cache-Control'] = 'private, no-store'
+            return response
+
+        return handle
+
 
 router = APIRouter(tags=["found_items"])
 
@@ -30,13 +45,17 @@ async def get_found_item(itemId: UUID):
     )
 
 
-@router.post('/found-items', summary='습득물 등록', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def create_found_item():
-    """ITEM-03: 습득물 등록. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-03 구현 예정"},
-    )
+async def create_found_item(request: Request, body: CreateFoundItemRequest, response: Response):
+    result = await FoundItemService(request).create(body)
+    response.headers['Location'] = f'/api/v1/found-items/{result.item_id}'
+    return result
+
+
+router.add_api_route(
+    '/found-items', create_found_item, methods=['POST'], summary='습득물 등록',
+    status_code=201, response_model=FoundItemDetail, route_class_override=FoundItemWriteRoute,
+    responses={code: {'model': ErrorResponse} for code in (400, 401, 403, 409, 415, 500)},
+)
 
 
 @router.patch('/found-items/{itemId}', summary='자기 게시물 수정', responses={501: {"description": "아직 구현되지 않은 기능"}})

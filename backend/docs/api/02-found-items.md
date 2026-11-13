@@ -857,3 +857,13 @@ FoundItemDetail은 ITEM-02/03/04/09에서 공통으로 사용한다.
 
 사진 업로드의 altText는 연결 시 PhotoAttachmentInput에서 받아 저장하므로 업로드 즉시 이미지가 화면에 표시된다면 파일 선택 UI의 임시 대체 텍스트를 사용한다. 파일 바이트나 EXIF를 API 오류·감사 로그에 넣지 않는다.
 
+
+## ITEM-03 구현 보충 (2026-11-13)
+
+[전체 구조·구현 안내](../design/found-items.md). 등록만 기존 보호 트랜잭션으로 연결했다.
+활성 카테고리·건물, timezone 포함 foundAt, 물품사진 1~5장 및 최초 보관 정보를 검증한다.
+타인 사진은 403 PHOTO_FORBIDDEN, 재사용 사진은 409 PHOTO_ALREADY_ATTACHED,
+없는/비활성 참조·잘못된 사진 목적·미연결 만료는 400 INVALID_REFERENCE다.
+분석 요청·최초 보관 이력·사진 연결·구독 스냅샷·감사를 원본과 함께 커밋한다.
+실제 번역·후보 생성은 기존 워커가 수행하며 등록 응답의 analysisStatus와 MATCH-01로 진행을 확인한다.
+등록 응답에는 보관사진·보관 위치를 넣지 않는다. Location 대상의 상세 조회는 아직 후속 구현 범위다.

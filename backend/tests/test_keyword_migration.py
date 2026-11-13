@@ -37,5 +37,5 @@ def test_keyword_upgrade_no_backfill_and_history_guard(migration_database):
     with pytest.raises(subprocess.CalledProcessError):
         migrate(url, 'downgrade', '20261109_0009')
     with psycopg.connect(url.render_as_string(hide_password=False)) as db:
-        assert db.execute('SELECT version_num FROM alembic_version').fetchone() == ('20261109_0012',)
+        assert db.execute('SELECT version_num FROM alembic_version').fetchone() == ('20261113_0013',)
         assert db.execute('SELECT id FROM keyword_registration_events').fetchone() == (row[0],)

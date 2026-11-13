@@ -31,6 +31,7 @@ MESSAGES = {
 
 
 MESSAGES.update({
+    'LOST_REPORT_NOT_OPEN': ('진행 중인 분실 신고가 아닙니다.', 'The lost report is not open.'),
     'COLLECTION_RESTRICTED': ('수거 권한이 제한되어 있습니다.', 'Collection permission is restricted.'),
     'COLLECTION_NOT_FOUND': ('현재 수거 기록을 찾을 수 없습니다.', 'Current collection not found.'),
     'ALREADY_COLLECTED': ('이미 수거된 물품입니다.', 'The item is already collected.'),

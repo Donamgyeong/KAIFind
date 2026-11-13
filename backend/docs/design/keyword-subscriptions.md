@@ -93,3 +93,24 @@ docker compose exec -T -w /app backend python -m scripts.manage_keyword_subscrip
 개발 DB에0010을 적용했고 기존37개 테이블의 행 수를 보존했다.
 alembic check는 추가 변경 없음, 실행 중 루트·OpenAPI는200, git diff --check는 통과했다.
 분석 프로필 fingerprint를 유지하기 위해 구독 판정은 library/keyword_subscription_matching.py에 분리했다.
+
+## 프로필 전환 가드 보정 (2026-11-13)
+
+기본 테스트 DB가 head 0012로 기록되어 있지만 keyword_profile_drain 함수·트리거가 없는
+스키마 불일치를 확인했다. 미처리 이벤트를 남긴 프로필 전환이 성공하여
+`test_profile_switch_drains_events_and_create_rejects_mismatch`의 예외 기대가 실패했다.
+정상적으로 마이그레이션한 별도 DB에서는 같은 테스트가 통과했다.
+
+revision `20261113_0013`은 기존 0010을 수정하지 않고 함수 정의를 복구하고,
+트리거가 없으면 추가하며 비활성 트리거는 활성화한다. 정상 트리거 객체와 기존 이벤트·원본 데이터는 유지한다.
+0012로 downgrade해도 가드를 남긴다. 이 객체는 본래 0010 소유이므로 0010의 downgrade에서 제거한다.
+프로필 전환 차단 조건·잠금 키·이벤트 상태 정책·공개 API 계약은 변경하지 않는다.
+
+기존 backend 컨테이너 /app에서 대상 DB의 `python -m alembic upgrade head`를 실행해 적용한다.
+`alembic upgrade head`가 이미 적용된 과거 migration 파일을 재실행하지 않으므로 새 revision이 필요하다.
+실패가 발생한 기본 `kaifind_test_backend`에는 테스트 실행 경로로 보정을 적용했다.
+개발 DB에 이 revision을 적용하는 작업은 이번 테스트 DB 복구 범위에서 수행하지 않았다.
+
+회귀 테스트는 함수 누락·트리거 누락·비활성·정상 4가지의 upgrade와 정상 객체/이벤트 보존,
+미처리 상태 전환 거부·처리 완료 후 전환 허용 및 downgrade/re-upgrade를 검사한다.
+누락이 발생한 과거 작업의 경위는 현재 DB 상태만으로 확정하지 않았다.

@@ -194,3 +194,56 @@ backend 재생성 후 만료 정책 적용·healthcheck·루트/OpenAPI200과 �
 확인했다. 실제 개발 DB의 당시 만료 대상은0건이며 양성 만료·삭제는 격리 테스트에서 검증했다.
 다음04:00의 예약 실행과 향후 원본 HTTP API의 연장·재게시 전체 통합은 아직 관찰·검증하지 않았다.
 운영 명령·기한 정책은 [일일 만료 안내](../docs/design/daily-expiry.md)를 따른다.
+
+## 분실 신고
+
+`test_lost_report_models.py`는 필수값·문자수·타입·날짜 형식·중복 건물·비공개 요약 분리를 검사한다.
+`test_lost_report_contract.py`는 LOST-01~06, 소유권·관리자 읽기, 만료 409의 커밋·개인정보 삭제,
+비활성 참조 유지, 분석 요청 실패 롤백, 동시 연장/해결과 HTTP→분석→매칭 통합을 검사한다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_lost_report_models.py tests/test_lost_report_contract.py -q
+# 모델 assets가 준비된 기존 backend에서 실제 한국어 번역까지 검사
+docker compose exec -T -w /app -e RUN_REAL_TEXT_ANALYSIS_TESTS=true backend python -m scripts.test_backend tests/test_lost_report_contract.py -k pipeline -q
+```
+
+일반 실행의 실제 모델 opt-in skip은 실제 번역 검증 성공을 의미하지 않는다.
+
+2026-11-13 전체 회귀: 기존 db 서비스의 새 전용 `kaifind_test_lost_reports_20261113` DB에
+처음부터 head까지 마이그레이션을 적용한 뒤 703개 통과·opt-in 6개 skip.
+재사용 기본 테스트 DB에서는 기존 keyword_profile_drain 함수 누락으로 키워드 구독 테스트 1개가
+실패했으므로 전체 결과는 새 DB를 기준으로 한다. 개발 DB·기존 테스트 DB는 수정하지 않았다.
+같은 새 DB에서 RUN_REAL_TEXT_ANALYSIS_TESTS=true로 분실 신고 모델·HTTP 테스트를 실행한 결과
+29개가 모두 통과했다. 실제 한국어 번역→키워드 후보 생성까지 포함한다.
+최대 페이지·대량 후보 데이터의 부하 성능과 다음 정기 만료 실행은 이번에 관찰하지 않았다.
+
+## 습득물 등록 (ITEM-03)
+
+`test_found_item_models.py`와 `test_found_item_contract.py`는 등록 모델, 실제 사진 업로드·MinIO,
+최초 보관 이력·보호 라벨, 인증·권한·참조·사진 재사용, 실패 롤백과 동시 재사용을 검사한다.
+두 실제 HTTP 등록 순서에서 다른 건물의 KEYWORD 전용 후보와 최초 알림 중복 방지도 검사한다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_found_item_models.py tests/test_found_item_contract.py -q
+docker compose exec -T -w /app -e RUN_REAL_TEXT_ANALYSIS_TESTS=true backend python -m scripts.test_backend tests/test_found_item_models.py tests/test_found_item_contract.py -q
+```
+
+2026-11-13: 기존 db 서비스의 새 전용 `kaifind_test_found_items_20261113` DB와
+기존 storage의 임시 `kaifind-test-*` 버킷에서 실제 모델 활성 신규 34개가 모두 통과했다.
+테스트는 워커를 명시적으로 실행하며 운영 서버 lifespan 자동 소비·실제 외부 이메일 발송·부하 성능은 미검증이다.
+같은 전용 DB의 전체 회귀는 735개 통과·실제 모델 opt-in 8개 skip이었다.
+이 중 새 습득물 실제 모델 2개는 앞선 실제 모델 활성 실행에서 모두 통과했다.
+
+## 키워드 프로필 전환 가드 복구
+
+2026-11-13 revision `20261113_0013`으로 기본 `kaifind_test_backend`의 누락된 가드를 복구했다.
+앞서 기록한 기본 테스트 DB의 keyword_profile_drain 누락은 이 보정으로 해소했다.
+`test_keyword_profile_guard_migration.py`는 함수 누락·트리거 누락·비활성·정상 4가지에서
+이벤트 보존·동일 정책 유지·미처리 이벤트의 전환 차단·완료 후 전환 허용과 왕복을 검사한다.
+기존 실패 테스트를 포함한 관련 5개가 기본 테스트 DB에서 통과했다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_keyword_profile_guard_migration.py tests/test_keyword_subscriptions.py::test_profile_switch_drains_events_and_create_rejects_mismatch -q
+```
+보정 적용 후 기본 `kaifind_test_backend`에서 전체 회귀 739개 통과·실제 모델 opt-in 8개 skip.
+이번 변경은 프로필 전환 DB 가드와 migration 검증이며 실제 모델 테스트는 재실행하지 않았다.
