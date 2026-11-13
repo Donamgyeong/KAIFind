@@ -194,3 +194,25 @@ backend 재생성 후 만료 정책 적용·healthcheck·루트/OpenAPI200과 �
 확인했다. 실제 개발 DB의 당시 만료 대상은0건이며 양성 만료·삭제는 격리 테스트에서 검증했다.
 다음04:00의 예약 실행과 향후 원본 HTTP API의 연장·재게시 전체 통합은 아직 관찰·검증하지 않았다.
 운영 명령·기한 정책은 [일일 만료 안내](../docs/design/daily-expiry.md)를 따른다.
+
+## 분실 신고
+
+`test_lost_report_models.py`는 필수값·문자수·타입·날짜 형식·중복 건물·비공개 요약 분리를 검사한다.
+`test_lost_report_contract.py`는 LOST-01~06, 소유권·관리자 읽기, 만료 409의 커밋·개인정보 삭제,
+비활성 참조 유지, 분석 요청 실패 롤백, 동시 연장/해결과 HTTP→분석→매칭 통합을 검사한다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_lost_report_models.py tests/test_lost_report_contract.py -q
+# 모델 assets가 준비된 기존 backend에서 실제 한국어 번역까지 검사
+docker compose exec -T -w /app -e RUN_REAL_TEXT_ANALYSIS_TESTS=true backend python -m scripts.test_backend tests/test_lost_report_contract.py -k pipeline -q
+```
+
+일반 실행의 실제 모델 opt-in skip은 실제 번역 검증 성공을 의미하지 않는다.
+
+2026-11-13 전체 회귀: 기존 db 서비스의 새 전용 `kaifind_test_lost_reports_20261113` DB에
+처음부터 head까지 마이그레이션을 적용한 뒤 703개 통과·opt-in 6개 skip.
+재사용 기본 테스트 DB에서는 기존 keyword_profile_drain 함수 누락으로 키워드 구독 테스트 1개가
+실패했으므로 전체 결과는 새 DB를 기준으로 한다. 개발 DB·기존 테스트 DB는 수정하지 않았다.
+같은 새 DB에서 RUN_REAL_TEXT_ANALYSIS_TESTS=true로 분실 신고 모델·HTTP 테스트를 실행한 결과
+29개가 모두 통과했다. 실제 한국어 번역→키워드 후보 생성까지 포함한다.
+최대 페이지·대량 후보 데이터의 부하 성능과 다음 정기 만료 실행은 이번에 관찰하지 않았다.

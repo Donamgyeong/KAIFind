@@ -1,61 +1,62 @@
-"""기능별 API 기본 구조. 상세 계약은 docs/api 참고."""
+"""Authenticated lost report lifecycle endpoints."""
 
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Query, Request, Response
 
-router = APIRouter(tags=["lost_reports"])
-
-
-@router.post('/lost-reports', summary='create lost report', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def create_lost_report():
-    """LOST-01: create lost report. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "LOST-01 구현 예정"},
-    )
-
-
-@router.get('/lost-reports', summary='list lost reports', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def list_lost_reports():
-    """LOST-02: list lost reports. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "LOST-02 구현 예정"},
-    )
+from library.auth_http import error_response
+from library.protected_http import ProtectedRoute
+from schema.common import ErrorResponse
+from schema.lost_report_params import LostReportParams
+from schema.lost_reports import (
+    CreateLostReportRequest, LostReportPage, LostReportResponse, UpdateLostReportRequest,
+)
+from service.auth import AuthError
+from service.lost_reports import LostReportService
 
 
-@router.get('/lost-reports/{reportId}', summary='get lost report', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def get_lost_report(reportId: UUID):
-    """LOST-03: get lost report. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "LOST-03 구현 예정"},
-    )
+router = APIRouter(
+    tags=['lost_reports'], route_class=ProtectedRoute,
+    responses={'default': {'model': ErrorResponse, 'description': '공통 오류'}},
+)
 
 
-@router.put('/lost-reports/{reportId}', summary='update lost report', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def update_lost_report(reportId: UUID):
-    """LOST-04: update lost report. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "LOST-04 구현 예정"},
-    )
+def mutation_response(result, request):
+    # Return the error normally so an expiry transition commits with the response.
+    if result is None:
+        return error_response(AuthError(409, 'LOST_REPORT_NOT_OPEN'), request)
+    return result
 
 
-@router.post('/lost-reports/{reportId}/extend', summary='extend lost report', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def extend_lost_report(reportId: UUID):
-    """LOST-05: extend lost report. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "LOST-05 구현 예정"},
-    )
+@router.post('/lost-reports', response_model=LostReportResponse, status_code=201)
+async def create_lost_report(request: Request, body: CreateLostReportRequest, response: Response):
+    result = await LostReportService(request).create(body)
+    response.headers['Location'] = f'/api/v1/lost-reports/{result.report_id}'
+    return result
 
 
-@router.post('/lost-reports/{reportId}/resolve', summary='resolve lost report', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def resolve_lost_report(reportId: UUID):
-    """LOST-06: resolve lost report. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "LOST-06 구현 예정"},
-    )
+@router.get('/lost-reports', response_model=LostReportPage)
+async def list_lost_reports(request: Request, params: Annotated[LostReportParams, Query()]):
+    return await LostReportService(request).list(params)
+
+
+@router.get('/lost-reports/{reportId}', response_model=LostReportResponse)
+async def get_lost_report(request: Request, reportId: UUID):
+    service = LostReportService(request)
+    return await service.response(await service.load(reportId))
+
+
+@router.put('/lost-reports/{reportId}', response_model=LostReportResponse)
+async def update_lost_report(request: Request, reportId: UUID, body: UpdateLostReportRequest):
+    return mutation_response(await LostReportService(request).update(reportId, body), request)
+
+
+@router.post('/lost-reports/{reportId}/extend', response_model=LostReportResponse)
+async def extend_lost_report(request: Request, reportId: UUID):
+    return mutation_response(await LostReportService(request).extend(reportId), request)
+
+
+@router.post('/lost-reports/{reportId}/resolve', response_model=LostReportResponse)
+async def resolve_lost_report(request: Request, reportId: UUID):
+    return await LostReportService(request).resolve(reportId)
