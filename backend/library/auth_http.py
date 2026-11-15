@@ -68,6 +68,7 @@ MESSAGES.update({
     'COLLECTOR_MISMATCH': ('분쟁의 수거자와 대상 회원이 다릅니다.', 'The user is not the disputed collector.'),
     'INVALID_TIME_RANGE': ('종료 시각은 시작 시각 이후여야 합니다.', 'End time must be after start time.'),
     'CONCURRENT_MODIFICATION': ('동시 변경이 발생했습니다. 다시 시도해주세요.', 'Concurrent modification; please retry.'),
+    'ITEM_NOT_EXPIRED': ('만료된 물품만 다시 등록할 수 있습니다.', 'Only expired items can be reposted.'),
 })
 
 
