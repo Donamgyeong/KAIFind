@@ -1,13 +1,17 @@
 """ITEM-06/07/08: storage spot reads, appended revisions and history, with audit rules."""
 
+import asyncio
 from uuid import uuid4
 
 import pytest
+from sqlalchemy import text
+from sqlalchemy.exc import DBAPIError
 
 from found_item_fixtures import (  # noqa: F401
     BASE, analysis_env, add_item, context, error, guest, login, member, other_building, run,
     scalar, sensitive_category, storage, upload,
 )
+from service.found_items import FoundItemService
 
 
 def spot(item):
@@ -111,6 +115,70 @@ def test_drop_off_reads_follow_item_visibility(context):
         now=env.clock(), later=env.clock(), id=item['itemId'])
     error(client.get(spot(item)), 404, 'NOT_FOUND')
     error(client.get(f'{BASE}/{uuid4()}/drop-off'), 404, 'NOT_FOUND')
+
+
+@pytest.mark.parametrize('suffix', ['', '/history'], ids=['current', 'history'])
+def test_drop_off_reads_do_not_expose_a_location_added_after_hiding(context, monkeypatch, suffix):
+    client, env, body, headers, storage = context
+    item = located(client, body, headers)
+    member(client, 'faculty-01')
+    private_spot = 'Location added after hiding'
+
+    def hide_and_change_location():
+        # Use another connection after authorization. NOWAIT also lets a fixed
+        # reader keep its shared row lock without deadlocking this test.
+        try:
+            with env.sync.begin() as db:
+                db.execute(
+                    text('SELECT id FROM found_items WHERE id=:id FOR UPDATE NOWAIT'),
+                    {'id': item['itemId']},
+                )
+                db.execute(
+                    text('UPDATE found_items SET hidden=true WHERE id=:id'),
+                    {'id': item['itemId']},
+                )
+                db.execute(
+                    text('''INSERT INTO drop_off_versions (
+                        id, item_id, revision_no, mode, building_id, spot_description,
+                        changed_by_user_id, changed_at, sensitive_latched
+                    )
+                    SELECT :version, id, 2, 'DROP_OFF', found_building_id, :spot,
+                           finder_id, :now, false
+                    FROM found_items WHERE id=:id'''),
+                    {
+                        'version': uuid4(), 'id': item['itemId'],
+                        'spot': private_spot, 'now': env.clock(),
+                    },
+                )
+        except DBAPIError as exc:
+            if getattr(exc.orig, 'sqlstate', None) != '55P03':
+                raise
+
+    original_load = FoundItemService.load
+
+    async def load_then_hide(service, item_id, **kwargs):
+        loaded = await original_load(service, item_id, **kwargs)
+        await asyncio.to_thread(hide_and_change_location)
+        return loaded
+
+    monkeypatch.setattr(FoundItemService, 'load', load_then_hide)
+    response = client.get(spot(item) + suffix)
+
+    # A serialized read may return the old location; a permission recheck may
+    # return 404. Neither may include data that only existed after hiding.
+    assert private_spot not in response.text, response.text
+    if response.status_code == 404:
+        error(response, 404, 'NOT_FOUND')
+    else:
+        assert response.status_code == 200, response.text
+        data = response.json()
+        if suffix:
+            assert data['totalElements'] == 1
+            assert len(data['items']) == 1
+            assert data['items'][0]['before'] is None
+            assert data['items'][0]['after']['spotDescription'] == 'Front desk'
+        else:
+            assert data['spotDescription'] == 'Front desk'
 
 
 # ------------------------------------------------------------------ ITEM-07
