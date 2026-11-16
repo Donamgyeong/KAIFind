@@ -252,14 +252,14 @@ docker compose exec -T -w /app backend python -m scripts.test_backend tests/test
 
 `test_found_item_public_contract.py`(검색·상세, 비회원·보호 사진), `test_found_item_mine_contract.py`(내 습득물),
 `test_found_item_manage_contract.py`(수정·삭제·재등록), `test_found_item_drop_off_contract.py`(보관 위치 조회·변경·이력)가
-각각 28·14·34·29개로 총 105개다. 공용 헬퍼는 `found_item_fixtures.py`이며 직접 실행하는 테스트 파일이 아니다.
+각각 29·14·34·31개로 총 108개다. 공용 헬퍼는 `found_item_fixtures.py`이며 직접 실행하는 테스트 파일이 아니다.
 
 ```sh
 docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_found_item_public_contract.py tests/test_found_item_mine_contract.py tests/test_found_item_manage_contract.py tests/test_found_item_drop_off_contract.py -q
 ```
 
-2026-11-15: 기본 `kaifind_test_backend`에서 위 105개와 갱신한 `test_found_item_contract.py`가 통과했다.
+2026-11-15: 기본 `kaifind_test_backend`에서 위 108개와 갱신한 `test_found_item_contract.py`가 통과했다.
 번역 모델·WordNet 준비 후 `RUN_REAL_TEXT_ANALYSIS_TESTS=true`로 습득물 6개 파일 132개가 모두 통과했고,
 `test_text_analysis.py`·`test_wordnet_keywords.py` 35개도 통과했다(WordNet이 없을 때의 14개 실패는 자원 미준비 때문).
 실제 서버에서 동시 수정·보관 위치 변경 12건씩이 모두 성공하고 이력이 일치함을 확인했다.
-부하 성능은 미검증이다. 최종 코드에서 전체 회귀는 844개 통과·실제 모델 opt-in 8개 skip이다(739 + 신규 105).
+부하 성능은 미검증이다. 최종 코드에서 전체 회귀는 847개 통과·실제 모델 opt-in 8개 skip이다(739 + 신규 108).

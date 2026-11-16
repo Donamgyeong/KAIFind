@@ -85,6 +85,19 @@ def test_search_pagination_counts_only_visible_rows(context):
     assert (page['totalElements'], page['totalPages']) == (3, 2)
 
 
+def test_search_accepts_maximum_end_date(context):
+    client, env, body, headers, storage = context
+    item = add_item(client, body, headers, 'within date range')
+    guest(client)
+
+    response = client.get(BASE, params={'foundDateTo': '9999-12-31'})
+
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert [row['itemId'] for row in data['items']] == [item['itemId']]
+    assert (data['totalElements'], data['totalPages']) == (1, 1)
+
+
 @pytest.mark.parametrize('params', [
     {'q': ' '}, {'q': 'x' * 101}, {'foundDateFrom': '2026/11/01'}, {'foundDateFrom': '20261101'},
     {'foundDateFrom': '2026-11-05', 'foundDateTo': '2026-11-01'}, {'categoryId': 'nope'},
