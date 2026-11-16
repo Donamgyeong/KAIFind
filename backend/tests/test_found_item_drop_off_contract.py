@@ -1,9 +1,13 @@
 """ITEM-06/07/08: storage spot reads, appended revisions and history, with audit rules."""
 
+import asyncio
+import threading
 from uuid import uuid4
 
 import pytest
+from sqlalchemy import text
 
+from service.found_items import FoundItemService
 from found_item_fixtures import (  # noqa: F401
     BASE, analysis_env, add_item, context, error, guest, login, member, other_building, run,
     scalar, sensitive_category, storage, upload,
@@ -285,3 +289,42 @@ def test_openapi_has_no_501_for_drop_off_operations(context):
     for path, method in (('/drop-off', 'get'), ('/drop-off', 'put'), ('/drop-off/history', 'get')):
         operation = paths[BASE + '/{itemId}' + path][method]
         assert '501' not in operation['responses'] and operation['responses']['200']
+
+
+@pytest.mark.parametrize('read', ['current', 'history'])
+def test_drop_off_reads_do_not_expose_a_location_added_after_hiding(context, monkeypatch, read):
+    client, env, body, headers, storage = context
+    item = located(client, body, headers)
+    member(client, 'faculty-01')  # neither the finder nor an administrator
+    url = spot(item) + ('/history' if read == 'history' else '')
+
+    def hide_and_move():
+        with env.sync.begin() as db:
+            db.execute(text('UPDATE found_items SET hidden=true WHERE id=:id'), {'id': item['itemId']})
+            db.execute(text(
+                'INSERT INTO drop_off_versions (id,item_id,revision_no,mode,building_id,spot_description,'
+                'changed_by_user_id,changed_at) SELECT gen_random_uuid(),item_id,revision_no+1,mode,building_id,'
+                "'Added after hiding',changed_by_user_id,now() FROM drop_off_versions WHERE item_id=:id "
+                'ORDER BY revision_no DESC LIMIT 1'), {'id': item['itemId']})
+
+    race = {}
+    original = FoundItemService.load
+
+    async def load_then_compete(self, *args, **kwargs):
+        found = await original(self, *args, **kwargs)
+        if 'thread' not in race:
+            race['thread'] = threading.Thread(target=hide_and_move)
+            race['thread'].start()
+            await asyncio.sleep(1)  # long enough for the competing commit unless the row is locked
+            race['committed_meanwhile'] = not race['thread'].is_alive()
+        return found
+
+    monkeypatch.setattr(FoundItemService, 'load', load_then_compete)
+    response = client.get(url)
+    race['thread'].join(timeout=15)
+
+    assert not race['thread'].is_alive()
+    # Either the request finished first (old spot) or it saw the hidden item (404); never the new spot.
+    assert 'Added after hiding' not in response.text
+    assert response.status_code in {200, 404}
+    assert race['committed_meanwhile'] is False  # the hide had to wait for this read

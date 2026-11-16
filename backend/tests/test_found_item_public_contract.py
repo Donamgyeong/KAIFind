@@ -220,3 +220,18 @@ def test_openapi_documents_both_public_operations(context):
         assert '501' not in operation['responses'] and operation['responses']['200']
         cookie = next(p for p in operation['parameters'] if p['name'] == 'KAIFIND_SESSION')
         assert cookie['required'] is False
+
+
+@pytest.mark.parametrize('params, expected', [
+    ({'foundDateTo': '9999-12-31'}, ['edge']),
+    ({'foundDateFrom': '0001-01-01'}, ['edge']),
+    ({'foundDateFrom': '0001-01-01', 'foundDateTo': '9999-12-31'}, ['edge']),
+    ({'foundDateFrom': '9999-12-31'}, []),
+    ({'foundDateTo': '0001-01-01'}, []),
+])
+def test_search_accepts_the_calendar_boundary_dates(context, params, expected):
+    client, env, body, headers, storage = context
+    add_item(client, body, headers, 'edge')
+    guest(client)
+
+    assert titles(client.get(BASE, params=params)) == expected

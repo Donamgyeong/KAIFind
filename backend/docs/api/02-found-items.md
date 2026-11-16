@@ -887,13 +887,15 @@ service/found_items.py(FoundItemService), schema/found_items.py·found_item_para
   카테고리가 비민감으로 바뀌어도 한 번 붙은 보호 라벨은 유지한다. 보관사진은 물품 응답에 포함하지 않는다.
 - ITEM-01: statuses 생략 시 POSTED만. hidden·삭제 제외(작성자·관리자 포함). q는 제목·설명만 대소문자 무시 부분 일치이며
   %와 _는 문자 그대로 검색한다. foundDateFrom/To는 KST 달력일이고 종료일을 포함한다. 정렬은 createdAt, id 내림차순.
-  정의되지 않은 쿼리 파라미터는 400이다.
+  정의되지 않은 쿼리 파라미터는 400이다. 달력의 처음·끝 날짜(0001-01-01·9999-12-31)는 모든 날짜를 포함하므로 해당 방향의 조건을 걸지 않는다(범위 제한 없음).
 - ITEM-10: 본인 글만, statuses 생략 시 전체 상태, hidden 포함(관리자도 본인 글만), 삭제 제외.
 
 ### 보관 위치
 
 - ITEM-06·08: 회원 전용. 민감 물품(또는 보호 라벨이 붙은 보관 이력)을 열람하면 요청마다 SENSITIVE_DROP_OFF_VIEWED 감사를 남긴다.
   감사 저장이 실패하면 응답을 전달하지 않는다. 직접 보관(KEPT_BY_FINDER)이어도 민감 물품이면 열람 감사를 남긴다.
+- ITEM-06·08은 물품 행에 공유 잠금(FOR SHARE)을 걸고 응답 생성까지 유지한다. 권한(hidden) 판정과 위치 조회가 같은 상태를 보도록 하며,
+  동시에 숨김·위치 변경이 들어오면 그 요청이 이 조회가 끝날 때까지 기다린다.
 - ITEM-08: 최신 revision부터이며 각 항목에 before(직전 revision, 최초는 null)와 after가 있다. before는 다음 페이지의 행에서 가져온다.
 - ITEM-07: 기존 이력을 고치지 않고 새 revision을 추가한다(DB 트리거가 수정을 막는다). 작성자만 가능하며 DROP_OFF_CHANGED 감사를 남긴다.
   민감 물품이면 응답에 위치가 나가므로 SENSITIVE_DROP_OFF_VIEWED도 남긴다. 발견 장소·상태·updatedAt은 바꾸지 않는다.

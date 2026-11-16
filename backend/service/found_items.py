@@ -1,7 +1,7 @@
 """Found item operations run inside the caller's transaction (protected or optional-auth)."""
 
 from collections import defaultdict
-from datetime import datetime, time, timedelta
+from datetime import date, datetime, time, timedelta
 
 from sqlalchemy import func, inspect, or_, select
 from sqlalchemy.orm.attributes import flag_modified
@@ -134,8 +134,12 @@ class FoundItemService:
         if not self.is_finder(item):
             raise AuthError(403, 'FORBIDDEN')
 
-    async def load(self, item_id, *, writing=False, extra_categories=()):
-        """Fetch a live item the caller may see; writers lock category, then the row."""
+    async def load(self, item_id, *, writing=False, shared=False, extra_categories=()):
+        """Fetch a live item the caller may see; writers lock category, then the row.
+
+        shared=True keeps a row share lock until the transaction ends, so a concurrent
+        hide or spot change cannot slip in between the visibility check and the reads.
+        """
         category = await self.db.scalar(select(FoundItem.category_id).where(FoundItem.id == item_id))
         if category is None:
             raise AuthError(404, 'NOT_FOUND')
@@ -143,7 +147,11 @@ class FoundItemService:
             await lock_matching_categories(self.db, [category, *extra_categories])
 
         query = select(FoundItem).where(FoundItem.id == item_id).execution_options(populate_existing=True)
-        item = await self.db.scalar(query.with_for_update() if writing else query)
+        if writing:
+            query = query.with_for_update()
+        elif shared:
+            query = query.with_for_update(read=True)
+        item = await self.db.scalar(query)
         if item is None or item.deleted_at is not None:
             raise AuthError(404, 'NOT_FOUND')
         if writing and item.category_id != category:
@@ -257,9 +265,11 @@ class FoundItemService:
         if params.found_building_id:
             filters.append(FoundItem.found_building_id == params.found_building_id)
         # Dates are KST calendar days; the end day is inclusive.
-        if params.found_date_from:
+        # The calendar's first and last days bound every date, so no filter is needed there
+        # (and adding a day to the last one would overflow).
+        if params.found_date_from and params.found_date_from != date.min:
             filters.append(FoundItem.found_at >= datetime.combine(params.found_date_from, time.min, tzinfo=KST))
-        if params.found_date_to:
+        if params.found_date_to and params.found_date_to != date.max:
             end = params.found_date_to + timedelta(days=1)
             filters.append(FoundItem.found_at < datetime.combine(end, time.min, tzinfo=KST))
         return await self.page(filters, params)
@@ -322,7 +332,7 @@ class FoundItemService:
 
     async def drop_off(self, item_id):
         """ITEM-06: current storage spot (members only)."""
-        item = await self.load(item_id)
+        item = await self.load(item_id, shared=True)
         category = await self.db.get(Category, item.category_id)
         version = await self.latest_version(item.id)
 
@@ -334,7 +344,7 @@ class FoundItemService:
 
     async def drop_off_history(self, item_id, params):
         """ITEM-08: newest-first revisions, each with the spot before and after."""
-        item = await self.load(item_id)
+        item = await self.load(item_id, shared=True)
         category = await self.db.get(Category, item.category_id)
 
         total = await self.db.scalar(select(func.count()).select_from(DropOffVersion).where(
