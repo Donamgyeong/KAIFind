@@ -79,8 +79,8 @@ def test_registration_response_and_atomic_records(context):
         assert db.execute(text('SELECT unattached_expires_at FROM photos WHERE id=:id'),
                           {'id': body['photos'][0]['photoId']}).scalar_one() is None
     error(client.post(BASE, json=body, headers=headers), 409, 'PHOTO_ALREADY_ATTACHED')
-    # Other item APIs retain their existing implementation status.
-    assert client.get(response.headers['location']).status_code == 501
+    # The Location header now resolves: ITEM-02 returns the public detail.
+    assert client.get(response.headers['location']).status_code == 200
 
 
 def test_drop_off_and_sensitive_photo_protection(context):

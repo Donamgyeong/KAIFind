@@ -866,4 +866,60 @@ FoundItemDetail은 ITEM-02/03/04/09에서 공통으로 사용한다.
 없는/비활성 참조·잘못된 사진 목적·미연결 만료는 400 INVALID_REFERENCE다.
 분석 요청·최초 보관 이력·사진 연결·구독 스냅샷·감사를 원본과 함께 커밋한다.
 실제 번역·후보 생성은 기존 워커가 수행하며 등록 응답의 analysisStatus와 MATCH-01로 진행을 확인한다.
-등록 응답에는 보관사진·보관 위치를 넣지 않는다. Location 대상의 상세 조회는 아직 후속 구현 범위다.
+등록 응답에는 보관사진·보관 위치를 넣지 않는다. Location 대상의 상세 조회(ITEM-02)는 2026-11-15에 구현되었다.
+
+## ITEM-01·02·04~10 구현 보충 (2026-11-15)
+
+ITEM-03 외 나머지 습득물 API의 501 골격을 모두 구현했다. 코드 위치는 router/found_items.py,
+service/found_items.py(FoundItemService), schema/found_items.py·found_item_params.py이다.
+
+### 인증 방식
+
+| API | 라우트 | 동작 |
+| --- | --- | --- |
+| ITEM-01, 02 | library/optional_http.py의 OptionalAuthRoute | 비회원 허용. 쿠키 없음·잘못됨·만료·익명 세션은 모두 비회원으로 처리하며 401을 반환하지 않는다. 유효한 세션이면 활동 시각을 갱신한다 |
+| ITEM-04~10 | ProtectedRoute(FoundItemWriteRoute) | 로그인 필수. 모든 응답에 Cache-Control: private, no-store |
+
+### 조회
+
+- 가시성: 삭제된 물품은 누구에게나 404. hidden 물품은 작성자·관리자만 조회하고 나머지는 404(위치·이력 API 포함).
+- 사진: 비회원에게는 민감 물품(category.sensitive) 또는 보호 라벨(sensitive_latched)이 있는 사진의 metadata·altText를 주지 않는다.
+  카테고리가 비민감으로 바뀌어도 한 번 붙은 보호 라벨은 유지한다. 보관사진은 물품 응답에 포함하지 않는다.
+- ITEM-01: statuses 생략 시 POSTED만. hidden·삭제 제외(작성자·관리자 포함). q는 제목·설명만 대소문자 무시 부분 일치이며
+  %와 _는 문자 그대로 검색한다. foundDateFrom/To는 KST 달력일이고 종료일을 포함한다. 정렬은 createdAt, id 내림차순.
+  정의되지 않은 쿼리 파라미터는 400이다. 달력의 처음·끝 날짜(0001-01-01·9999-12-31)는 모든 날짜를 포함하므로 해당 방향의 조건을 걸지 않는다(범위 제한 없음).
+- ITEM-10: 본인 글만, statuses 생략 시 전체 상태, hidden 포함(관리자도 본인 글만), 삭제 제외.
+
+### 보관 위치
+
+- ITEM-06·08: 회원 전용. 민감 물품(또는 보호 라벨이 붙은 보관 이력)을 열람하면 요청마다 SENSITIVE_DROP_OFF_VIEWED 감사를 남긴다.
+  감사 저장이 실패하면 응답을 전달하지 않는다. 직접 보관(KEPT_BY_FINDER)이어도 민감 물품이면 열람 감사를 남긴다.
+- ITEM-06·08은 물품 행에 공유 잠금(FOR SHARE)을 걸고 응답 생성까지 유지한다. 권한(hidden) 판정과 위치 조회가 같은 상태를 보도록 하며,
+  동시에 숨김·위치 변경이 들어오면 그 요청이 이 조회가 끝날 때까지 기다린다.
+- ITEM-08: 최신 revision부터이며 각 항목에 before(직전 revision, 최초는 null)와 after가 있다. before는 다음 페이지의 행에서 가져온다.
+- ITEM-07: 기존 이력을 고치지 않고 새 revision을 추가한다(DB 트리거가 수정을 막는다). 작성자만 가능하며 DROP_OFF_CHANGED 감사를 남긴다.
+  민감 물품이면 응답에 위치가 나가므로 SENSITIVE_DROP_OFF_VIEWED도 남긴다. 발견 장소·상태·updatedAt은 바꾸지 않는다.
+  현재 위치가 쓰는 건물은 비활성이어도 유지할 수 있고, 새로 비활성 건물을 고르면 400 INVALID_REFERENCE다.
+
+### 수정·삭제·재등록
+
+- ITEM-04: 보낸 필드만 변경한다. 최소 1개, null 금지, 정의되지 않은 필드(status·hidden·dropOff 등)는 400.
+  제목·설명이 바뀌면 새 분석을, 그 외 변경은 재평가만 요청한다(분석 정책이 설정된 경우에 한함).
+  photos를 보내면 전체 교체이며, 빠진 사진은 삭제가 아니라 detached 처리하고 다시 연결할 수 없다(409 PHOTO_ALREADY_ATTACHED).
+  카테고리를 민감으로 바꾸면 기존 사진·보관 이력의 보호 라벨은 DB 트리거가 올린다. 관리자도 타인 글은 수정할 수 없다(403).
+- ITEM-05: 논리 삭제(deletedAt). 이미 종료된 물품은 기존 purge_after를 유지하고, 미종료 물품은 삭제 시각+1년이다.
+  후보·분석 결과·평가 작업·대화는 DB 트리거가 즉시 정리한다. 삭제용 감사 이벤트 종류가 없어 감사는 남기지 않는다.
+- ITEM-09: EXPIRED만 가능(아니면 409 ITEM_NOT_EXPIRED). postedAt=지금, expiresAt=+30일, closedAt·purge_after 해제, hidden 유지,
+  ITEM_STATUS_CHANGED(EXPIRED→POSTED) 감사와 재평가 요청.
+- 작성자가 아닌 회원은 403 FORBIDDEN, 존재 은닉 대상(hidden·삭제·없음)은 404 NOT_FOUND다.
+
+### 명세가 정하지 않아 선택한 사항
+
+- 비회원 공개 조회에서 만료된 세션은 401이 아니라 비회원으로 처리한다(공개 기준정보 API와 같은 방침).
+- ITEM-07에서 현재 보관사진과 같은 photoId를 다시 보내면 409다(photo_id가 연결 테이블의 PK라 한 사진은 한 번만 연결된다).
+- 닫힌(COLLECTED·EXPIRED) 물품과 hidden 물품도 작성자는 수정·위치 변경을 할 수 있다(명세가 제한하지 않음).
+
+### 검증 범위
+
+실제 PostgreSQL·MinIO 기반 계약 테스트로 검증했다([tests/README.md](../../tests/README.md)의 "습득물 조회·수정·위치" 절).
+실제 번역 모델을 켠 상태의 재분석 동작, 운영 서버 lifespan에서의 자동 소비, 대량 데이터 검색 성능은 검증하지 않았다.

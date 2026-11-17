@@ -101,6 +101,14 @@ class FoundItemSummary(ApiModel):
         return value.astimezone(ZoneInfo('Asia/Seoul')).isoformat()
 
 
+class FoundItemPage(ApiModel):
+    items: list[FoundItemSummary]
+    page: int
+    size: int
+    total_elements: int
+    total_pages: int
+
+
 class FoundItemDetail(FoundItemSummary, TextAnalysisProgress):
     description: str
     found_location_description: str
@@ -113,3 +121,66 @@ class FoundItemDetail(FoundItemSummary, TextAnalysisProgress):
     @field_serializer('updated_at', 'posted_at', 'expires_at', 'closed_at')
     def serialize_detail_time(self, value):
         return value.astimezone(ZoneInfo('Asia/Seoul')).isoformat() if value else None
+
+
+class UpdateFoundItemRequest(ApiModel):
+    """PATCH body: send only what changes; at least one field, never null."""
+
+    category_id: UUID | None = None
+    title: Title | None = None
+    description: Description | None = None
+    found_building_id: UUID | None = None
+    found_location_description: LocationText | None = None
+    found_at: AwareDatetime | None = None
+    photos: list[PhotoAttachmentInput] | None = Field(default=None, min_length=1, max_length=5)
+
+    @field_validator('found_at', mode='before')
+    @classmethod
+    def timestamp_string(cls, value):
+        if value is not None and (not isinstance(value, str) or 'T' not in value):
+            raise ValueError('Expected RFC3339 timestamp with timezone')
+        return value
+
+    @model_validator(mode='after')
+    def at_least_one_non_null_field(self):
+        if not self.model_fields_set:
+            raise ValueError('At least one field is required')
+        if any(getattr(self, name) is None for name in self.model_fields_set):
+            raise ValueError('Null is not allowed')
+        if self.photos:
+            ids = [photo.photo_id for photo in self.photos]
+            if len(set(ids)) != len(ids):
+                raise ValueError('Photo IDs must be unique')
+        return self
+
+
+class DropOffResponse(ApiModel):
+    mode: Literal['DROP_OFF', 'KEPT_BY_FINDER']
+    building: BuildingSummary | None
+    spot_description: str | None
+    photo: PhotoMetadata | None
+    updated_at: AwareDatetime
+
+    @field_serializer('updated_at')
+    def serialize_time(self, value):
+        return value.astimezone(ZoneInfo('Asia/Seoul')).isoformat()
+
+
+class DropOffHistoryEntry(ApiModel):
+    history_id: UUID
+    changed_by_user_id: UUID
+    changed_at: AwareDatetime
+    before: DropOffResponse | None
+    after: DropOffResponse
+
+    @field_serializer('changed_at')
+    def serialize_time(self, value):
+        return value.astimezone(ZoneInfo('Asia/Seoul')).isoformat()
+
+
+class DropOffHistoryPage(ApiModel):
+    items: list[DropOffHistoryEntry]
+    page: int
+    size: int
+    total_elements: int
+    total_pages: int

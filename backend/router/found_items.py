@@ -1,13 +1,19 @@
 """기능별 API 기본 구조. 상세 계약은 docs/api 참고."""
 
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, Request, Response, status
+from fastapi import APIRouter, Query, Request, Response
 
+from library.optional_http import OptionalAuthRoute
 from library.protected_http import ProtectedRoute
 from schema.admin import CreatePostReportRequest, PostReportResponse
 from schema.common import ErrorResponse
-from schema.found_items import CreateFoundItemRequest, FoundItemDetail
+from schema.found_item_params import FoundItemListParams, MyFoundItemParams, PageParams
+from schema.found_items import (
+    CreateFoundItemRequest, DropOffHistoryPage, DropOffInput, DropOffResponse, FoundItemDetail,
+    FoundItemPage, UpdateFoundItemRequest,
+)
 from service.admin import AdminService
 from service.found_items import FoundItemService
 
@@ -27,22 +33,31 @@ class FoundItemWriteRoute(ProtectedRoute):
 router = APIRouter(tags=["found_items"])
 
 
-@router.get('/found-items', summary='검색·목록', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def list_found_items():
-    """ITEM-01: 검색·목록. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-01 구현 예정"},
-    )
+def errors(*codes):
+    return {code: {'model': ErrorResponse} for code in codes}
 
 
-@router.get('/found-items/{itemId}', summary='공개 상세', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def get_found_item(itemId: UUID):
-    """ITEM-02: 공개 상세. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-02 구현 예정"},
-    )
+# Public reads: guests allowed; a live session widens what the caller may see.
+async def list_found_items(request: Request, params: Annotated[FoundItemListParams, Query()]):
+    return await FoundItemService(request).search(params)
+
+
+router.add_api_route(
+    '/found-items', list_found_items, methods=['GET'], summary='검색·목록',
+    response_model=FoundItemPage, route_class_override=OptionalAuthRoute,
+    responses=errors(400, 500),
+)
+
+
+async def get_found_item(request: Request, itemId: UUID):
+    return await FoundItemService(request).get(itemId)
+
+
+router.add_api_route(
+    '/found-items/{itemId}', get_found_item, methods=['GET'], summary='공개 상세',
+    response_model=FoundItemDetail, route_class_override=OptionalAuthRoute,
+    responses=errors(400, 404, 500),
+)
 
 
 async def create_found_item(request: Request, body: CreateFoundItemRequest, response: Response):
@@ -58,67 +73,86 @@ router.add_api_route(
 )
 
 
-@router.patch('/found-items/{itemId}', summary='자기 게시물 수정', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def update_found_item(itemId: UUID):
-    """ITEM-04: 자기 게시물 수정. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-04 구현 예정"},
-    )
+# Finder-only writes and member-only reads share the protected transaction.
+async def update_found_item(request: Request, itemId: UUID, body: UpdateFoundItemRequest):
+    return await FoundItemService(request).update(itemId, body)
 
 
-@router.delete('/found-items/{itemId}', summary='자기 게시물 삭제', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def delete_found_item(itemId: UUID):
-    """ITEM-05: 자기 게시물 삭제. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-05 구현 예정"},
-    )
+router.add_api_route(
+    '/found-items/{itemId}', update_found_item, methods=['PATCH'], summary='자기 게시물 수정',
+    response_model=FoundItemDetail, route_class_override=FoundItemWriteRoute,
+    responses=errors(400, 401, 403, 404, 409, 415, 500),
+)
 
 
-@router.get('/found-items/{itemId}/drop-off', summary='보관 위치 조회', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def get_drop_off(itemId: UUID):
-    """ITEM-06: 보관 위치 조회. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-06 구현 예정"},
-    )
+async def delete_found_item(request: Request, itemId: UUID):
+    await FoundItemService(request).delete(itemId)
+    return Response(status_code=204)
 
 
-@router.put('/found-items/{itemId}/drop-off', summary='보관 위치 변경', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def update_drop_off(itemId: UUID):
-    """ITEM-07: 보관 위치 변경. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-07 구현 예정"},
-    )
+router.add_api_route(
+    '/found-items/{itemId}', delete_found_item, methods=['DELETE'], summary='자기 게시물 삭제',
+    status_code=204, route_class_override=FoundItemWriteRoute,
+    responses=errors(400, 401, 403, 404, 500),
+)
 
 
-@router.get('/found-items/{itemId}/drop-off/history', summary='보관 위치 이력', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def list_drop_off_history(itemId: UUID):
-    """ITEM-08: 보관 위치 이력. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-08 구현 예정"},
-    )
+async def get_drop_off(request: Request, itemId: UUID):
+    return await FoundItemService(request).drop_off(itemId)
 
 
-@router.post('/found-items/{itemId}/repost', summary='만료 재등록', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def repost_found_item(itemId: UUID):
-    """ITEM-09: 만료 재등록. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-09 구현 예정"},
-    )
+router.add_api_route(
+    '/found-items/{itemId}/drop-off', get_drop_off, methods=['GET'], summary='보관 위치 조회',
+    response_model=DropOffResponse, route_class_override=FoundItemWriteRoute,
+    responses=errors(400, 401, 404, 500),
+)
 
 
-@router.get('/me/found-items', summary='내 게시물', responses={501: {"description": "아직 구현되지 않은 기능"}})
-async def list_my_found_items():
-    """ITEM-10: 내 게시물. 요청·응답 모델과 서비스 연동 구현 예정."""
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail={"code": "NOT_IMPLEMENTED", "message": "ITEM-10 구현 예정"},
-    )
+async def update_drop_off(request: Request, itemId: UUID, body: DropOffInput):
+    return await FoundItemService(request).change_drop_off(itemId, body)
+
+
+router.add_api_route(
+    '/found-items/{itemId}/drop-off', update_drop_off, methods=['PUT'], summary='보관 위치 변경',
+    response_model=DropOffResponse, route_class_override=FoundItemWriteRoute,
+    responses=errors(400, 401, 403, 404, 409, 415, 500),
+)
+
+
+async def list_drop_off_history(
+    request: Request, itemId: UUID, params: Annotated[PageParams, Query()],
+):
+    return await FoundItemService(request).drop_off_history(itemId, params)
+
+
+router.add_api_route(
+    '/found-items/{itemId}/drop-off/history', list_drop_off_history, methods=['GET'],
+    summary='보관 위치 이력', response_model=DropOffHistoryPage,
+    route_class_override=FoundItemWriteRoute, responses=errors(400, 401, 404, 500),
+)
+
+
+async def repost_found_item(request: Request, itemId: UUID):
+    return await FoundItemService(request).repost(itemId)
+
+
+router.add_api_route(
+    '/found-items/{itemId}/repost', repost_found_item, methods=['POST'], summary='만료 재등록',
+    response_model=FoundItemDetail, route_class_override=FoundItemWriteRoute,
+    responses=errors(400, 401, 403, 404, 409, 500),
+)
+
+
+async def list_my_found_items(request: Request, params: Annotated[MyFoundItemParams, Query()]):
+    return await FoundItemService(request).list_mine(params)
+
+
+# Login is required, so this shares the protected transaction and private cache header.
+router.add_api_route(
+    '/me/found-items', list_my_found_items, methods=['GET'], summary='내 게시물',
+    response_model=FoundItemPage, route_class_override=FoundItemWriteRoute,
+    responses={code: {'model': ErrorResponse} for code in (400, 401, 500)},
+)
 
 
 # MOD-01 shares the protected transaction wrapper with admin review endpoints.

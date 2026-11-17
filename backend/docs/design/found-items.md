@@ -321,4 +321,13 @@ test_found_item_models.py와 test_found_item_contract.py에 모델·실제 Postg
 실제 한국어 모델 활성 상태에서 신규 34개가 모두 통과했다. KEYWORD 전용 매칭과 최초 알림 중복 방지를 포함한다.
 이 테스트는 워커를 명시적으로 실행했다. 실행 중 서버 lifespan의 자동 소비를 별도로 검증한 결과는 아니다.
 전체 회귀 결과는 tests/README.md에 기록한다. Mermaid 전용 렌더러에 의한 도식 시각 검증은 수행하지 않았다.
-대량 데이터 성능·운영 스케줄 관찰·실제 외부 이메일·나머지 ITEM API는 별도 후속 범위다.
+대량 데이터 성능·운영 스케줄 관찰·실제 외부 이메일은 별도 후속 범위다.
+
+## 11. 나머지 API 구현 (2026-11-15)
+
+8절의 B~F 단계(ITEM-01·02·04~10)를 구현했다. 위 4절의 "후속 확장" 파일 구성을 따르되
+보관 위치 로직은 별도 파일 없이 service/found_items.py에 두었다. 구현 규칙과 명세가 정하지 않아 선택한 사항은
+[습득물 API 명세의 구현 보충](../api/02-found-items.md)에 기록했다. 비회원 허용 조회용 라우트는
+library/optional_http.py(OptionalAuthRoute)이며, 수정·삭제·재등록의 후속 정리는 DB 트리거와
+기존 request_found_item_analysis·request_item_reevaluation을 재사용한다. 8절 G단계(수거·취소·만료·숨김 경합,
+대량 성능)는 아직 수행하지 않았다.
