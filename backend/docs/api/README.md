@@ -1,5 +1,9 @@
 # KAIFind API 명세
 
+2026-11-18 분실 신고 연장 상한: LOST-05는 추가 연장 합계 최대 180일,
+최초 등록 시각부터 최대 210일까지만 OPEN으로 유지한다. 상한 도달 시
+409 LOST_REPORT_EXTENSION_LIMIT_REACHED를 반환한다. [분실 신고 계약](03-lost-reports-matching.md).
+
 Notion 최신 문서를 Markdown으로 내보낸 사본입니다. 인증을 포함한 총 63개 엔드포인트의 설계 초안이며, 상세 동작·모델·JSON 예시를 유지했습니다.
 
 내보낸 날짜: 2026-11-02 (KST)
