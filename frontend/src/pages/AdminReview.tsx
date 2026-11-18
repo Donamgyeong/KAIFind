@@ -267,14 +267,14 @@ export default function AdminReviewDetail({ kind }: { kind: Kind }) {
       </article>
       {record.status === "OPEN" && (
         <ReviewForm
-          key={caseId}
+          key={"review:" + caseId}
           record={record}
           path={path}
           reload={result.reload}
         />
       )}
       {"collectorId" in record && (
-        <RestrictFromDispute key={caseId} record={record} />
+        <RestrictFromDispute key={"restriction:" + caseId} record={record} />
       )}
     </div>
   );
