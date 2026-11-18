@@ -80,5 +80,4 @@ export const campusCategories = [
   { nameKo: "생활용품", nameEn: "Everyday Items", sensitive: false },
   { nameKo: "의류", nameEn: "Clothing", sensitive: false },
   { nameKo: "기타", nameEn: "Other", sensitive: false },
-  { nameKo: "휴대전화", nameEn: "Mobile Phones", sensitive: true },
 ];
