@@ -2,6 +2,7 @@
 
 import asyncio
 import os
+from datetime import datetime, timedelta
 from uuid import uuid4
 
 import pytest
@@ -78,6 +79,105 @@ def test_create_update_extend_resolve(context):
     with env.sync.connect() as db:
         assert db.execute(text('SELECT count(*) FROM lost_report_private_details WHERE report_id=:id'),
                           {'id': report['reportId']}).scalar_one() == 0
+
+
+@pytest.mark.parametrize(('language', 'message'), [
+    ('ko', '분실 신고는 최초 등록일로부터 최대 210일까지만 유지할 수 있습니다.'),
+    ('en', 'A lost report can remain open for at most 210 days from registration.'),
+])
+def test_extension_limit_and_rejection_has_no_side_effects(context, language, message):
+    client, env, body, headers = context
+    report, path = create(context)
+    created_at = datetime.fromisoformat(report['createdAt'])
+    assert datetime.fromisoformat(report['expiresAt']) == created_at + timedelta(days=30)
+
+    for extension in range(1, 7):
+        response = client.post(path + '/extend', headers=headers)
+        assert response.status_code == 200, response.text
+        assert datetime.fromisoformat(response.json()['expiresAt']) == (
+            created_at + timedelta(days=30 + extension * 30)
+        )
+
+    def snapshot():
+        with env.sync.connect() as db:
+            params = {'id': report['reportId']}
+            return (
+                db.execute(text('SELECT * FROM lost_reports WHERE id=:id'), params).one(),
+                db.execute(text('SELECT * FROM match_evaluation_jobs WHERE report_id=:id'), params).one(),
+                db.execute(text('SELECT count(*) FROM outbox_events')).scalar_one(),
+                db.execute(text('SELECT count(*) FROM audit_logs')).scalar_one(),
+                db.execute(text('SELECT details FROM lost_report_private_details WHERE report_id=:id'),
+                           params).scalar_one(),
+            )
+
+    before = snapshot()
+    for _ in range(2):
+        response = client.post(path + '/extend', headers={**headers, 'Accept-Language': language})
+        assert_error(response, 409, 'LOST_REPORT_EXTENSION_LIMIT_REACHED')
+        assert response.json()['fieldErrors'] == []
+        assert response.json()['message'] == message
+        assert snapshot() == before
+
+
+def test_extension_clamps_to_registration_limit(context):
+    client, env, body, headers = context
+    report, path = create(context)
+    created_at = datetime.fromisoformat(report['createdAt'])
+    with env.sync.begin() as db:
+        db.execute(text('UPDATE lost_reports SET expires_at=:expiry WHERE id=:id'), {
+            'expiry': created_at + timedelta(days=200), 'id': report['reportId'],
+        })
+
+    response = client.post(path + '/extend', headers=headers)
+    assert response.status_code == 200, response.text
+    assert datetime.fromisoformat(response.json()['expiresAt']) == created_at + timedelta(days=210)
+
+
+def test_registration_limit_expiry_boundary(context):
+    client, env, body, headers = context
+    report, path = create(context)
+    for _ in range(6):
+        assert client.post(path + '/extend', headers=headers).status_code == 200
+
+    env.clock.advance(days=210, microseconds=-1)
+    headers = {'X-CSRF-Token': login(client)['csrfToken']}
+    assert client.get(path).json()['status'] == 'OPEN'
+    assert_error(client.post(path + '/extend', headers=headers),
+                 409, 'LOST_REPORT_EXTENSION_LIMIT_REACHED')
+
+    env.clock.advance(microseconds=1)
+    assert_error(client.post(path + '/extend', headers=headers), 409, 'LOST_REPORT_NOT_OPEN')
+    closed = client.get(path).json()
+    assert closed['status'] == 'CLOSED'
+    assert closed['privateIdentifyingDetails'] is None
+    with env.sync.connect() as db:
+        row = db.execute(text('SELECT closed_at, purge_after FROM lost_reports WHERE id=:id'),
+                         {'id': report['reportId']}).one()
+        assert row.closed_at == env.clock()
+        assert row.purge_after > row.closed_at
+        assert db.execute(text("""SELECT count(*) FROM audit_logs
+            WHERE target_id=:id AND actor_type='SYSTEM'
+            AND metadata->>'toStatus'='CLOSED'"""), {'id': report['reportId']}).scalar_one() == 1
+
+
+def test_concurrent_last_extension(context):
+    from concurrent.futures import ThreadPoolExecutor
+
+    client, env, body, headers = context
+    report, path = create(context)
+    for _ in range(5):
+        assert client.post(path + '/extend', headers=headers).status_code == 200
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        futures = [executor.submit(client.post, path + '/extend', headers=headers) for _ in range(2)]
+        responses = [future.result(timeout=20) for future in futures]
+    assert sorted(response.status_code for response in responses) == [200, 409]
+    rejected = next(response for response in responses if response.status_code == 409)
+    assert_error(rejected, 409, 'LOST_REPORT_EXTENSION_LIMIT_REACHED')
+    current = client.get(path).json()
+    assert datetime.fromisoformat(current['expiresAt']) == (
+        datetime.fromisoformat(report['createdAt']) + timedelta(days=210)
+    )
 
 
 @pytest.mark.parametrize('action', ['extend', 'update', 'detail', 'list'])

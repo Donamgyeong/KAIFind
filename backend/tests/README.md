@@ -209,6 +209,17 @@ docker compose exec -T -w /app -e RUN_REAL_TEXT_ANALYSIS_TESTS=true backend pyth
 
 일반 실행의 실제 모델 opt-in skip은 실제 번역 검증 성공을 의미하지 않는다.
 
+2026-11-18 연장 상한: 최초 30일·6회 추가 연장 후 210일, 추가 요청의 ko/en 409와
+기한·버전·재평가·이벤트·감사·비공개 정보 보존, 마지막 연장의 동시 요청,
+30일 미만의 잔여 기간 보정과 등록 시각+210일의 정확한 종료 경계를 검사한다.
+기존 backend 컨테이너와 기본 전용 `kaifind_test_backend`에서 아래 명령으로
+52개 통과·실제 번역 모델 opt-in 1개 skip을 확인했다. 전체 회귀·실제 번역 모델은
+이번 변경에서 실행하지 않았다.
+
+```sh
+docker compose exec -T -w /app backend python -m scripts.test_backend tests/test_lost_report_contract.py tests/test_lost_report_models.py tests/test_expiry.py -q
+```
+
 2026-11-13 전체 회귀: 기존 db 서비스의 새 전용 `kaifind_test_lost_reports_20261113` DB에
 처음부터 head까지 마이그레이션을 적용한 뒤 703개 통과·opt-in 6개 skip.
 재사용 기본 테스트 DB에서는 기존 keyword_profile_drain 함수 누락으로 키워드 구독 테스트 1개가

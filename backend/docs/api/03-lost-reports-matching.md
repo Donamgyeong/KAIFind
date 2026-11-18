@@ -228,7 +228,7 @@
 | Request body | 없음 |
 | Request model | 없음 |
 | 성공 | 200 LostReportResponse |
-| 실패 | 공통 실패, 404 LOST\_REPORT\_NOT\_FOUND, 409 LOST\_REPORT\_NOT\_OPEN |
+| 실패 | 공통 실패, 404 LOST\_REPORT\_NOT\_FOUND, 409 LOST\_REPORT\_NOT\_OPEN / LOST\_REPORT\_EXTENSION\_LIMIT\_REACHED |
 
 ### Parameter
 
@@ -242,7 +242,9 @@
 ### 처리 규칙
 
 - 신고자 본인만 OPEN 신고를 연장할 수 있다.
-- 연장 기간은 SRS 미정이므로 30일로 제안한다. 새 expiresAt=max(현재 expiresAt, 요청 시각)+30일.
+- 최초 유효기간은 등록 시각부터 30일이며 추가 연장은 합계 최대 180일이다. 새 expiresAt=min(현재 expiresAt+30일, createdAt+210일). 날짜 자정이 아닌 등록 시각을 기준으로 계산한다.
+- 정상 등록한 신고는 30일씩 총 6회 연장할 수 있다. 현재 expiresAt이 이미 createdAt+210일 이상이면 409 LOST_REPORT_EXTENSION_LIMIT_REACHED를 반환한다. 실패 시 기한·수정 시각·버전·매칭 재평가를 변경하지 않는다.
+- 만료 시각에 도달했으면 자동 종료 처리를 우선하여 409 LOST_REPORT_NOT_OPEN을 반환한다. 연장 상한은 OPEN 유효기간 제한이며 종료 후 일반 정보 1년 보존 정책은 유지한다.
 - 자동 종료와 경합하면 트랜잭션에서 상태를 다시 검사한다. 이미 CLOSED면 409. 재개방·개인정보 복원은 하지 않는다.
 - 본문 없음. 기간·상태를 클라이언트가 지정하지 않는다.
 
@@ -473,7 +475,7 @@ LostReportSummary는 위 두 상태 필드를 포함하며 privateIdentifyingDet
 
 ## 오류·검증 기준
 
-추가 오류는 400 INVALID\_REFERENCE(존재하지 않거나 새로 선택할 수 없는 기준정보), 404 LOST\_REPORT\_NOT\_FOUND(없음 또는 소유권 없음), 409 LOST\_REPORT\_NOT\_OPEN(수정·연장 불가능 상태)다. 실패 시 상태·기한·매칭을 부분 반영하지 않는다.
+추가 오류는 400 INVALID\_REFERENCE(존재하지 않거나 새로 선택할 수 없는 기준정보), 404 LOST\_REPORT\_NOT\_FOUND(없음 또는 소유권 없음), 409 LOST\_REPORT\_NOT\_OPEN(수정·연장 불가능 상태), 409 LOST_REPORT_EXTENSION_LIMIT_REACHED(등록 시각부터 210일인 연장 상한 도달)다. 만료 정리의 커밋은 아래 구현 보충을 따르며, 그 외 실패 시 상태·기한·매칭을 부분 반영하지 않는다.
 
 | 확인 상황 | 기대 결과 |
 | --- | --- |
@@ -490,7 +492,7 @@ LostReportSummary는 위 두 상태 필드를 포함하며 privateIdentifyingDet
 
 ## 명시적 설계 제안·미정 사항
 
-30일 단위 연장, 최초 closedAt부터1년 보존, 문자열·건물 수 제한, 키워드 정규화, 불일치 후보 제거·재등장 중복 알림 정책은 SRS가 세부적으로 정하지 않은 초안이다. 상태값 CLOSED는 30일 자동 종료를 표현하기 위한 새 명칭이다. 사용자 소유권 승인·찾은 사람 사전 승인 절차는 추가하지 않는다.
+2026-11-18 결정으로 연장은 30일 단위·추가 최대 180일·등록 시각부터 최대 210일로 확정했다. 최초 closedAt부터1년 보존, 문자열·건물 수 제한, 키워드 정규화, 불일치 후보 제거·재등장 중복 알림 정책은 SRS가 세부적으로 정하지 않은 초안이다. 상태값 CLOSED는 자동 종료를 표현하기 위한 명칭이다. 사용자 소유권 승인·찾은 사람 사전 승인 절차는 추가하지 않는다.
 
 
 ## LOST-01~06 구현 보충 (2026-11-13)

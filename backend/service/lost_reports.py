@@ -15,6 +15,10 @@ from service.matching import matching_progress
 from service.text_analysis import request_lost_report_analysis, request_report_reevaluation
 
 
+REPORT_VALIDITY = timedelta(days=30)
+REPORT_MAX_LIFETIME = timedelta(days=210)
+
+
 class LostReportService:
     def __init__(self, request):
         self.db = request.state.db
@@ -120,7 +124,7 @@ class LostReportService:
             owner_id=self.user.id, category_id=body.category_id, description=body.description,
             lost_date_from=body.lost_date_from, lost_date_to=body.lost_date_to,
             status='OPEN', created_at=self.now, updated_at=self.now,
-            expires_at=self.now + timedelta(days=30),
+            expires_at=self.now + REPORT_VALIDITY,
         )
         self.db.add(report)
         await self.db.flush()
@@ -149,7 +153,12 @@ class LostReportService:
         report = await self.load(report_id, writing=True)
         if report.status != 'OPEN':
             return None
-        report.expires_at = max(report.expires_at, self.now) + timedelta(days=30)
+
+        latest_expiry = report.created_at + REPORT_MAX_LIFETIME
+        if report.expires_at >= latest_expiry:
+            raise AuthError(409, 'LOST_REPORT_EXTENSION_LIMIT_REACHED')
+
+        report.expires_at = min(report.expires_at + REPORT_VALIDITY, latest_expiry)
         report.updated_at = self.now
         flag_modified(report, 'updated_at')
         await self.db.flush()
