@@ -17,6 +17,12 @@ import Home from "./pages/Home";
 import FoundDetail from "./pages/FoundDetail";
 import FoundForm, { ChangeStorage, FoundCreated } from "./pages/FoundForm";
 import MyFound from "./pages/MyFound";
+import Admin from "./pages/Admin";
+import AdminReviewDetail from "./pages/AdminReview";
+import Buildings from "./pages/Buildings";
+import Profile, { EmailSettings, Keywords } from "./pages/Profile";
+import Notifications, { NotificationPopup } from "./pages/Notifications";
+
 import LostForm from "./pages/LostForm";
 import LostReports, { LostDetail, Matches } from "./pages/LostReports";
 import Conversations, { ConversationMessages } from "./pages/Messages";
@@ -68,6 +74,7 @@ function Shell() {
   const { t, lang, user, checking, revision, changeLanguage } = useSession();
   const [error, setError] = useState<unknown>();
   const [changing, setChanging] = useState(false);
+  const [notificationRevision, setNotificationRevision] = useState<number>();
   const location = useLocation();
   const navigate = useNavigate();
   const links = [
@@ -145,6 +152,19 @@ function Shell() {
                   className={ui.iconButton}
                   to="/me/notifications"
                   aria-label={t("알림", "Notifications")}
+                  aria-haspopup="dialog"
+                  onClick={(event) => {
+                    if (
+                      event.button === 0 &&
+                      !event.metaKey &&
+                      !event.ctrlKey &&
+                      !event.shiftKey &&
+                      !event.altKey
+                    ) {
+                      event.preventDefault();
+                      setNotificationRevision(revision);
+                    }
+                  }}
                 >
                   <Bell size={22} />
                 </Link>
@@ -165,6 +185,72 @@ function Shell() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/found-items" element={<Home />} />
+          <Route path="/buildings" element={<Buildings />} />
+          <Route
+            path="/me"
+            element={
+              <RequireMember>
+                <Profile />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/me/notifications"
+            element={
+              <RequireMember>
+                <Notifications />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/me/settings"
+            element={
+              <RequireMember>
+                <EmailSettings />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/me/keywords"
+            element={
+              <RequireMember>
+                <Keywords />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <RequireMember admin>
+                <Admin />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/admin/:section"
+            element={
+              <RequireMember admin>
+                <Admin />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/admin/post-reports/:caseId"
+            element={
+              <RequireMember admin>
+                <AdminReviewDetail kind="post-reports" />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/admin/disputes/:caseId"
+            element={
+              <RequireMember admin>
+                <AdminReviewDetail kind="disputes" />
+              </RequireMember>
+            }
+          />
+
           <Route
             path="/lost-reports"
             element={
@@ -291,6 +377,9 @@ function Shell() {
             }
           />
         </Routes>
+        {notificationRevision === revision && user && (
+          <NotificationPopup close={() => setNotificationRevision(undefined)} />
+        )}
       </main>
       <nav
         className={styles.mobileNav}

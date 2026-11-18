@@ -40,3 +40,26 @@ export function buildingMapUrl(building: Building) {
   }).toString();
   return url.href;
 }
+
+export function buildingZones(buildings: Building[], t: Translate) {
+  const groups = [
+    { code: "E", name: t("동측 구역", "East Zone") },
+    { code: "W", name: t("서측 구역", "West Zone") },
+    { code: "N", name: t("북측 구역", "North Zone") },
+    { code: "", name: t("기타 건물", "Other buildings") },
+  ];
+  return groups
+    .map(({ code, name }) => ({
+      code,
+      name,
+      entries: buildings
+        .filter(
+          (building) =>
+            building.active &&
+            (building.code.match(/^([EWN])\d/i)?.[1]?.toUpperCase() ?? "") ===
+              code,
+        )
+        .sort((a, b) => a.code.localeCompare(b.code, "en", { numeric: true })),
+    }))
+    .filter(({ entries }) => entries.length > 0);
+}

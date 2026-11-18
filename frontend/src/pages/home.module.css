@@ -149,3 +149,13 @@
     aspect-ratio: 1.22;
   }
 }
+
+.buildingLink {
+  color: var(--brand);
+  font-size: 0.75rem;
+  justify-self: start;
+  padding-block: 3px;
+}
+.buildingLink:hover {
+  text-decoration: underline;
+}

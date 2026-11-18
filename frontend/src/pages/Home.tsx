@@ -62,6 +62,14 @@ export default function Home() {
   }
   const buildings = useRemote<{ items: Building[] }>("/buildings", true);
   const categories = useRemote<{ items: Category[] }>("/categories", true);
+  const preferredOrder = ["전자기기", "카드·지갑", "생활용품", "의류", "기타"];
+  const priority = (category: Category) => {
+    const index = preferredOrder.indexOf(category.nameKo);
+    return index === -1 ? preferredOrder.length : index;
+  };
+  const choices = [...(categories.data?.items ?? [])].sort(
+    (a, b) => priority(a) - priority(b),
+  );
   const request = new URLSearchParams();
   for (const field of [
     "q",
@@ -131,7 +139,7 @@ export default function Home() {
           >
             {t("전체", "All")}
           </button>
-          {categories.data?.items.map((category) => (
+          {choices.map((category) => (
             <button
               type="button"
               key={category.categoryId}
@@ -239,6 +247,7 @@ export default function Home() {
           </div>
         </section>
       )}
+
       <div className={ui.between}>
         <h1 className={styles.heading}>
           {t("최근 발견된 물건", "Recently found items")}
@@ -251,6 +260,7 @@ export default function Home() {
         )}
       </div>
       {items.loading && <Loading />}
+
       {items.error !== undefined && (
         <ErrorState error={items.error} retry={items.reload} />
       )}
@@ -273,6 +283,9 @@ export default function Home() {
           />
         </>
       )}
+      <Link className={styles.buildingLink} to="/buildings">
+        {t("건물별 보관 물품", "Items by storage building")}
+      </Link>
     </div>
   );
 }

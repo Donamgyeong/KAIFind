@@ -24,6 +24,7 @@ import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
 import styles from "./found.module.css";
 import ItemInteractions from "./ItemInteractions";
+import ReportItem from "./ReportItem";
 
 function BuildingLocation({
   building,
@@ -229,6 +230,7 @@ function DetailContent({
             )}
           </section>
           <ItemInteractions item={item} changed={reload} />
+          <ReportItem itemId={item.itemId} />
           {owner && (
             <section className={ui.panel + " " + ui.stack}>
               <h2>{t("게시물 관리", "Manage post")}</h2>

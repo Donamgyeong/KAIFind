@@ -27,3 +27,13 @@ npm run format:check
 npm run lint
 npm run build
 ```
+
+## 시연 기준정보
+
+Vite와 백엔드가 실행 중인 상태에서 시연 관리자 계정으로 건물 E/W/N 68개와 기본 카테고리를 등록합니다. 카드·지갑은 비민감으로 등록합니다. 기존 코드는 기존 서버 ID와 설정을 유지합니다. 스크립트가 활성·민감 설정 차이를 표시하면 관리자 화면에서 해당 항목의 정책을 확인할 수 있습니다.
+
+\`\`\`sh
+npm run seed:reference
+\`\`\`
+
+기본 접속 주소는 \`https://localhost:3000\`, 기본 계정은 \`admin-01\`입니다. 시연 출처와 계정이 다르면 명령 실행 시 \`KAIFIND_SEED_ORIGIN\`과 \`KAIFIND_SEED_ACCOUNT\`를 지정합니다. Node가 로컬 CA를 별도로 필요로 하면 \`NODE_EXTRA_CA_CERTS\`에 해당 CA 인증서 경로를 지정합니다.

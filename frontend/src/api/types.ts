@@ -190,3 +190,43 @@ export interface Message {
   content: string;
   createdAt: string;
 }
+
+export interface NotificationSettings {
+  emailEnabled: boolean;
+  matchEmail: boolean;
+  collectionEmail: boolean;
+  expiryEmail: boolean;
+  keywordEmail: boolean;
+}
+
+export interface Notification {
+  notificationId: string;
+  type: "MATCH_CANDIDATE" | "ITEM_COLLECTED" | "ITEM_EXPIRED" | "KEYWORD_MATCH";
+  message: string;
+  targetPath: string;
+  itemId: string | null;
+  reportId: string | null;
+  createdAt: string;
+  readAt: string | null;
+}
+
+export interface Subscription {
+  subscriptionId: string;
+  keyword: string;
+  createdAt: string;
+}
+
+export type ReportReason = "INAPPROPRIATE" | "SPAM" | "OTHER";
+
+export interface PostReport {
+  reportId: string;
+  itemId: string;
+  reporterId: string;
+  reasonCode: ReportReason;
+  details: string;
+  status: "OPEN" | "REVIEWED";
+  decision: "HIDE" | "DISMISS" | null;
+  createdAt: string;
+  reviewedAt: string | null;
+  reviewerId: string | null;
+}

@@ -365,3 +365,45 @@
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
+
+.zoneChoice {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 56px;
+  padding: 10px 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  text-align: start;
+}
+.zoneChoice:hover {
+  background: var(--soft);
+}
+.zoneChoice svg {
+  color: var(--brand);
+  flex: none;
+}
+.zoneChoice small {
+  display: block;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.zoneHeading {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 0;
+}
+.buildingOptions {
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.buildingOptions button {
+  min-height: 54px;
+}
+.buildingOptions button:first-child {
+  border-top: 0;
+}

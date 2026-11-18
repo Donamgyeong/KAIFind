@@ -1,10 +1,10 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { ApiError } from "../api/client";
 import { useSession } from "../api/session-context";
 import type { Building, ItemStatus } from "../api/types";
-import { localName, statusLabel } from "./format";
+import { buildingZones, localName, statusLabel } from "./format";
 import styles from "./ui.module.css";
 
 export function Status({ status }: { status: ItemStatus }) {
@@ -146,26 +146,18 @@ export function BuildingPicker({
   disabled?: boolean;
 }) {
   const { t, lang } = useSession();
-  const ref = useRef<HTMLDialogElement>(null);
-  const id = useId();
-  const zones = [
-    { code: "E", name: t("동측 구역", "East Zone") },
-    { code: "W", name: t("서측 구역", "West Zone") },
-    { code: "N", name: t("북측 구역", "North Zone") },
-    { code: "", name: t("기타 건물", "Other buildings") },
-  ];
-  const group = (code: string) =>
-    buildings
-      .filter(
-        (building) =>
-          building.active &&
-          (building.code.match(/^([EWN])\d/i)?.[1]?.toUpperCase() ?? "") ===
-            code,
-      )
-      .sort((a, b) => a.code.localeCompare(b.code, "en", { numeric: true }));
-  const selected = values.map((value) =>
-    buildings.find((building) => building.buildingId === value),
+  const [open, setOpen] = useState(false);
+  const [zoneCode, setZone] = useState<string>();
+  const zones = buildingZones(buildings, t);
+  const zone = zones.find(({ code }) => code === zoneCode);
+  const selected = buildings.filter((building) =>
+    values.includes(building.buildingId),
   );
+  const summary = multiple
+    ? label
+    : selected
+        .map((building) => building.code + " · " + localName(building, lang))
+        .join(", ") || label;
   return (
     <>
       <button
@@ -173,85 +165,95 @@ export function BuildingPicker({
         className={styles.selectButton}
         disabled={disabled}
         aria-haspopup="dialog"
-        onClick={() => ref.current?.showModal()}
+        onClick={() => {
+          setZone(undefined);
+          setOpen(true);
+        }}
       >
-        {selected
-          .filter(Boolean)
-          .map(
-            (building) => building!.code + " · " + localName(building!, lang),
-          )
-          .join(", ") || label}
+        {summary}
         <ChevronRight size={16} />
       </button>
-      <dialog ref={ref} className={styles.dialog} aria-labelledby={id}>
-        <div className={styles.dialogHeader}>
-          <h2 id={id}>{label}</h2>
-          <button
-            type="button"
-            className={styles.iconButton}
-            aria-label={t("닫기", "Close")}
-            onClick={() => ref.current?.close()}
-          >
-            <X size={20} />
-          </button>
-        </div>
-        <div className={styles.zoneList}>
-          {zones.map(({ code, name }) => {
-            const entries = group(code);
-            if (!entries.length) return null;
-            return (
-              <details name={id} key={code} className={styles.zone}>
-                <summary>
-                  {name}
-                  {code ? " (" + code + ")" : ""}
+      {open && (
+        <Dialog title={label} close={() => setOpen(false)}>
+          {zone ? (
+            <>
+              <button
+                type="button"
+                className={styles.textButton}
+                onClick={() => setZone(undefined)}
+              >
+                <ChevronLeft size={16} />{" "}
+                {t("구역 다시 선택", "Choose another zone")}
+              </button>
+              <p className={styles.zoneHeading}>
+                {zone.name} · {zone.entries.length}
+                {t("개 건물", " buildings")}
+              </p>
+              <div className={styles.buildingOptions}>
+                {zone.entries.map((building) => {
+                  const checked = values.includes(building.buildingId);
+                  return (
+                    <button
+                      type="button"
+                      aria-pressed={checked}
+                      key={building.buildingId}
+                      onClick={() => {
+                        const next = multiple
+                          ? checked
+                            ? values.filter(
+                                (value) => value !== building.buildingId,
+                              )
+                            : [...values, building.buildingId]
+                          : [building.buildingId];
+                        onChange(next);
+                        if (!multiple) setOpen(false);
+                      }}
+                    >
+                      <b>{building.code}</b> {localName(building, lang)}
+                      {checked && " ✓"}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <div className={styles.zoneList}>
+              {zones.map(({ code, name, entries }) => (
+                <button
+                  type="button"
+                  className={styles.zoneChoice}
+                  key={code}
+                  onClick={() => setZone(code)}
+                >
+                  <span>
+                    {name}
+                    {code ? " (" + code + ")" : ""}
+                    <small>
+                      {entries.length}
+                      {t("개 건물", " buildings")}
+                    </small>
+                  </span>
                   <ChevronRight size={16} />
-                  <small>{entries.length}</small>
-                </summary>
-                <div className={styles.buildingOptions}>
-                  {entries.map((building) => {
-                    const checked = values.includes(building.buildingId);
-                    return (
-                      <button
-                        type="button"
-                        aria-pressed={checked}
-                        key={building.buildingId}
-                        onClick={() => {
-                          const next = multiple
-                            ? checked
-                              ? values.filter(
-                                  (value) => value !== building.buildingId,
-                                )
-                              : [...values, building.buildingId]
-                            : [building.buildingId];
-                          onChange(next);
-                          if (!multiple) ref.current?.close();
-                        }}
-                      >
-                        <b>{building.code}</b> {localName(building, lang)}
-                        {checked && " ✓"}
-                      </button>
-                    );
-                  })}
-                </div>
-              </details>
-            );
-          })}
-          {!buildings.some((building) => building.active) && (
-            <p>
-              {t("선택 가능한 건물이 없습니다.", "No buildings available.")}
-            </p>
+                </button>
+              ))}
+              {!zones.length && (
+                <p>
+                  {t("선택 가능한 건물이 없습니다.", "No buildings available.")}
+                </p>
+              )}
+            </div>
           )}
-        </div>
-        {multiple && (
-          <button
-            type="button"
-            className={styles.primary}
-            onClick={() => ref.current?.close()}
-          >
-            {t("선택 완료", "Done")}
-          </button>
-        )}
-      </dialog>
+          {multiple && (
+            <button
+              type="button"
+              className={styles.primary + " " + styles.full}
+              onClick={() => setOpen(false)}
+            >
+              {t("선택 완료", "Done")}
+            </button>
+          )}
+        </Dialog>
+      )}
     </>
   );
 }
