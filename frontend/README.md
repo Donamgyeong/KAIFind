@@ -1,51 +1,39 @@
 # KAIFind 프론트엔드
 
-KAIFind 프론트엔드는 **React + TypeScript + Vite**로 구성된 웹 앱입니다.
+React, TypeScript, Vite와 React Router로 구성한 캠퍼스 분실물 웹앱입니다. Node.js 버전은 `.nvmrc`를 따릅니다.
 
-- **라우팅**은 화면별 경로를 구현할 때 React Router를 사용합니다. 현재는 [`src/App.tsx`](src/App.tsx)에서 단일 화면을 렌더링합니다.
-- **스타일링**은 CSS Modules와 CSS 변수를 사용합니다. 화면과 컴포넌트의 스타일은 대응하는 `.module.css` 파일에 작성하고, 색상·글꼴·간격 같은 공통 값은 [`src/index.css`](src/index.css)에 CSS 변수로 정의합니다.
+## 로컬 실행
 
-## 1. 프론트엔드 개발 설정
-
-저장소 루트에서 아래 명령을 실행합니다. [`.nvmrc`](.nvmrc)에 지정된 Node.js 24.14.1을 사용합니다.
+1. 저장소 루트에서 [백엔드 실행 안내](../backend/README.md)에 따라 Docker Compose, DB 마이그레이션, 모델·매칭 정책과 사진 저장소를 준비합니다.
+2. 브라우저에서 신뢰하는 localhost 인증서와 키를 준비합니다. 예를 들어 로컬 CA가 이미 등록돼 있다면 `mkcert localhost 127.0.0.1`로 발급할 수 있습니다.
+3. 백엔드에 `AUTH_ALLOWED_ORIGINS=https://localhost:3000`, `PHOTO_PUBLIC_BASE_URL=https://localhost:3000`, `NOTIFICATION_EMAIL_APP_BASE_URL=https://localhost:3000`을 설정합니다. 시연 계정은 [인증 안내](../backend/docs/api/AUTH-IMPLEMENTATION.md)에 따라 활성화합니다.
+4. 이 디렉터리에서 실행합니다.
 
 ```sh
-cd frontend
-nvm install
-nvm use
 npm ci
+KAIFIND_TLS_CERT=/path/to/localhost.pem KAIFIND_TLS_KEY=/path/to/localhost-key.pem npm run dev
 ```
 
-`nvm`을 사용하지 않는 경우 Node.js 24.14.1을 설치한 뒤 `frontend/`에서 `npm ci`를 실행합니다. `package-lock.json`이 바뀌면 `npm ci`를 다시 실행합니다.
+브라우저에서 [KAIFind](https://localhost:3000)를 엽니다. Vite는 동일 출처의 `/api/v1`을 Compose의 FastAPI 포트 8000으로 전달합니다. 정적 빌드 배포 시에도 같은 HTTPS 호스트에 API 리버스 프록시를 두고, 페이지 경로의 직접 접근은 `index.html`로 처리합니다.
 
-## 2. 프론트엔드 서버 실행 및 개발 명령
+## 구조와 검증
 
-`frontend/`에서 개발 서버를 실행합니다.
+- `src/api`는 API 요청, 세션·CSRF, 응답 타입을 관리합니다.
+- `src/ui`는 화면 공통 컴포넌트와 KST 표시를 제공합니다.
+- `src/pages`는 기능별 라우트 화면이고, 색상·글꼴은 `src/index.css`의 공통 스타일을 사용합니다.
 
 ```sh
-npm run dev
+npm run format:check
+npm run lint
+npm run build
 ```
 
-브라우저에서 [http://localhost:3000](http://localhost:3000)을 엽니다. 3000번 포트가 사용 중이면 포트를 비운 뒤 다시 실행합니다.
+## 시연 기준정보
 
-| 명령                   | 설명                      |
-| ---------------------- | ------------------------- |
-| `npm run format`       | Prettier 포맷 적용        |
-| `npm run format:check` | Prettier 포맷 검사        |
-| `npm run lint`         | ESLint 검사               |
-| `npm run build`        | TypeScript 검사와 빌드    |
-| `npm run preview`      | 빌드 결과를 로컬에서 확인 |
+Vite와 백엔드가 실행 중인 상태에서 시연 관리자 계정으로 건물 E/W/N 68개와 기본 카테고리를 등록합니다. 카드·지갑은 비민감으로 등록합니다. 기존 코드는 기존 서버 ID와 설정을 유지합니다. 스크립트가 활성·민감 설정 차이를 표시하면 관리자 화면에서 해당 항목의 정책을 확인할 수 있습니다.
 
-## 3. 백엔드 서버 실행 및 연결
+\`\`\`sh
+npm run seed:reference
+\`\`\`
 
-백엔드를 처음 실행하는 경우 [백엔드 README](../backend/README.md)의 환경 설정과 초기화 절차를 따릅니다. 초기화가 끝난 환경에서는 Docker Desktop을 실행한 뒤 저장소 루트에서 아래 명령을 실행합니다.
-
-```sh
-docker compose up -d backend
-```
-
-- [FastAPI 문서](http://localhost:8000/docs)가 열리면 백엔드가 실행 중입니다.
-- Vite도 실행한 상태에서 [카테고리 API](http://localhost:3000/api/v1/categories)가 JSON을 응답하면 프록시가 연결된 상태입니다.
-- 프론트 코드에서는 `fetch("/api/v1/categories")`처럼 상대 경로를 사용합니다. Vite가 `/api/v1`의 요청을 `http://127.0.0.1:8000`으로 전달합니다.
-
-목업 로그인 연동 시 브라우저에서 `http://localhost:3000`을 사용하고, 저장소 루트 `.env`의 `AUTH_ALLOWED_ORIGINS`에 같은 주소가 허용돼 있는지 확인합니다. 사진 링크도 Vite를 거치게 하려면 `PHOTO_PUBLIC_BASE_URL`을 같은 주소로 설정합니다. [인증 설정 안내](../backend/docs/api/AUTH-IMPLEMENTATION.md) · [API 명세](../backend/docs/api/README.md)
+기본 접속 주소는 \`https://localhost:3000\`, 기본 계정은 \`admin-01\`입니다. 시연 출처와 계정이 다르면 명령 실행 시 \`KAIFIND_SEED_ORIGIN\`과 \`KAIFIND_SEED_ACCOUNT\`를 지정합니다. Node가 로컬 CA를 별도로 필요로 하면 \`NODE_EXTRA_CA_CERTS\`에 해당 CA 인증서 경로를 지정합니다.

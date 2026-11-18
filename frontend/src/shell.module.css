@@ -1,0 +1,120 @@
+.header {
+  background: var(--bg);
+}
+.headerInner {
+  max-width: 1240px;
+  min-height: 60px;
+  margin: auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+.brand {
+  color: var(--brand);
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.account {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.language {
+  color: var(--muted);
+  font-size: 0.72rem;
+  border: 0;
+  background: transparent;
+  min-height: 44px;
+}
+.language strong {
+  font-weight: 500;
+}
+.language .current {
+  font-weight: 800;
+}
+.main {
+  max-width: 1240px;
+  margin: auto;
+  padding: 12px 20px calc(108px + env(safe-area-inset-bottom));
+}
+.desktopNav {
+  display: none;
+}
+.mobileNav {
+  position: fixed;
+  z-index: 3;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  left: 20px;
+  right: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 36px #17244018;
+  background: var(--surface);
+  border-radius: 22px;
+  padding: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.mobileNav a,
+.desktopNav a {
+  color: var(--muted);
+  border-radius: 16px;
+}
+.mobileNav a {
+  min-height: 54px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 0.69rem;
+}
+.mobileNav .active,
+.desktopNav .active {
+  color: var(--brand);
+  background: var(--soft);
+  font-weight: 700;
+}
+.skip {
+  position: absolute;
+  z-index: 10;
+  left: 16px;
+  top: -300px;
+  background: var(--surface);
+  padding: 8px 12px;
+}
+.skip:focus {
+  top: 8px;
+}
+@media (min-width: 800px) {
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .headerInner {
+    min-height: 72px;
+  }
+  .main {
+    padding-top: 30px;
+    padding-bottom: 64px;
+  }
+  .mobileNav {
+    display: none;
+  }
+  .desktopNav {
+    display: flex;
+    gap: 6px;
+  }
+  .desktopNav a {
+    min-width: 74px;
+    padding: 12px;
+    text-align: center;
+    font-size: 0.84rem;
+  }
+  .desktopNav svg {
+    display: none;
+  }
+}

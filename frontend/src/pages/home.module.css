@@ -1,0 +1,161 @@
+.home {
+  display: grid;
+  gap: 14px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 0 10px;
+}
+.search button {
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 8px 5px;
+  color: var(--brand);
+  background: transparent;
+}
+.search input[type="search"] {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+}
+.filters {
+  display: grid;
+  gap: 10px;
+}
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+  padding: 3px;
+  margin: -3px;
+  scrollbar-width: none;
+}
+.filterToggle {
+  min-height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.73rem;
+  text-align: start;
+}
+.filterToggle svg {
+  color: var(--brand);
+}
+.filterPanel {
+  display: grid;
+  gap: 12px;
+}
+.filterPanel label {
+  display: grid;
+  gap: 5px;
+  font-size: 0.8rem;
+}
+.heading {
+  font-size: 1rem;
+}
+.resultCount {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: end;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+.card {
+  min-width: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 4px 16px #17244008;
+}
+.card:hover {
+  border-color: var(--brand);
+}
+.cardImage {
+  aspect-ratio: 1.02;
+}
+.cardText {
+  padding: 10px 11px 12px;
+  display: grid;
+  gap: 8px;
+  min-height: 69px;
+}
+.cardText strong {
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+}
+.cardText p,
+.cardMeta {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+.cardMeta {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.cardMeta span[class] {
+  font-size: 0.63rem;
+}
+@media (min-width: 800px) {
+  .home {
+    gap: 17px;
+  }
+  .search {
+    width: min(100%, 560px);
+    height: 52px;
+  }
+  .filters {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 28px;
+  }
+  .filterToggle {
+    min-width: 220px;
+  }
+  .filterPanel {
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: end;
+  }
+  .filterPanel > :last-child {
+    grid-column: 1 / -1;
+  }
+  .heading {
+    font-size: 1.3rem;
+  }
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .cardImage {
+    aspect-ratio: 1.22;
+  }
+}
+
+.buildingLink {
+  color: var(--brand);
+  font-size: 0.75rem;
+  justify-self: start;
+  padding-block: 3px;
+}
+.buildingLink:hover {
+  text-decoration: underline;
+}

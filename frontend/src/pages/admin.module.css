@@ -1,0 +1,57 @@
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tabs a[aria-current="page"] {
+  background: var(--brand);
+  color: white;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+.metric {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  padding: 10px;
+}
+.metric > strong {
+  font-size: clamp(1rem, 4vw, 2rem);
+}
+.filters {
+  display: grid;
+  gap: 12px;
+  align-items: end;
+}
+.auditRecord {
+  overflow-wrap: anywhere;
+}
+.auditRecord summary {
+  cursor: pointer;
+}
+.auditRecord time {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.auditRecord dt {
+  font-weight: 700;
+}
+.auditRecord dd {
+  margin: 0 0 8px;
+}
+.auditRecord pre {
+  white-space: pre-wrap;
+}
+@media (min-width: 800px) {
+  .metric {
+    padding: 20px;
+  }
+  .filters {
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  }
+}
