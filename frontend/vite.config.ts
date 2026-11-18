@@ -23,9 +23,7 @@ const server = {
 =======
   allowedHosts: ['kaifind.pingsns.bond'],
   proxy: { "^/api/v1(?:/|\\?|$)": {
-    target: "https://api.pingsns.bond", 
-    changeOrigin: true, 
-    secure: true,
+    target: "http://backend:8000", 
   } 
   },
 >>>>>>> 7594d95 (Dockerize frontend)
