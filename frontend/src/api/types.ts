@@ -74,3 +74,33 @@ export interface ItemDetail extends ItemSummary {
   closedAt: string | null;
   analysisStatus: ProcessingStatus;
 }
+
+export interface PhotoAttachment {
+  photoId: string;
+  altText: string;
+}
+
+export type DropOffInput =
+  | { mode: "KEPT_BY_FINDER" }
+  | {
+      mode: "DROP_OFF";
+      buildingId: string;
+      spotDescription: string;
+      photo?: PhotoAttachment;
+    };
+
+export interface DropOff {
+  mode: DropOffInput["mode"];
+  building: Building | null;
+  spotDescription: string | null;
+  photo: Photo | null;
+  updatedAt: string;
+}
+
+export interface DropOffHistory {
+  historyId: string;
+  changedByUserId: string;
+  changedAt: string;
+  before: DropOff | null;
+  after: DropOff;
+}

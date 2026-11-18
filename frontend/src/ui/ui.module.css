@@ -241,3 +241,122 @@
   object-fit: cover;
   min-height: 0;
 }
+
+.pageTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 50px;
+}
+.pageTitle h1 {
+  font-size: 1.14rem;
+}
+.pageTitle a {
+  margin-left: -6px;
+}
+.formPage {
+  max-width: 704px;
+  margin-inline: auto;
+  display: grid;
+  gap: 13px;
+}
+.fields {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.fields > label {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+.fields :is(input, select, textarea) {
+  font-weight: 400;
+}
+.segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.segment button {
+  border: 0;
+  border-radius: 999px;
+  background: var(--soft);
+  color: var(--brand);
+  min-height: 38px;
+  font-weight: 700;
+}
+.segment [aria-pressed="true"] {
+  background: var(--brand);
+  color: white;
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.upload {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  min-height: 132px;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  text-align: center;
+}
+.uploadChoice,
+.capture {
+  cursor: pointer;
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 6px;
+  border-radius: 8px;
+}
+.uploadChoice {
+  flex-direction: column;
+  font-weight: 700;
+}
+.capture {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.uploadChoice:focus-within,
+.capture:focus-within {
+  outline: 2px solid var(--brand);
+}
+.photoEdit {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+.photoPreview {
+  width: 56px;
+  height: 56px;
+  border-radius: 9px;
+  object-fit: cover;
+}
+.emptyCard {
+  min-height: 168px;
+  color: var(--muted);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+  gap: 8px;
+}
+.emptyCard svg {
+  color: var(--brand);
+}
+.emptyCard h2 {
+  color: var(--ink);
+}

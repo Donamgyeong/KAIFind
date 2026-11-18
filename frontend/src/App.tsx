@@ -14,6 +14,9 @@ import type { ReactNode } from "react";
 import SessionProvider from "./api/SessionProvider";
 import { useSession } from "./api/session-context";
 import Home from "./pages/Home";
+import FoundDetail from "./pages/FoundDetail";
+import FoundForm, { ChangeStorage, FoundCreated } from "./pages/FoundForm";
+import MyFound from "./pages/MyFound";
 import Login from "./pages/Login";
 import { ErrorState, Loading } from "./ui/controls";
 import ui from "./ui/ui.module.css";
@@ -159,6 +162,48 @@ function Shell() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/found-items" element={<Home />} />
+          <Route path="/found-items/:itemId" element={<FoundDetail />} />
+          <Route
+            path="/found-items/new"
+            element={
+              <RequireMember>
+                <FoundForm />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/found-items/:itemId/edit"
+            element={
+              <RequireMember>
+                <FoundForm />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/found-items/:itemId/storage"
+            element={
+              <RequireMember>
+                <ChangeStorage />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/found-items/:itemId/created"
+            element={
+              <RequireMember>
+                <FoundCreated />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/me/found-items"
+            element={
+              <RequireMember>
+                <MyFound />
+              </RequireMember>
+            }
+          />
+
           <Route
             path="/login"
             element={
