@@ -3,6 +3,7 @@ import { useSession } from "./session-context";
 
 interface Result<T> {
   key: string;
+  scope: string;
   data?: T;
   error?: unknown;
 }
@@ -11,7 +12,8 @@ export function useRemote<T>(path: string | null, anonymous = false) {
   const { api, lang, revision } = useSession();
   const [version, setVersion] = useState(0);
   const [result, setResult] = useState<Result<T>>();
-  const key = JSON.stringify([path, lang, revision, version]);
+  const scope = JSON.stringify([path, revision]);
+  const key = JSON.stringify([scope, lang, version]);
   const reload = useCallback(() => setVersion((previous) => previous + 1), []);
 
   useEffect(() => {
@@ -19,20 +21,35 @@ export function useRemote<T>(path: string | null, anonymous = false) {
     const controller = new AbortController();
     void api.request<T>(path, { signal: controller.signal, anonymous }).then(
       (data) => {
-        if (!controller.signal.aborted) setResult({ key, data });
+        if (!controller.signal.aborted) setResult({ key, scope, data });
       },
       (error: unknown) => {
-        if (!controller.signal.aborted) setResult({ key, error });
+        if (!controller.signal.aborted) setResult({ key, scope, error });
       },
     );
     return () => controller.abort();
-  }, [api, anonymous, key, path]);
+  }, [api, anonymous, key, path, scope]);
 
-  const current = result?.key === key ? result : undefined;
+  const data = result?.scope === scope ? result?.data : undefined;
+  const current = result?.key === key;
   return {
-    data: current?.data,
-    error: current?.error,
-    loading: path !== null && !current,
+    data,
+    error: current ? result?.error : undefined,
+    loading: path !== null && !current && !data,
     reload,
   };
+}
+
+export function useVisiblePolling(
+  reload: () => void,
+  enabled: boolean,
+  intervalMs = 5000,
+) {
+  useEffect(() => {
+    if (!enabled) return;
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === "visible") reload();
+    }, intervalMs);
+    return () => window.clearInterval(interval);
+  }, [reload, enabled, intervalMs]);
 }

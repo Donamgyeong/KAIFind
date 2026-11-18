@@ -17,6 +17,9 @@ import Home from "./pages/Home";
 import FoundDetail from "./pages/FoundDetail";
 import FoundForm, { ChangeStorage, FoundCreated } from "./pages/FoundForm";
 import MyFound from "./pages/MyFound";
+import LostForm from "./pages/LostForm";
+import LostReports, { LostDetail, Matches } from "./pages/LostReports";
+import Conversations, { ConversationMessages } from "./pages/Messages";
 import Login from "./pages/Login";
 import { ErrorState, Loading } from "./ui/controls";
 import ui from "./ui/ui.module.css";
@@ -162,6 +165,71 @@ function Shell() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/found-items" element={<Home />} />
+          <Route
+            path="/lost-reports"
+            element={
+              <RequireMember>
+                <LostReports />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/lost-reports/new"
+            element={
+              <RequireMember>
+                <LostForm />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/lost-reports/:reportId"
+            element={
+              <RequireMember>
+                <LostDetail />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/lost-reports/:reportId/edit"
+            element={
+              <RequireMember>
+                <LostForm />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/lost-reports/:reportId/created"
+            element={
+              <RequireMember>
+                <LostDetail created />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/lost-reports/:reportId/matches"
+            element={
+              <RequireMember>
+                <Matches />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/conversations"
+            element={
+              <RequireMember>
+                <Conversations />
+              </RequireMember>
+            }
+          />
+          <Route
+            path="/conversations/:conversationId"
+            element={
+              <RequireMember>
+                <ConversationMessages />
+              </RequireMember>
+            }
+          />
+
           <Route path="/found-items/:itemId" element={<FoundDetail />} />
           <Route
             path="/found-items/new"

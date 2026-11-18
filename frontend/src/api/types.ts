@@ -104,3 +104,89 @@ export interface DropOffHistory {
   before: DropOff | null;
   after: DropOff;
 }
+
+export type LostReportStatus = "OPEN" | "RESOLVED" | "CLOSED";
+
+export interface LostReportInput {
+  categoryId: string;
+  description: string;
+  possibleBuildingIds: string[];
+  lostDateFrom: string;
+  lostDateTo: string;
+  privateIdentifyingDetails: string;
+}
+
+export interface LostReport extends Omit<
+  LostReportInput,
+  "privateIdentifyingDetails"
+> {
+  reportId: string;
+  ownerId: string;
+  status: LostReportStatus;
+  createdAt: string;
+  updatedAt: string;
+  expiresAt: string;
+  closedAt: string | null;
+  analysisStatus: ProcessingStatus;
+  matchingStatus: ProcessingStatus;
+  privateIdentifyingDetails?: string | null;
+}
+
+export interface MatchCandidate {
+  candidateId: string;
+  reportId: string;
+  itemId: string;
+  matchedAt: string;
+  matchedBy: ("BUILDING" | "KEYWORD")[];
+  item: {
+    itemId: string;
+    categoryId: string;
+    foundBuildingId: string;
+    title: string;
+    foundAt: string;
+    status: ItemStatus;
+    sensitive: boolean;
+  };
+}
+
+export interface MatchPage extends Page<MatchCandidate> {
+  analysisStatus: ProcessingStatus;
+  matchingStatus: ProcessingStatus;
+  isComplete: boolean;
+}
+
+export interface Collection {
+  collectionId: string;
+  itemId: string;
+  collectorId: string;
+  collectedAt: string;
+  status: "COLLECTED";
+}
+
+export interface Dispute {
+  disputeId: string;
+  itemId: string;
+  collectionId: string;
+  reason: string;
+  status: "OPEN" | "RESOLVED";
+  decision: "UPHELD" | "DISMISSED" | null;
+  createdAt: string;
+  resolvedAt: string | null;
+}
+
+export interface Conversation {
+  conversationId: string;
+  itemId: string;
+  finderId: string;
+  memberId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Message {
+  messageId: string;
+  conversationId: string;
+  senderId: string;
+  content: string;
+  createdAt: string;
+}

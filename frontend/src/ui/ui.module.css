@@ -360,3 +360,8 @@
 .emptyCard h2 {
   color: var(--ink);
 }
+
+.userText {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
