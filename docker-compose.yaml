@@ -1,13 +1,14 @@
 services:
-    # frontend:
-  #   build: ./frontend
-  #   container_name: frontend
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - app-net
-  #   depends_on:
-  #     - backend
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-net
+    depends_on:
+      backend:
+        condition: service_healthy
   
   backend:
     build: ./backend
