@@ -5,7 +5,8 @@ import type { Page, Role } from "../api/types";
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { Dialog, ErrorState, Loading, Pagination } from "../ui/controls";
-import { dateTime, statusLabel } from "../ui/format";
+import DateField from "../ui/DateField";
+import { kstDateTime, kstTimestamp, statusLabel } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
 import AdminReference from "./AdminReference";
@@ -42,7 +43,7 @@ function Overview() {
         ))}
       </div>
       <small className={ui.muted}>
-        {t("집계 시각", "As of")} {dateTime(asOf, lang)} KST
+        {t("집계 시각", "As of")} {kstDateTime(asOf, lang)}
       </small>
     </div>
   );
@@ -231,7 +232,7 @@ function Audit() {
             if (value)
               params.set(
                 key,
-                key === "from" || key === "to" ? value + ":00+09:00" : value,
+                key === "from" || key === "to" ? kstTimestamp(value) : value,
               );
           }
           setFilter(params.size ? "&" + params.toString() : "");
@@ -259,11 +260,15 @@ function Audit() {
         </label>
         <label className={ui.field}>
           {t("시작 시각 (KST)", "From (KST)")}
-          <input type="datetime-local" name="from" />
+          <DateField
+            label={t("시작 시각 (KST)", "From (KST)")}
+            name="from"
+            time
+          />
         </label>
         <label className={ui.field}>
           {t("종료 시각 (KST)", "To (KST)")}
-          <input type="datetime-local" name="to" />
+          <DateField label={t("종료 시각 (KST)", "To (KST)")} name="to" time />
         </label>
         <button className={ui.primary} type="submit">
           {t("조회", "Apply filters")}
@@ -286,7 +291,7 @@ function Audit() {
           <summary>
             <strong>{entry.action}</strong>
             <time dateTime={entry.occurredAt}>
-              {dateTime(entry.occurredAt, lang)} KST
+              {kstDateTime(entry.occurredAt, lang)}
             </time>
           </summary>
           <dl>
@@ -347,7 +352,7 @@ export default function Admin() {
   const selected = sections.find(({ key }) => key === section);
   if (!selected) return <Navigate to="/admin" replace />;
   return (
-    <div className={ui.stack}>
+    <div className={ui.stack + " " + styles.page}>
       <SectionTitle
         title={t("관리자 대시보드", "Admin dashboard")}
         back="/me"

@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 
 const cert = process.env.KAIFIND_TLS_CERT;
 const key = process.env.KAIFIND_TLS_KEY;
+const apiOrigin = process.env.KAIFIND_API_ORIGIN ?? "http://127.0.0.1:8000";
 if (Boolean(cert) !== Boolean(key)) {
   throw new Error("Set both KAIFIND_TLS_CERT and KAIFIND_TLS_KEY.");
 }
@@ -14,7 +15,7 @@ const server = {
     cert && key
       ? { cert: readFileSync(cert), key: readFileSync(key) }
       : undefined,
-  proxy: { "^/api/v1(?:/|\\?|$)": "http://127.0.0.1:8000" },
+  proxy: { "^/api/v1(?:/|\\?|$)": apiOrigin },
 };
 
 export default defineConfig({ plugins: [react()], server, preview: server });

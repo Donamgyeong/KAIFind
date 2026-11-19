@@ -1,10 +1,9 @@
-import { ClipboardList, Plus, Search } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSession } from "../api/session-context";
 import type {
   Building,
-  Category,
   LostReport,
   LostReportStatus,
   MatchPage,
@@ -12,6 +11,7 @@ import type {
   ProcessingStatus,
 } from "../api/types";
 import { useAction } from "../api/useAction";
+import { useBuildings, useCategories } from "../api/useReferences";
 import { useRemote, useVisiblePolling } from "../api/useRemote";
 import {
   Dialog,
@@ -20,11 +20,19 @@ import {
   Pagination,
   Status,
 } from "../ui/controls";
-import { dateTime, localName } from "../ui/format";
+import { kstDateTime, localName } from "../ui/format";
+import {
+  EmptyReportList,
+  ReportEntry,
+  ReportGroup,
+  ReportList,
+} from "../ui/ReportList";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
 
-const statuses: LostReportStatus[] = ["OPEN", "RESOLVED", "CLOSED"];
+// The lost reports API enforces this limit and does not return extension eligibility.
+const extensionDays = 30;
+const maximumLifetimeMs = 210 * 24 * 60 * 60 * 1000;
 
 function ReportStatus({ status }: { status: LostReportStatus }) {
   const { t } = useSession();
@@ -75,99 +83,112 @@ function MatchStatus({ status }: { status: ProcessingStatus }) {
   );
 }
 
-export function ReportCard({ report }: { report: LostReport }) {
-  const { t, lang } = useSession();
+function ReportCard({
+  report,
+  buildings,
+}: {
+  report: LostReport;
+  buildings: Building[];
+}) {
+  const { t } = useSession();
   const path = "/lost-reports/" + report.reportId;
+  const open = report.status === "OPEN";
+  const matches = useRemote<MatchPage>(open ? path + "/matches?size=1" : null);
+  const codes = report.possibleBuildingIds
+    .map((id) => buildings.find((building) => building.buildingId === id)?.code)
+    .filter(Boolean)
+    .join(", ");
+  const status = {
+    OPEN: t("찾는 중", "Searching"),
+    RESOLVED: t("해결 완료", "Resolved"),
+    CLOSED: t("자동 종료", "Closed"),
+  }[report.status];
   return (
-    <article className={ui.panel + " " + ui.stack}>
-      <div className={ui.between}>
-        <h2 className={ui.userText}>{report.description}</h2>
-        <ReportStatus status={report.status} />
+    <ReportEntry title={report.description} status={status} to={path}>
+      <div className={ui.reportMeta}>
+        {codes && (
+          <p>
+            {t("분실 추정 건물", "Possible buildings")} · {codes}
+          </p>
+        )}
+        <p>
+          {t("분실 기간", "Lost between")} · {report.lostDateFrom} ~{" "}
+          {report.lostDateTo}
+        </p>
       </div>
-      <p className={ui.muted}>
-        {report.lostDateFrom} ~ {report.lostDateTo}
-      </p>
-      <div className={ui.row}>
-        <span className={ui.muted}>
-          {t("기한", "Expires")} {dateTime(report.expiresAt, lang)} KST
-        </span>
-        <MatchStatus status={report.matchingStatus} />
-      </div>
-      <div className={ui.row}>
-        <Link to={path + "/matches"} className={ui.primary}>
-          <Search size={17} />
-          {t("매칭 후보", "Match candidates")}
+      {open && (
+        <Link to={path + "/matches"} className={ui.reportStatus}>
+          {matches.data?.totalElements
+            ? t(
+                "매칭 후보 " + matches.data.totalElements + "개",
+                matches.data.totalElements + " match candidates",
+              )
+            : t("매칭 후보 보기", "View match candidates")}
         </Link>
-        <Link to={path} className={ui.secondary}>
-          {t("신고 상세", "Report details")}
-        </Link>
-      </div>
-    </article>
+      )}
+    </ReportEntry>
   );
 }
 
 export default function LostReports() {
   const { t } = useSession();
-  const [status, setStatus] = useState<LostReportStatus | "">("");
   const [page, setPage] = useState(0);
-  const reports = useRemote<Page<LostReport>>(
-    "/lost-reports?page=" + page + (status ? "&status=" + status : ""),
+  const reports = useRemote<Page<LostReport>>("/lost-reports?page=" + page);
+  const buildings = useBuildings();
+  const activeCount = useRemote<Page<LostReport>>(
+    (reports.data?.totalPages ?? 0) > 1
+      ? "/lost-reports?status=OPEN&size=1"
+      : null,
   );
+  const active =
+    reports.data?.items.filter(({ status }) => status === "OPEN") ?? [];
+  const previous =
+    reports.data?.items.filter(({ status }) => status !== "OPEN") ?? [];
   return (
-    <div className={ui.formPage}>
-      <div className={ui.between}>
-        <SectionTitle title={t("분실 신고", "Lost reports")} />
-        <Link to="/lost-reports/new" className={ui.primary}>
-          <Plus size={18} />
-          {t("분실물 등록", "Report lost item")}
-        </Link>
-      </div>
-      <div className={ui.row}>
-        <button
-          type="button"
-          className={ui.chip}
-          aria-pressed={!status}
-          onClick={() => {
-            setStatus("");
-            setPage(0);
-          }}
-        >
-          {t("전체", "All")}
-        </button>
-        {statuses.map((value) => (
-          <button
-            type="button"
-            key={value}
-            className={ui.chip}
-            aria-pressed={status === value}
-            onClick={() => {
-              setStatus(value);
-              setPage(0);
-            }}
-          >
-            <ReportStatus status={value} />
-          </button>
-        ))}
-      </div>
+    <ReportList
+      title={t("분실 신고", "Lost reports")}
+      createTo="/lost-reports/new"
+      createLabel={t("새 분실 신고하기", "New lost report")}
+    >
       {reports.loading && <Loading />}
       {reports.error !== undefined && (
         <ErrorState error={reports.error} retry={reports.reload} />
       )}
       {reports.data?.items.length === 0 && (
-        <section className={ui.panel + " " + ui.emptyCard}>
-          <ClipboardList size={34} aria-hidden="true" />
-          <h2>{t("분실 신고 내역이 없어요", "No lost reports here")}</h2>
-          <p>
-            {t(
-              "분실한 물품을 등록하면 매칭 알림을 받을 수 있어요.",
-              "Report a lost item to receive match notifications.",
-            )}
-          </p>
-        </section>
+        <EmptyReportList
+          Icon={ClipboardList}
+          title={t("분실 신고 내역이 없어요", "No lost reports yet")}
+          description={t(
+            "분실한 물품을 등록하면 매칭 알림을 받을 수 있어요.",
+            "Report a lost item to receive match notifications.",
+          )}
+        />
       )}
-      {reports.data?.items.map((report) => (
-        <ReportCard key={report.reportId} report={report} />
-      ))}
+      {active.length > 0 && (
+        <ReportGroup
+          title={t("진행 중인 분실 신고", "Active lost reports")}
+          count={activeCount.data?.totalElements ?? active.length}
+        >
+          {active.map((report) => (
+            <ReportCard
+              key={report.reportId}
+              report={report}
+              buildings={buildings.data?.items ?? []}
+            />
+          ))}
+        </ReportGroup>
+      )}
+      {previous.length > 0 && (
+        <ReportGroup title={t("이전 분실 신고", "Previous lost reports")}>
+          {previous.map((report) => (
+            <ReportCard
+              key={report.reportId}
+              report={report}
+              buildings={buildings.data?.items ?? []}
+            />
+          ))}
+        </ReportGroup>
+      )}
       {reports.data && (
         <Pagination
           page={page}
@@ -175,7 +196,7 @@ export default function LostReports() {
           change={setPage}
         />
       )}
-    </div>
+    </ReportList>
   );
 }
 
@@ -184,8 +205,8 @@ export function LostDetail({ created = false }: { created?: boolean }) {
   const { api, user, t, lang } = useSession();
   const path = "/lost-reports/" + reportId;
   const result = useRemote<LostReport>(path);
-  const categories = useRemote<{ items: Category[] }>("/categories", true);
-  const buildings = useRemote<{ items: Building[] }>("/buildings", true);
+  const categories = useCategories();
+  const buildings = useBuildings();
   const [confirm, setConfirm] = useState<"extend" | "resolve">();
   const action = useAction();
   const report = result.data;
@@ -209,7 +230,7 @@ export function LostDetail({ created = false }: { created?: boolean }) {
   const maxed =
     new Date(report.expiresAt).getTime() -
       new Date(report.createdAt).getTime() >=
-    210 * 86400000;
+    maximumLifetimeMs;
   return (
     <div className={ui.formPage}>
       <SectionTitle
@@ -231,7 +252,7 @@ export function LostDetail({ created = false }: { created?: boolean }) {
         </p>
         <p className={ui.muted}>
           {t("신고 기한", "Report expires")} ·{" "}
-          {dateTime(report.expiresAt, lang)} KST
+          {kstDateTime(report.expiresAt, lang)}
         </p>
         {report.privateIdentifyingDetails && (
           <div className={ui.notice + " " + ui.stack}>
@@ -256,7 +277,10 @@ export function LostDetail({ created = false }: { created?: boolean }) {
                 setConfirm("extend");
               }}
             >
-              {t("30일 연장", "Extend by 30 days")}
+              {t(
+                extensionDays + "일 연장",
+                "Extend by " + extensionDays + " days",
+              )}
             </button>
             <button
               className={ui.secondary}
@@ -330,7 +354,7 @@ export function Matches() {
   const path = "/lost-reports/" + reportId;
   const reports = useRemote<LostReport>(path);
   const remote = useRemote<MatchPage>(path + "/matches?page=" + page);
-  const buildings = useRemote<{ items: Building[] }>("/buildings", true);
+  const buildings = useBuildings();
   const matches = remote.data;
   const pending =
     matches?.matchingStatus === "PROCESSING" ||
@@ -396,7 +420,7 @@ export function Matches() {
                 </div>
                 <p className={ui.muted}>
                   {building && building.code + " · "}
-                  {dateTime(match.item.foundAt, lang)} KST
+                  {kstDateTime(match.item.foundAt, lang)}
                 </p>
                 <div className={ui.row}>
                   {match.matchedBy.map((reason) => (

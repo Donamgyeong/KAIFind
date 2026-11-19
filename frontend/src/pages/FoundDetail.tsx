@@ -1,5 +1,6 @@
+import BuildingMap from "../ui/BuildingMap";
 import { useState } from "react";
-import { LockKeyhole, MapPin } from "lucide-react";
+import { LockKeyhole } from "lucide-react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSession } from "../api/session-context";
 import type {
@@ -11,6 +12,7 @@ import type {
 } from "../api/types";
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
+import { signInPath } from "../routing";
 import {
   Dialog,
   ErrorState,
@@ -18,7 +20,7 @@ import {
   Pagination,
   Status,
 } from "../ui/controls";
-import { buildingMapUrl, dateTime, localName } from "../ui/format";
+import { kstDateTime, localName } from "../ui/format";
 import PhotoView from "../ui/PhotoView";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
@@ -33,24 +35,13 @@ function BuildingLocation({
   building: Building;
   description?: string | null;
 }) {
-  const { t, lang } = useSession();
+  const { lang } = useSession();
   return (
     <div className={styles.location}>
-      <div>
-        <strong>
-          {building.code} · {localName(building, lang)}
-        </strong>
-        {description && <p>{description}</p>}
-      </div>
-      <a
-        className={ui.secondary}
-        href={buildingMapUrl(building)}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <MapPin size={17} />
-        {t("지도에서 보기", "View on map")}
-      </a>
+      <strong>
+        {building.code} · {localName(building, lang)}
+      </strong>
+      {description && <p>{description}</p>}
     </div>
   );
 }
@@ -70,7 +61,7 @@ function LocationHistory({ path }: { path: string }) {
         {history.data?.items.map((entry) => (
           <li key={entry.historyId}>
             <time dateTime={entry.changedAt}>
-              {dateTime(entry.changedAt, lang)} KST
+              {kstDateTime(entry.changedAt, lang)}
             </time>
             <div>
               {entry.after.building
@@ -158,7 +149,10 @@ function DetailContent({
         </section>
         <div className={ui.stack}>
           <section className={ui.panel + " " + ui.stack}>
-            <h2>{t("발견 정보", "Found at")}</h2>
+            <div className={ui.between}>
+              <h2>{t("발견 정보", "Found at")}</h2>
+              <BuildingMap building={item.foundBuilding} />
+            </div>
             <BuildingLocation
               building={item.foundBuilding}
               description={item.foundLocationDescription}
@@ -166,12 +160,17 @@ function DetailContent({
             <p className={ui.muted}>
               {t("발견 시각", "Found")}{" "}
               <time dateTime={item.foundAt}>
-                {dateTime(item.foundAt, lang)} KST
+                {kstDateTime(item.foundAt, lang)}
               </time>
             </p>
           </section>
           <section className={ui.panel + " " + ui.stack}>
-            <h2>{t("보관 정보", "Storage location")}</h2>
+            <div className={ui.between}>
+              <h2>{t("보관 정보", "Storage location")}</h2>
+              {dropOff.data?.building && (
+                <BuildingMap building={dropOff.data.building} />
+              )}
+            </div>
             {checking && <Loading />}
             {!checking && !user && (
               <div className={ui.notice + " " + ui.stack}>
@@ -184,9 +183,7 @@ function DetailContent({
                 </span>
                 <Link
                   className={ui.secondary}
-                  to={
-                    "/login?returnTo=" + encodeURIComponent(location.pathname)
-                  }
+                  to={signInPath(location.pathname)}
                 >
                   {t("로그인", "Sign in")}
                 </Link>

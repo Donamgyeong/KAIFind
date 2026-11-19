@@ -1,46 +1,86 @@
-import { MessageCircle, Send } from "lucide-react";
-import { useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { ChevronRight, MessageCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useSession } from "../api/session-context";
 import type { Conversation, ItemDetail, Message, Page } from "../api/types";
 import { useAction } from "../api/useAction";
 import { useRemote, useVisiblePolling } from "../api/useRemote";
 import { ErrorState, Loading, Pagination } from "../ui/controls";
 import { fieldError } from "../ui/fieldError";
-import { dateTime } from "../ui/format";
+import { timeOfDay } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
 import styles from "./messages.module.css";
 
+function roleName(
+  conversation: Conversation,
+  userId: string | undefined,
+  t: (ko: string, en: string) => string,
+) {
+  return conversation.finderId === userId
+    ? t("분실자", "Item owner")
+    : t("습득자", "Finder");
+}
+
 export function ConversationRow({
   conversation,
+  compact = false,
 }: {
   conversation: Conversation;
+  compact?: boolean;
 }) {
-  const { t, user, lang } = useSession();
+  const { t, user } = useSession();
+  const location = useLocation();
   const item = useRemote<ItemDetail>(
     "/found-items/" + conversation.itemId,
     true,
   );
+  const messagesUrl =
+    "/conversations/" + conversation.conversationId + "/messages?size=1";
+  const head = useRemote<Page<Message>>(compact ? messagesUrl : null);
+  const lastPage = Math.max(0, (head.data?.totalPages ?? 1) - 1);
+  const tail = useRemote<Page<Message>>(
+    lastPage ? messagesUrl + "&page=" + lastPage : null,
+  );
+  const latest = (lastPage ? tail.data : head.data)?.items[0];
+  const title = item.data
+    ? item.data.title + " · " + roleName(conversation, user?.userId, t)
+    : t("물품 대화", "Item conversation");
+
   return (
     <Link
-      className={ui.panel + " " + ui.between}
+      className={compact ? styles.room : ui.panel + " " + styles.room}
       to={"/conversations/" + conversation.conversationId}
+      state={{ conversation, back: location.pathname + location.search }}
     >
-      <div className={ui.row}>
-        <MessageCircle size={21} aria-hidden="true" />
-        <div>
-          <h2>{item.data?.title ?? t("물품 대화", "Item conversation")}</h2>
-          <p className={ui.muted}>
-            {conversation.finderId === user?.userId
-              ? t("분실자", "Item owner")
-              : t("습득자", "Finder")}
-          </p>
+      <span className={styles.roomIcon}>
+        <MessageCircle size={22} strokeWidth={1.65} aria-hidden="true" />
+      </span>
+      <div className={styles.roomInfo}>
+        <div className={styles.roomTop}>
+          <strong>{title}</strong>
+          <time dateTime={conversation.updatedAt}>
+            {timeOfDay(conversation.updatedAt)}
+          </time>
         </div>
+        {latest && (
+          <p>
+            {latest.senderId === user?.userId && t("나: ", "Me: ")}
+            {latest.content}
+          </p>
+        )}
       </div>
-      <small className={ui.muted}>
-        {dateTime(conversation.updatedAt, lang)}
-      </small>
+      <ChevronRight
+        size={18}
+        strokeWidth={1.65}
+        className={styles.roomArrow}
+        aria-hidden="true"
+      />
     </Link>
   );
 }
@@ -85,7 +125,15 @@ export default function Conversations() {
 }
 
 function Thread({ id }: { id: string }) {
-  const { t, lang, user, api } = useSession();
+  const { t, user, api } = useSession();
+  const location = useLocation();
+  const hint = location.state as {
+    conversation?: Conversation;
+    back?: string;
+  } | null;
+  const [conversation, setConversation] = useState<Conversation | undefined>(
+    hint?.conversation?.conversationId === id ? hint.conversation : undefined,
+  );
   const [page, setPage] = useState<number>();
   const [content, setContent] = useState("");
   const action = useAction();
@@ -97,26 +145,61 @@ function Thread({ id }: { id: string }) {
     index ? path + "?page=" + index + "&size=20" : null,
   );
   const remote = index ? others : latest;
+  const item = useRemote<ItemDetail>(
+    conversation ? "/found-items/" + conversation.itemId : null,
+    true,
+  );
   useVisiblePolling(latest.reload, latest.error === undefined);
   useVisiblePolling(
     others.reload,
     index === lastPage && index > 0 && others.error === undefined,
   );
 
+  useEffect(() => {
+    if (conversation?.conversationId === id) return;
+    const abort = new AbortController();
+    async function findConversation() {
+      let page = 0;
+      while (!abort.signal.aborted) {
+        const result = await api.request<Page<Conversation>>(
+          "/conversations?size=100&page=" + page,
+          { signal: abort.signal },
+        );
+        const match = result.items.find((entry) => entry.conversationId === id);
+        if (match) {
+          if (!abort.signal.aborted) setConversation(match);
+          return;
+        }
+        if (++page >= result.totalPages) return;
+      }
+    }
+    void findConversation().catch(() => {});
+    return () => abort.abort();
+  }, [api, conversation?.conversationId, id]);
+
+  const title =
+    conversation && item.data
+      ? item.data.title + " · " + roleName(conversation, user?.userId, t)
+      : t("메시지", "Messages");
+  const back =
+    hint?.back?.startsWith("/") && !hint.back.startsWith("//")
+      ? hint.back
+      : "/me";
+
   return (
-    <div className={ui.formPage}>
-      <SectionTitle title={t("메시지", "Messages")} back="/conversations" />
-      <section className={ui.panel + " " + ui.stack}>
+    <div className={styles.chat}>
+      <div className={styles.chatHeading}>
+        <SectionTitle title={title} back={back} />
+      </div>
+      <div className={styles.history}>
         {remote.loading && <Loading />}
         {remote.error !== undefined && (
           <ErrorState error={remote.error} retry={remote.reload} />
         )}
-        {remote.data?.items.length === 0 && (
-          <p className={ui.empty}>
-            {t("첫 메시지를 보내 보세요.", "Send the first message.")}
-          </p>
-        )}
-        <ol className={styles.thread}>
+        <ol
+          className={styles.thread}
+          aria-label={t("대화 내역", "Message history")}
+        >
           {remote.data?.items.map((message) => (
             <li
               key={message.messageId}
@@ -124,7 +207,7 @@ function Thread({ id }: { id: string }) {
             >
               <p>{message.content}</p>
               <time dateTime={message.createdAt}>
-                {dateTime(message.createdAt, lang)}
+                {timeOfDay(message.createdAt)}
               </time>
             </li>
           ))}
@@ -143,51 +226,60 @@ function Thread({ id }: { id: string }) {
             {t("최신 메시지", "Latest messages")}
           </button>
         )}
-        {remote.data && (
-          <form
-            className={ui.stack}
-            onSubmit={(event) => {
-              event.preventDefault();
-              void action.run(async () => {
-                await api.request(path, {
-                  method: "POST",
-                  body: { content: content.trim() },
-                });
-                setContent("");
-                setPage(undefined);
-                latest.reload();
-                others.reload();
+      </div>
+      {remote.data && (
+        <form
+          className={styles.composer}
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!content.trim()) return;
+            void action.run(async () => {
+              await api.request(path, {
+                method: "POST",
+                body: { content: content.trim() },
               });
+              setContent("");
+              setPage(undefined);
+              latest.reload();
+              others.reload();
+            });
+          }}
+        >
+          <textarea
+            required
+            maxLength={2000}
+            rows={1}
+            aria-label={t("메시지 입력", "Message")}
+            placeholder={t("메시지를 입력하세요", "Type a message")}
+            value={content}
+            disabled={action.busy}
+            onChange={(event) => setContent(event.target.value)}
+            onKeyDown={(event) => {
+              if (
+                event.key === "Enter" &&
+                !event.shiftKey &&
+                !event.nativeEvent.isComposing
+              ) {
+                event.preventDefault();
+                event.currentTarget.form?.requestSubmit();
+              }
             }}
+          />
+          <button
+            type="submit"
+            aria-label={t("보내기", "Send")}
+            disabled={action.busy || !content.trim()}
           >
-            <label className={ui.field}>
-              {t("메시지 입력", "Message")}
-              <textarea
-                required
-                maxLength={2000}
-                className={styles.composer}
-                value={content}
-                disabled={action.busy}
-                onChange={(event) => setContent(event.target.value)}
-              />
-              {fieldError(action.error, "content") && (
-                <span className={ui.fieldError}>
-                  {fieldError(action.error, "content")}
-                </span>
-              )}
-            </label>
-            {action.error !== undefined && <ErrorState error={action.error} />}
-            <button
-              type="submit"
-              className={ui.primary}
-              disabled={action.busy || !content.trim()}
-            >
-              <Send size={17} />
-              {t("보내기", "Send")}
-            </button>
-          </form>
-        )}
-      </section>
+            <ChevronRight size={24} strokeWidth={1.65} aria-hidden="true" />
+          </button>
+          {fieldError(action.error, "content") && (
+            <span className={ui.fieldError}>
+              {fieldError(action.error, "content")}
+            </span>
+          )}
+          {action.error !== undefined && <ErrorState error={action.error} />}
+        </form>
+      )}
     </div>
   );
 }

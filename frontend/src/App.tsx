@@ -5,12 +5,12 @@ import {
   Link,
   Navigate,
   NavLink,
+  Outlet,
   Route,
   Routes,
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import type { ReactNode } from "react";
 import SessionProvider from "./api/SessionProvider";
 import { useSession } from "./api/session-context";
 import Home from "./pages/Home";
@@ -27,17 +27,12 @@ import LostForm from "./pages/LostForm";
 import LostReports, { LostDetail, Matches } from "./pages/LostReports";
 import Conversations, { ConversationMessages } from "./pages/Messages";
 import Login from "./pages/Login";
+import { signInPath } from "./routing";
 import { ErrorState, Loading } from "./ui/controls";
 import ui from "./ui/ui.module.css";
 import styles from "./shell.module.css";
 
-export function RequireMember({
-  children,
-  admin = false,
-}: {
-  children: ReactNode;
-  admin?: boolean;
-}) {
+function RequireMember({ admin = false }: { admin?: boolean }) {
   const session = useSession();
   const location = useLocation();
   if (session.checking) return <Loading />;
@@ -50,13 +45,7 @@ export function RequireMember({
     );
   if (!session.user)
     return (
-      <Navigate
-        to={
-          "/login?returnTo=" +
-          encodeURIComponent(location.pathname + location.search)
-        }
-        replace
-      />
+      <Navigate to={signInPath(location.pathname + location.search)} replace />
     );
   if (admin && session.user.role !== "ADMIN")
     return (
@@ -67,7 +56,7 @@ export function RequireMember({
         )}
       </p>
     );
-  return children;
+  return <Outlet />;
 }
 
 function Shell() {
@@ -77,6 +66,7 @@ function Shell() {
   const [notificationRevision, setNotificationRevision] = useState<number>();
   const location = useLocation();
   const navigate = useNavigate();
+  const viewingThread = /^\/conversations\/[^/]+\/?$/.test(location.pathname);
   const links = [
     { to: "/", label: t("홈", "Home"), Icon: House },
     { to: "/lost-reports", label: t("찾기", "Find"), Icon: Search },
@@ -100,9 +90,7 @@ function Shell() {
       <span>{label}</span>
     </NavLink>
   ));
-  const loginPath =
-    "/login?returnTo=" +
-    encodeURIComponent(location.pathname + location.search);
+  const loginPath = signInPath(location.pathname + location.search);
 
   return (
     <>
@@ -180,184 +168,63 @@ function Shell() {
           </div>
         </div>
       </header>
-      <main id="main" className={styles.main} key={revision}>
+      <main
+        id="main"
+        className={styles.main + (viewingThread ? " " + styles.chatMain : "")}
+        key={revision}
+      >
         {error !== undefined && <ErrorState error={error} />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/found-items" element={<Home />} />
           <Route path="/buildings" element={<Buildings />} />
-          <Route
-            path="/me"
-            element={
-              <RequireMember>
-                <Profile />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/me/notifications"
-            element={
-              <RequireMember>
-                <Notifications />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/me/settings"
-            element={
-              <RequireMember>
-                <EmailSettings />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/me/keywords"
-            element={
-              <RequireMember>
-                <Keywords />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <RequireMember admin>
-                <Admin />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/admin/:section"
-            element={
-              <RequireMember admin>
-                <Admin />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/admin/post-reports/:caseId"
-            element={
-              <RequireMember admin>
-                <AdminReviewDetail kind="post-reports" />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/admin/disputes/:caseId"
-            element={
-              <RequireMember admin>
-                <AdminReviewDetail kind="disputes" />
-              </RequireMember>
-            }
-          />
-
-          <Route
-            path="/lost-reports"
-            element={
-              <RequireMember>
-                <LostReports />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/lost-reports/new"
-            element={
-              <RequireMember>
-                <LostForm />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/lost-reports/:reportId"
-            element={
-              <RequireMember>
-                <LostDetail />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/lost-reports/:reportId/edit"
-            element={
-              <RequireMember>
-                <LostForm />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/lost-reports/:reportId/created"
-            element={
-              <RequireMember>
-                <LostDetail created />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/lost-reports/:reportId/matches"
-            element={
-              <RequireMember>
-                <Matches />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/conversations"
-            element={
-              <RequireMember>
-                <Conversations />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/conversations/:conversationId"
-            element={
-              <RequireMember>
-                <ConversationMessages />
-              </RequireMember>
-            }
-          />
-
           <Route path="/found-items/:itemId" element={<FoundDetail />} />
-          <Route
-            path="/found-items/new"
-            element={
-              <RequireMember>
-                <FoundForm />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/found-items/:itemId/edit"
-            element={
-              <RequireMember>
-                <FoundForm />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/found-items/:itemId/storage"
-            element={
-              <RequireMember>
-                <ChangeStorage />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/found-items/:itemId/created"
-            element={
-              <RequireMember>
-                <FoundCreated />
-              </RequireMember>
-            }
-          />
-          <Route
-            path="/me/found-items"
-            element={
-              <RequireMember>
-                <MyFound />
-              </RequireMember>
-            }
-          />
-
+          <Route element={<RequireMember />}>
+            <Route path="/me" element={<Profile />} />
+            <Route path="/me/notifications" element={<Notifications />} />
+            <Route path="/me/settings" element={<EmailSettings />} />
+            <Route path="/me/keywords" element={<Keywords />} />
+            <Route path="/me/found-items" element={<MyFound />} />
+            <Route path="/lost-reports" element={<LostReports />} />
+            <Route path="/lost-reports/new" element={<LostForm />} />
+            <Route path="/lost-reports/:reportId" element={<LostDetail />} />
+            <Route path="/lost-reports/:reportId/edit" element={<LostForm />} />
+            <Route
+              path="/lost-reports/:reportId/created"
+              element={<LostDetail created />}
+            />
+            <Route
+              path="/lost-reports/:reportId/matches"
+              element={<Matches />}
+            />
+            <Route path="/conversations" element={<Conversations />} />
+            <Route
+              path="/conversations/:conversationId"
+              element={<ConversationMessages />}
+            />
+            <Route path="/found-items/new" element={<FoundForm />} />
+            <Route path="/found-items/:itemId/edit" element={<FoundForm />} />
+            <Route
+              path="/found-items/:itemId/storage"
+              element={<ChangeStorage />}
+            />
+            <Route
+              path="/found-items/:itemId/created"
+              element={<FoundCreated />}
+            />
+          </Route>
+          <Route element={<RequireMember admin />}>
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/:section" element={<Admin />} />
+            <Route
+              path="/admin/post-reports/:caseId"
+              element={<AdminReviewDetail kind="post-reports" />}
+            />
+            <Route
+              path="/admin/disputes/:caseId"
+              element={<AdminReviewDetail kind="disputes" />}
+            />
+          </Route>
           <Route
             path="/login"
             element={
@@ -381,12 +248,14 @@ function Shell() {
           <NotificationPopup close={() => setNotificationRevision(undefined)} />
         )}
       </main>
-      <nav
-        className={styles.mobileNav}
-        aria-label={t("주 메뉴", "Main navigation")}
-      >
-        {nav}
-      </nav>
+      {!viewingThread && (
+        <nav
+          className={styles.mobileNav}
+          aria-label={t("주 메뉴", "Main navigation")}
+        >
+          {nav}
+        </nav>
+      )}
     </>
   );
 }

@@ -1,34 +1,139 @@
+.room {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 10px;
+  min-height: 64px;
+}
+.roomIcon {
+  background: var(--soft);
+  color: var(--brand);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+}
+.roomInfo {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+.roomTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  align-items: start;
+}
+.roomTop strong,
+.roomInfo p {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.roomInfo p,
+.roomTop time {
+  color: var(--muted);
+  font-size: 11px;
+}
+.roomTop time {
+  flex: none;
+}
+.roomArrow {
+  color: var(--brand);
+}
+
+.chat {
+  max-width: 704px;
+  margin-inline: auto;
+  min-height: calc(100dvh - 60px);
+  display: flex;
+  flex-direction: column;
+}
+.chatHeading {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+}
+.chatHeading h1 {
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.history {
+  flex: 1;
+  padding: 16px 0;
+}
 .thread {
   display: grid;
-  gap: 12px;
+  gap: 16px;
   padding: 0;
   margin: 0;
   list-style: none;
 }
 .thread li {
-  display: grid;
-  gap: 5px;
-  justify-items: start;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
 }
 .thread li[data-mine="true"] {
-  justify-items: end;
+  flex-direction: row-reverse;
 }
 .thread p {
-  padding: 10px 13px;
-  max-width: 85%;
-  background: var(--soft);
-  border-radius: 14px;
+  padding: 12px;
+  max-width: 78%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.55;
 }
 .thread li[data-mine="true"] p {
   background: var(--brand);
+  border-color: var(--brand);
   color: white;
 }
 .thread time {
   color: var(--muted);
-  font-size: 0.73rem;
+  font-size: 11px;
+  padding-bottom: 2px;
 }
 .composer {
-  min-height: 60px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  gap: 8px;
+  position: sticky;
+  bottom: 0;
+  padding: 8px 0 calc(16px + env(safe-area-inset-bottom));
+  background: var(--bg);
+}
+.composer textarea {
+  resize: none;
+  height: 48px;
+  min-height: 48px;
+  padding: 13px 12px;
+  background: var(--bg);
+  line-height: 20px;
+}
+.composer button {
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 14px;
+  background: var(--soft);
+  color: var(--brand);
+}
+.composer button:disabled {
+  opacity: 1;
+  color: #506eab;
+}
+.composer > :nth-child(n + 3) {
+  grid-column: 1 / -1;
+}
+@media (min-width: 800px) {
+  .chat {
+    min-height: calc(100dvh - 73px);
+  }
 }

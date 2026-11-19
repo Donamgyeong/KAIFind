@@ -1,15 +1,4 @@
-import {
-  Bell,
-  ChevronRight,
-  ClipboardList,
-  KeyRound,
-  LogOut,
-  MessageCircle,
-  Package,
-  Settings,
-  Shield,
-  UserRound,
-} from "lucide-react";
+import { UserRound } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSession } from "../api/session-context";
@@ -25,195 +14,193 @@ import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { Dialog, ErrorState, Loading, Pagination } from "../ui/controls";
 import { fieldError } from "../ui/fieldError";
-import { dateTime } from "../ui/format";
+import { affiliationLabel, dateTime } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
+import Switch from "../ui/Switch";
 import ui from "../ui/ui.module.css";
 import { ConversationRow } from "./Messages";
 import styles from "./profile.module.css";
 
+const notificationSettingsPath = "/me/notification-settings";
+
+function useNotificationSettings() {
+  const { api } = useSession();
+  const settings = useRemote<NotificationSettings>(notificationSettingsPath);
+
+  async function save(value: NotificationSettings) {
+    const updated = await api.request<NotificationSettings>(
+      notificationSettingsPath,
+      {
+        method: "PUT",
+        body: value,
+      },
+    );
+    settings.reload();
+    return updated;
+  }
+
+  return { ...settings, save };
+}
+
 export default function Profile() {
-  const { user, api, signOut, lang, t } = useSession();
+  const { user, signOut, lang, t } = useSession();
   const navigate = useNavigate();
   const account = useRemote<User>("/me/profile");
-  const settings = useRemote<NotificationSettings>("/me/notification-settings");
-  const chats = useRemote<Page<Conversation>>("/conversations?size=3");
+  const settings = useNotificationSettings();
+  const [chatPage, setChatPage] = useState(0);
+  const [reportPage, setReportPage] = useState(0);
+  const chats = useRemote<Page<Conversation>>(
+    "/conversations?size=8&page=" + chatPage,
+  );
   const reports = useRemote<Page<LostReport>>(
-    "/lost-reports?status=RESOLVED&size=3",
+    "/lost-reports?status=RESOLVED&size=8&page=" + reportPage,
   );
   const [logout, setLogout] = useState(false);
   const action = useAction();
   const profile = account.data ?? user;
-  const entries = [
-    {
-      path: "/me/found-items",
-      text: t("내 습득 신고", "My found items"),
-      Icon: Package,
-    },
-    {
-      path: "/lost-reports",
-      text: t("내 분실 신고와 매칭 후보", "My lost reports and matches"),
-      Icon: ClipboardList,
-    },
-    { path: "/me/notifications", text: t("알림", "Notifications"), Icon: Bell },
-    {
-      path: "/me/settings",
-      text: t("이메일 알림 설정", "Email notification settings"),
-      Icon: Settings,
-    },
-    {
-      path: "/me/keywords",
-      text: t("키워드 구독", "Keyword subscriptions"),
-      Icon: KeyRound,
-    },
-    ...(profile?.role === "ADMIN"
-      ? [
-          {
-            path: "/admin",
-            text: t("관리자 대시보드", "Admin dashboard"),
-            Icon: Shield,
-          },
-        ]
-      : []),
-  ];
 
   return (
-    <div className={ui.formPage}>
-      <SectionTitle title={t("마이페이지", "My profile")} />
-      <section className={ui.panel + " " + ui.stack}>
+    <div className={ui.formPage + " " + styles.profilePage}>
+      <SectionTitle title={t("마이페이지", "My profile")} back="/" />
+      <section className={ui.panel + " " + styles.profileCard}>
         {profile && (
-          <div className={styles.identity}>
-            <span className={styles.avatar}>
-              <UserRound size={24} aria-hidden="true" />
-            </span>
-            <div>
+          <>
+            <div className={styles.identity}>
+              <UserRound size={32} strokeWidth={1.65} aria-hidden="true" />
               <h2>{profile.name}</h2>
-              <p className={ui.muted}>
-                {
-                  {
-                    STUDENT: t("학생", "Student"),
-                    FACULTY: t("교원", "Faculty"),
-                    STAFF: t("직원", "Staff"),
-                  }[profile.affiliation]
-                }
-              </p>
-              <p className={styles.email}>{profile.email}</p>
             </div>
-          </div>
+            <p className={styles.profileAffiliation}>
+              {affiliationLabel(profile.affiliation, t)}
+            </p>
+          </>
         )}
         {account.error !== undefined && (
           <ErrorState error={account.error} retry={account.reload} />
         )}
+        {settings.error !== undefined && (
+          <ErrorState error={settings.error} retry={settings.reload} />
+        )}
         {settings.data && (
-          <label className={ui.between}>
-            {t("매칭 이메일 알림", "Match emails")}
-            <input
-              className={styles.switch}
-              type="checkbox"
-              role="switch"
-              checked={settings.data.matchEmail}
-              disabled={!settings.data.emailEnabled || action.busy}
-              onChange={(event) => {
-                const previous = settings.data;
-                const checked = event.target.checked;
-                if (!previous) return;
-                void action.run(async () => {
-                  await api.request("/me/notification-settings", {
-                    method: "PUT",
-                    body: { ...previous, matchEmail: checked },
-                  });
-                  settings.reload();
-                });
-              }}
-            />
-          </label>
+          <Switch
+            label={t("매칭 이메일 알림", "Match emails")}
+            checked={settings.data.matchEmail}
+            disabled={!settings.data.emailEnabled || action.busy}
+            onChange={(checked) => {
+              const previous = settings.data;
+              if (!previous) return;
+              void action.run(() =>
+                settings.save({ ...previous, matchEmail: checked }),
+              );
+            }}
+          />
         )}
         {action.error !== undefined && !logout && (
           <ErrorState error={action.error} />
         )}
+        <div className={styles.accountActions}>
+          {profile?.role === "ADMIN" && (
+            <Link to="/admin">{t("관리자 페이지", "Admin dashboard")}</Link>
+          )}
+          <button
+            type="button"
+            className={styles.signOut}
+            onClick={() => {
+              action.clear();
+              setLogout(true);
+            }}
+          >
+            {t("로그아웃", "Sign out")}
+          </button>
+        </div>
       </section>
-
-      <section className={ui.stack}>
+      <section className={ui.panel + " " + styles.profileCard}>
         <div className={ui.between}>
           <h2>{t("채팅방", "Conversations")}</h2>
-          <Link to="/conversations" className={ui.textButton}>
-            <MessageCircle size={16} aria-hidden="true" />{" "}
-            {t("전체 보기", "View all")}
-          </Link>
+          {chats.data && (
+            <small className={styles.count}>
+              {chats.data.totalElements}
+              {t("개", " chats")}
+            </small>
+          )}
         </div>
         {chats.loading && <Loading />}
         {chats.error !== undefined && (
           <ErrorState error={chats.error} retry={chats.reload} />
         )}
         {chats.data?.items.length === 0 && (
-          <p className={ui.muted}>
+          <p className={styles.profileAffiliation}>
             {t("아직 대화가 없어요.", "No conversations yet.")}
           </p>
         )}
-        {chats.data?.items.map((conversation) => (
-          <ConversationRow
-            conversation={conversation}
-            key={conversation.conversationId}
+        {chats.data?.items.length ? (
+          <div className={styles.profileRows}>
+            {chats.data.items.map((conversation) => (
+              <ConversationRow
+                conversation={conversation}
+                key={conversation.conversationId}
+                compact
+              />
+            ))}
+          </div>
+        ) : null}
+        {chats.data && (
+          <Pagination
+            page={chatPage}
+            total={chats.data.totalPages}
+            change={setChatPage}
           />
-        ))}
+        )}
       </section>
-
-      <section className={ui.stack}>
+      <section className={ui.panel + " " + styles.profileCard}>
         <div className={ui.between}>
           <h2>{t("완료한 신고 내역", "Resolved reports")}</h2>
-          <Link className={ui.textButton} to="/lost-reports">
-            {t("전체 보기", "View all")}
-          </Link>
+          {reports.data && (
+            <small className={styles.count}>
+              {reports.data.totalElements}
+              {t("건", " reports")}
+            </small>
+          )}
         </div>
         {reports.loading && <Loading />}
         {reports.error !== undefined && (
           <ErrorState error={reports.error} retry={reports.reload} />
         )}
         {reports.data?.items.length === 0 && (
-          <p className={ui.muted}>
+          <p className={styles.profileAffiliation}>
             {t("완료한 신고가 없어요.", "No resolved reports yet.")}
           </p>
         )}
-        {reports.data?.items.map((report) => (
-          <Link
-            className={ui.panel + " " + ui.between}
-            key={report.reportId}
-            to={"/lost-reports/" + report.reportId}
-          >
-            <strong className={ui.userText}>{report.description}</strong>
-            {report.closedAt && (
-              <small className={ui.muted}>
-                {dateTime(report.closedAt, lang)} KST
-              </small>
-            )}
-          </Link>
-        ))}
-      </section>
-
-      <section className={ui.panel + " " + styles.profileLinks}>
-        {entries.map(({ path, text, Icon }) => (
-          <Link key={path} to={path} className={styles.profileLink}>
-            <Icon size={19} aria-hidden="true" />
-            {text}
-            <ChevronRight size={17} aria-hidden="true" />
-          </Link>
-        ))}
-        <Link to="/login?returnTo=%2Fme" className={styles.profileLink}>
-          <UserRound size={19} aria-hidden="true" />
-          {t("계정 전환", "Switch account")}
-          <ChevronRight size={17} aria-hidden="true" />
-        </Link>
-        <button
-          className={styles.profileLink}
-          onClick={() => {
-            action.clear();
-            setLogout(true);
-          }}
-          type="button"
-        >
-          <LogOut size={19} aria-hidden="true" />
-          {t("로그아웃", "Sign out")}
-          <ChevronRight size={17} aria-hidden="true" />
-        </button>
+        {reports.data?.items.length ? (
+          <div className={styles.profileRows}>
+            {reports.data.items.map((report) => (
+              <Link
+                className={styles.resolved}
+                key={report.reportId}
+                to={"/lost-reports/" + report.reportId}
+              >
+                <div>
+                  <strong className={ui.userText}>{report.description}</strong>
+                  {report.closedAt && (
+                    <small className={styles.count}>
+                      {t("완료일", "Resolved on")}{" "}
+                      {dateTime(report.closedAt, lang)}
+                    </small>
+                  )}
+                </div>
+                <span className={ui.badge} data-status="COLLECTED">
+                  {t("해결 완료", "Resolved")}
+                </span>
+              </Link>
+            ))}
+          </div>
+        ) : null}
+        {reports.data && (
+          <Pagination
+            page={reportPage}
+            total={reports.data.totalPages}
+            change={setReportPage}
+          />
+        )}
       </section>
       {logout && (
         <Dialog
@@ -246,12 +233,12 @@ export default function Profile() {
 
 function EmailForm({
   initial,
-  reload,
+  save,
 }: {
   initial: NotificationSettings;
-  reload: () => void;
+  save: (value: NotificationSettings) => Promise<NotificationSettings>;
 }) {
-  const { t, api } = useSession();
+  const { t } = useSession();
   const [draft, setDraft] = useState(initial);
   const [saved, setSaved] = useState(false);
   const action = useAction();
@@ -268,33 +255,24 @@ function EmailForm({
       onSubmit={(event) => {
         event.preventDefault();
         void action.run(async () => {
-          const value = await api.request<NotificationSettings>(
-            "/me/notification-settings",
-            { method: "PUT", body: draft },
-          );
-          setDraft(value);
+          setDraft(await save(draft));
           setSaved(true);
-          reload();
         });
       }}
     >
       {options.map(([key, label]) => (
-        <label key={key} className={ui.between}>
-          {label}
-          <input
-            type="checkbox"
-            className={styles.switch}
-            role="switch"
-            checked={draft[key]}
-            disabled={
-              action.busy || (key !== "emailEnabled" && !draft.emailEnabled)
-            }
-            onChange={(event) => {
-              setDraft({ ...draft, [key]: event.target.checked });
-              setSaved(false);
-            }}
-          />
-        </label>
+        <Switch
+          key={key}
+          label={label}
+          checked={draft[key]}
+          disabled={
+            action.busy || (key !== "emailEnabled" && !draft.emailEnabled)
+          }
+          onChange={(checked) => {
+            setDraft({ ...draft, [key]: checked });
+            setSaved(false);
+          }}
+        />
       ))}
       {action.error !== undefined && <ErrorState error={action.error} />}
       {saved && (
@@ -311,7 +289,7 @@ function EmailForm({
 
 export function EmailSettings() {
   const { t } = useSession();
-  const settings = useRemote<NotificationSettings>("/me/notification-settings");
+  const settings = useNotificationSettings();
   return (
     <div className={ui.formPage}>
       <SectionTitle
@@ -323,7 +301,7 @@ export function EmailSettings() {
         <ErrorState error={settings.error} retry={settings.reload} />
       )}
       {settings.data && (
-        <EmailForm initial={settings.data} reload={settings.reload} />
+        <EmailForm initial={settings.data} save={settings.save} />
       )}
     </div>
   );

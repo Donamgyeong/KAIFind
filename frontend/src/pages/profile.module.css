@@ -1,98 +1,192 @@
+/* Account and notification overlays share the proportions of the Mobile frames. */
+.loginDialog {
+  padding: 16px 24px 22px;
+}
+.loginDialog > :first-child {
+  margin-bottom: 48px;
+}
+.loginDialog h2,
+.notificationDialog h2 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.loginAccounts {
+  display: grid;
+  gap: 10px;
+}
+.loginAccount {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 20px;
+  gap: 12px;
+  align-items: center;
+  text-align: start;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink);
+}
+.loginAccount:hover:not(:disabled) {
+  background: var(--bg);
+  border-color: var(--brand);
+}
+.loginAccount > svg {
+  color: var(--brand);
+}
+.accountAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--soft);
+  color: var(--brand);
+  font-weight: 700;
+}
+.accountIdentity {
+  display: grid;
+  gap: 3px;
+  overflow-wrap: anywhere;
+}
+.accountIdentity strong {
+  font-size: 14px;
+}
+.accountIdentity small,
+.loginNote {
+  font-size: 12px;
+  color: var(--muted);
+}
+.loginNote {
+  margin-top: 14px;
+}
+.loginDialog [role="alert"] {
+  margin-top: 12px;
+}
+
+.notificationDialog {
+  width: min(360px, 100% - 40px);
+}
+.notificationDialog > :first-child {
+  margin-bottom: 8px;
+}
+.notificationList {
+  display: grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+}
+.notificationList li {
+  display: block;
+  border: 0;
+}
+.notification {
+  display: grid;
+  width: 100%;
+  text-align: start;
+  color: var(--ink);
+  background: var(--surface);
+  gap: 10px;
+  min-height: 130px;
+  align-content: start;
+  padding: 15px 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.notification[data-unread="true"] {
+  background: var(--soft);
+  border-color: transparent;
+}
+.notificationMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--brand);
+}
+.notificationMeta time {
+  margin: 0 0 0 auto;
+  flex: none;
+  font-size: 11px;
+  color: var(--muted);
+}
+.notification strong {
+  font-size: 14px;
+}
+.unreadDot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--brand);
+}
+@media (max-width: 799px) {
+  .loginDialog {
+    inset-block-end: clamp(0px, calc(100dvh - 550px), 68px);
+  }
+  .notificationDialog {
+    inset: 60px 0 auto;
+    margin: 0 auto;
+  }
+}
+
+.profilePage {
+  gap: 16px;
+}
+.profileCard {
+  display: grid;
+  gap: 12px;
+}
 .identity {
   display: flex;
   align-items: center;
   gap: 14px;
 }
-.avatar {
-  color: var(--brand);
-  background: var(--soft);
-  border-radius: 50%;
-  width: 54px;
-  height: 54px;
-  display: grid;
-  place-items: center;
+.identity svg {
   flex: none;
-}
-.email {
-  margin-top: 3px;
   color: var(--muted);
-  font-size: 0.82rem;
-  overflow-wrap: anywhere;
 }
-.switch {
-  accent-color: var(--brand);
-  width: 21px;
-  height: 21px;
-  flex: none;
+.profileAffiliation,
+.count {
+  color: var(--muted);
+  font-size: 12px;
 }
-.profileLinks {
+.count {
+  white-space: nowrap;
+}
+.accountActions {
   display: grid;
-  padding-block: 5px;
 }
-.profileLink {
+.accountActions > * {
   display: flex;
-  text-align: start;
   align-items: center;
-  gap: 12px;
-  min-height: 50px;
+  min-height: 48px;
   border: 0;
-  border-bottom: 1px solid var(--border);
-  padding: 8px 0;
+  border-top: 1px solid var(--divider);
   background: transparent;
-  color: var(--ink);
-  font-size: 0.9rem;
-}
-.profileLink:last-child {
-  border-bottom: 0;
-}
-.profileLink svg {
-  color: var(--brand);
-  flex: none;
-}
-.profileLink svg:last-child {
-  margin-left: auto;
-}
-.notificationList {
-  display: grid;
-  gap: 9px;
   padding: 0;
-  margin: 0 0 8px;
-  list-style: none;
-}
-.notificationList li {
-  display: flex;
-  align-items: center;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-.notificationList li[data-unread="true"] {
-  background: var(--soft);
-}
-.notification {
-  background: transparent;
-  color: var(--ink);
-  border: 0;
-  padding: 11px;
-  display: flex;
-  align-items: center;
-  text-align: start;
-  gap: 10px;
-  flex: 1;
-}
-.notification svg {
-  flex: none;
   color: var(--brand);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: start;
 }
-.notification svg:last-child {
-  margin-left: auto;
+.accountActions .signOut {
+  color: var(--danger);
 }
-.notification time {
-  display: block;
-  color: var(--muted);
-  font-size: 0.75rem;
-  margin-top: 3px;
+.profileRows > * + * {
+  border-top: 1px solid var(--divider);
 }
-.notification strong {
-  font-size: 0.86rem;
+.resolved {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+}
+.resolved > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
 }

@@ -1,18 +1,14 @@
-import { MapPin } from "lucide-react";
+import BuildingMap from "../ui/BuildingMap";
 import { useSession } from "../api/session-context";
-import type { Building } from "../api/types";
-import { useRemote } from "../api/useRemote";
+import { useBuildings } from "../api/useReferences";
 import { ErrorState, Loading } from "../ui/controls";
-import { buildingMapUrl, buildingZones, localName } from "../ui/format";
+import { buildingZones, localName } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
 
 export default function Buildings() {
   const { t, lang } = useSession();
-  const result = useRemote<{ items: Building[] }>(
-    "/buildings?includePostedCount=true",
-    true,
-  );
+  const result = useBuildings(true);
   return (
     <div className={ui.formPage}>
       <SectionTitle
@@ -50,17 +46,7 @@ export default function Buildings() {
                       {(building.postedCount ?? 0).toLocaleString(lang)}
                     </small>
                   </div>
-                  <a
-                    className={ui.iconButton}
-                    href={buildingMapUrl(building)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={
-                      building.code + " " + t("지도에서 보기", "View on map")
-                    }
-                  >
-                    <MapPin size={18} />
-                  </a>
+                  <BuildingMap building={building} iconOnly />
                 </div>
               ))}
             </div>

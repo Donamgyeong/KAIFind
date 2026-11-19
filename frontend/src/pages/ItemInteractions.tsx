@@ -14,7 +14,7 @@ import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { Dialog, ErrorState, Loading, Pagination } from "../ui/controls";
 import { fieldError } from "../ui/fieldError";
-import { dateTime } from "../ui/format";
+import { kstDateTime } from "../ui/format";
 import ui from "../ui/ui.module.css";
 
 export function StartConversation({ item }: { item: ItemDetail }) {
@@ -45,7 +45,9 @@ export function StartConversation({ item }: { item: ItemDetail }) {
               "/conversations",
               { method: "POST", body: { itemId: item.itemId } },
             );
-            navigate("/conversations/" + conversation.conversationId);
+            navigate("/conversations/" + conversation.conversationId, {
+              state: { conversation, back: "/found-items/" + item.itemId },
+            });
           })
         }
       >
@@ -85,7 +87,7 @@ function DisputeList({ path }: { path: string }) {
                 : t("이의 기각", "Dismissed")}
           </span>
           <p className={ui.userText}>{entry.reason}</p>
-          <small>{dateTime(entry.createdAt, lang)} KST</small>
+          <small>{kstDateTime(entry.createdAt, lang)}</small>
         </article>
       ))}
       {disputes.data && (
@@ -140,8 +142,7 @@ export default function ItemInteractions({
   }
 
   return (
-    <section className={ui.panel + " " + ui.stack}>
-      <h2>{t("수령", "Pickup")}</h2>
+    <div className={ui.stack}>
       {item.status === "POSTED" && !item.hidden && (
         <>
           <StartConversation item={item} />
@@ -162,7 +163,7 @@ export default function ItemInteractions({
         <p className={ui.notice}>
           {t("수령이 완료된 물품이에요.", "This item has been collected.")}
           {collection.data &&
-            " " + dateTime(collection.data.collectedAt, lang) + " KST"}
+            " " + kstDateTime(collection.data.collectedAt, lang)}
         </p>
       )}
       {collection.data && (
@@ -319,6 +320,6 @@ export default function ItemInteractions({
           </form>
         </Dialog>
       )}
-    </section>
+    </div>
   );
 }

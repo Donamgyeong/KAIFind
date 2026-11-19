@@ -1,24 +1,22 @@
-import { SlidersHorizontal, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useSession } from "../api/session-context";
-import type {
-  Building,
-  Category,
-  ItemStatus,
-  ItemSummary,
-  Page,
-} from "../api/types";
+import type { ItemStatus, ItemSummary, Page } from "../api/types";
+import { useBuildings, useCategories } from "../api/useReferences";
 import { useRemote } from "../api/useRemote";
+import filterIcon from "../assets/filter.svg";
+import DateField from "../ui/DateField";
+import { ErrorState, Loading, Pagination, Status } from "../ui/controls";
 import {
-  BuildingPicker,
-  ErrorState,
-  Loading,
-  Pagination,
-  Status,
-} from "../ui/controls";
-import { dateTime, itemStatuses, localName, statusLabel } from "../ui/format";
+  dateTime,
+  itemStatuses,
+  localName,
+  orderCategories,
+  statusLabel,
+} from "../ui/format";
 import PhotoView from "../ui/PhotoView";
+import { BuildingPicker } from "../ui/ReferenceFields";
 import ui from "../ui/ui.module.css";
 import styles from "./home.module.css";
 
@@ -49,10 +47,17 @@ export function ItemCard({ item }: { item: ItemSummary }) {
   );
 }
 
+type FilterDraft = {
+  building: string;
+  from: string;
+  to: string;
+  status: ItemStatus | "ALL";
+};
+
 export default function Home() {
   const { t, lang } = useSession();
   const [params, setParams] = useSearchParams();
-  const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState<FilterDraft>();
   const q = params.get("q") ?? "";
   const [search, setSearch] = useState(q);
   const [previousQuery, setPreviousQuery] = useState(q);
@@ -60,16 +65,9 @@ export default function Home() {
     setPreviousQuery(q);
     setSearch(q);
   }
-  const buildings = useRemote<{ items: Building[] }>("/buildings", true);
-  const categories = useRemote<{ items: Category[] }>("/categories", true);
-  const preferredOrder = ["전자기기", "카드·지갑", "생활용품", "의류", "기타"];
-  const priority = (category: Category) => {
-    const index = preferredOrder.indexOf(category.nameKo);
-    return index === -1 ? preferredOrder.length : index;
-  };
-  const choices = [...(categories.data?.items ?? [])].sort(
-    (a, b) => priority(a) - priority(b),
-  );
+  const buildings = useBuildings();
+  const categories = useCategories();
+  const choices = orderCategories(categories.data?.items ?? []);
   const request = new URLSearchParams();
   for (const field of [
     "q",
@@ -88,6 +86,37 @@ export default function Home() {
       itemStatuses.includes(value as ItemStatus),
     );
   statuses.forEach((status) => request.append("statuses", status));
+  const current: FilterDraft = {
+    building: params.get("foundBuildingId") ?? "",
+    from: params.get("foundDateFrom") ?? "",
+    to: params.get("foundDateTo") ?? "",
+    status: statuses.length > 1 ? "ALL" : (statuses[0] ?? "POSTED"),
+  };
+  const reset: FilterDraft = {
+    building: "",
+    from: "",
+    to: "",
+    status: "POSTED",
+  };
+  const hasFilters =
+    (filter ?? current).building ||
+    (filter ?? current).from ||
+    (filter ?? current).to ||
+    (filter ?? current).status !== "POSTED";
+  function apply(draft: FilterDraft) {
+    update({
+      foundBuildingId: draft.building,
+      foundDateFrom: draft.from,
+      foundDateTo: draft.to,
+      statuses:
+        draft.status === "ALL"
+          ? itemStatuses
+          : draft.status === "POSTED"
+            ? []
+            : [draft.status],
+    });
+  }
+
   const items = useRemote<Page<ItemSummary>>(
     "/found-items?" + request.toString(),
     true,
@@ -115,7 +144,7 @@ export default function Home() {
         }}
       >
         <button type="submit" aria-label={t("검색", "Search")}>
-          <Search size={22} />
+          <Search size={22} strokeWidth={1.65} />
         </button>
         <input
           aria-label={t("키워드 검색", "Search by keyword")}
@@ -130,7 +159,11 @@ export default function Home() {
         />
       </form>
       <div className={styles.filters}>
-        <div className={styles.chips} aria-label={t("카테고리", "Categories")}>
+        <div
+          className={styles.chips}
+          role="group"
+          aria-label={t("카테고리", "Categories")}
+        >
           <button
             type="button"
             className={ui.chip}
@@ -154,95 +187,109 @@ export default function Home() {
         <button
           type="button"
           className={styles.filterToggle}
-          aria-expanded={open}
-          onClick={() => setOpen(!open)}
+          aria-expanded={!!filter}
+          aria-controls="found-filters"
+          onClick={() => setFilter(filter ? undefined : current)}
         >
           <span>
             {t("건물", "Building")} ▾ {t("날짜", "Date")} ▾{" "}
-            {statuses.length === 1
-              ? statusLabel(statuses[0], t)
-              : t("상태", "Status")}{" "}
+            {current.status === "ALL"
+              ? t("전체", "All")
+              : statusLabel(current.status, t)}{" "}
             ▾
           </span>
-          <SlidersHorizontal size={18} />
+          <img src={filterIcon} alt="" />
         </button>
       </div>
       {categories.error !== undefined && (
         <ErrorState error={categories.error} retry={categories.reload} />
       )}
-      {open && (
+
+      {filter && (
         <section
-          className={ui.panel + " " + styles.filterPanel}
+          id="found-filters"
+          className={styles.filterPanel}
           aria-label={t("상세 검색 필터", "Advanced filters")}
         >
-          <BuildingPicker
-            label={t("발견 건물 선택", "Select found building")}
-            buildings={buildings.data?.items ?? []}
-            values={
-              params.get("foundBuildingId")
-                ? [params.get("foundBuildingId")!]
-                : []
-            }
-            onChange={([id]) => update({ foundBuildingId: id ?? "" })}
-          />
-          {buildings.error !== undefined && (
-            <ErrorState error={buildings.error} retry={buildings.reload} />
-          )}
-          <label>
-            {t("발견일 시작", "Date from")}
-            <input
-              type="date"
-              value={params.get("foundDateFrom") ?? ""}
-              max={params.get("foundDateTo") ?? undefined}
-              onChange={(event) =>
-                update({ foundDateFrom: event.target.value })
+          <div className={styles.filterField}>
+            <span>{t("발견 건물", "Found building")}</span>
+            <BuildingPicker
+              label={t("발견 건물 선택", "Select found building")}
+              buildings={buildings.data?.items ?? []}
+              values={filter.building ? [filter.building] : []}
+              onChange={([building]) =>
+                setFilter({ ...filter, building: building ?? "" })
               }
             />
-          </label>
-          <label>
-            {t("발견일 종료", "Date to")}
-            <input
-              type="date"
-              value={params.get("foundDateTo") ?? ""}
-              min={params.get("foundDateFrom") ?? undefined}
-              onChange={(event) => update({ foundDateTo: event.target.value })}
-            />
-          </label>
-          <div className={ui.row}>
-            {itemStatuses.map((status) => (
-              <button
-                key={status}
-                type="button"
-                className={ui.chip}
-                aria-pressed={(statuses.length
-                  ? statuses
-                  : ["POSTED"]
-                ).includes(status)}
-                onClick={() => {
-                  const active = statuses.length ? statuses : ["POSTED"];
-                  update({
-                    statuses: active.includes(status)
-                      ? active.filter((value) => value !== status)
-                      : [...active, status],
-                  });
-                }}
-              >
-                {statusLabel(status, t)}
-              </button>
-            ))}
+            {buildings.error !== undefined && (
+              <ErrorState error={buildings.error} retry={buildings.reload} />
+            )}
+          </div>
+          <div className={styles.dateRange}>
+            <div className={styles.filterField}>
+              <span>{t("시작 날짜", "Date from")}</span>
+              <DateField
+                label={t("시작 날짜", "Date from")}
+                value={filter.from}
+                max={filter.to || undefined}
+                onChange={(from) => setFilter({ ...filter, from })}
+              />
+            </div>
+            <span aria-hidden="true">~</span>
+            <div className={styles.filterField}>
+              <span>{t("종료 날짜", "Date to")}</span>
+              <DateField
+                label={t("종료 날짜", "Date to")}
+                value={filter.to}
+                min={filter.from || undefined}
+                onChange={(to) => setFilter({ ...filter, to })}
+              />
+            </div>
+          </div>
+          <div className={styles.filterField}>
+            <span>{t("물품 상태", "Item status")}</span>
+            <div
+              className={styles.statusSwitch}
+              role="group"
+              aria-label={t("물품 상태", "Item status")}
+            >
+              {(["ALL", "POSTED", "COLLECTED"] as const).map((status) => (
+                <button
+                  type="button"
+                  key={status}
+                  aria-pressed={filter.status === status}
+                  onClick={() => setFilter({ ...filter, status })}
+                >
+                  {status === "ALL"
+                    ? t("전체", "All")
+                    : status === "COLLECTED"
+                      ? t("수령 완료", "Collected")
+                      : statusLabel(status, t)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className={styles.filterActions}>
             <button
               type="button"
-              className={ui.textButton}
-              onClick={() =>
-                update({
-                  foundBuildingId: "",
-                  foundDateFrom: "",
-                  foundDateTo: "",
-                  statuses: [],
-                })
-              }
+              className={ui.secondary + " " + styles.reset}
+              disabled={!hasFilters}
+              onClick={() => {
+                setFilter(reset);
+                apply(reset);
+              }}
             >
-              {t("필터 초기화", "Reset")}
+              {t("필터 초기화", "Reset filters")}
+            </button>
+            <button
+              type="button"
+              className={ui.primary}
+              onClick={() => {
+                apply(filter);
+                setFilter(undefined);
+              }}
+            >
+              {t("검색 적용하기", "Apply filters")}
             </button>
           </div>
         </section>
@@ -283,9 +330,6 @@ export default function Home() {
           />
         </>
       )}
-      <Link className={styles.buildingLink} to="/buildings">
-        {t("건물별 보관 물품", "Items by storage building")}
-      </Link>
     </div>
   );
 }

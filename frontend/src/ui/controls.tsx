@@ -1,10 +1,10 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { ApiError } from "../api/client";
 import { useSession } from "../api/session-context";
-import type { Building, ItemStatus } from "../api/types";
-import { buildingZones, localName, statusLabel } from "./format";
+import type { ItemStatus } from "../api/types";
+import { statusLabel } from "./format";
 import styles from "./ui.module.css";
 
 export function Status({ status }: { status: ItemStatus }) {
@@ -79,10 +79,16 @@ export function Dialog({
   title,
   close,
   children,
+  className,
+  back,
+  closeButtonClassName,
 }: {
   title: string;
   close: () => void;
   children: ReactNode;
+  className?: string;
+  back?: () => void;
+  closeButtonClassName?: string;
 }) {
   const { t } = useSession();
   const ref = useRef<HTMLDialogElement>(null);
@@ -95,7 +101,7 @@ export function Dialog({
   return (
     <dialog
       ref={ref}
-      className={styles.dialog}
+      className={[styles.dialog, className].filter(Boolean).join(" ")}
       aria-labelledby={id}
       onCancel={(event) => {
         event.preventDefault();
@@ -115,146 +121,30 @@ export function Dialog({
       }}
     >
       <div className={styles.dialogHeader}>
+        {back && (
+          <button
+            type="button"
+            className={styles.iconButton}
+            aria-label={t("구역 다시 선택", "Choose another zone")}
+            onClick={back}
+          >
+            <ChevronLeft size={24} strokeWidth={1.65} />
+          </button>
+        )}
         <h2 id={id}>{title}</h2>
         <button
-          className={styles.iconButton}
+          className={[styles.iconButton, closeButtonClassName]
+            .filter(Boolean)
+            .join(" ")}
           type="button"
           aria-label={t("닫기", "Close")}
           onClick={close}
         >
-          <X size={21} />
+          <X size={20} strokeWidth={1.65} />
         </button>
       </div>
       {children}
     </dialog>
-  );
-}
-
-export function BuildingPicker({
-  buildings,
-  values,
-  onChange,
-  label,
-  multiple = false,
-  disabled = false,
-}: {
-  buildings: Building[];
-  values: string[];
-  onChange: (ids: string[]) => void;
-  label: string;
-  multiple?: boolean;
-  disabled?: boolean;
-}) {
-  const { t, lang } = useSession();
-  const [open, setOpen] = useState(false);
-  const [zoneCode, setZone] = useState<string>();
-  const zones = buildingZones(buildings, t);
-  const zone = zones.find(({ code }) => code === zoneCode);
-  const selected = buildings.filter((building) =>
-    values.includes(building.buildingId),
-  );
-  const summary = multiple
-    ? label
-    : selected
-        .map((building) => building.code + " · " + localName(building, lang))
-        .join(", ") || label;
-  return (
-    <>
-      <button
-        type="button"
-        className={styles.selectButton}
-        disabled={disabled}
-        aria-haspopup="dialog"
-        onClick={() => {
-          setZone(undefined);
-          setOpen(true);
-        }}
-      >
-        {summary}
-        <ChevronRight size={16} />
-      </button>
-      {open && (
-        <Dialog title={label} close={() => setOpen(false)}>
-          {zone ? (
-            <>
-              <button
-                type="button"
-                className={styles.textButton}
-                onClick={() => setZone(undefined)}
-              >
-                <ChevronLeft size={16} />{" "}
-                {t("구역 다시 선택", "Choose another zone")}
-              </button>
-              <p className={styles.zoneHeading}>
-                {zone.name} · {zone.entries.length}
-                {t("개 건물", " buildings")}
-              </p>
-              <div className={styles.buildingOptions}>
-                {zone.entries.map((building) => {
-                  const checked = values.includes(building.buildingId);
-                  return (
-                    <button
-                      type="button"
-                      aria-pressed={checked}
-                      key={building.buildingId}
-                      onClick={() => {
-                        const next = multiple
-                          ? checked
-                            ? values.filter(
-                                (value) => value !== building.buildingId,
-                              )
-                            : [...values, building.buildingId]
-                          : [building.buildingId];
-                        onChange(next);
-                        if (!multiple) setOpen(false);
-                      }}
-                    >
-                      <b>{building.code}</b> {localName(building, lang)}
-                      {checked && " ✓"}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          ) : (
-            <div className={styles.zoneList}>
-              {zones.map(({ code, name, entries }) => (
-                <button
-                  type="button"
-                  className={styles.zoneChoice}
-                  key={code}
-                  onClick={() => setZone(code)}
-                >
-                  <span>
-                    {name}
-                    {code ? " (" + code + ")" : ""}
-                    <small>
-                      {entries.length}
-                      {t("개 건물", " buildings")}
-                    </small>
-                  </span>
-                  <ChevronRight size={16} />
-                </button>
-              ))}
-              {!zones.length && (
-                <p>
-                  {t("선택 가능한 건물이 없습니다.", "No buildings available.")}
-                </p>
-              )}
-            </div>
-          )}
-          {multiple && (
-            <button
-              type="button"
-              className={styles.primary + " " + styles.full}
-              onClick={() => setOpen(false)}
-            >
-              {t("선택 완료", "Done")}
-            </button>
-          )}
-        </Dialog>
-      )}
-    </>
   );
 }
 

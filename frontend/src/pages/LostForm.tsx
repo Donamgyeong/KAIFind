@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ApiError } from "../api/client";
 import { useSession } from "../api/session-context";
 import type {
   Building,
@@ -9,11 +8,14 @@ import type {
   LostReportInput,
 } from "../api/types";
 import { useAction } from "../api/useAction";
+import { useBuildings, useCategories } from "../api/useReferences";
 import { useRemote } from "../api/useRemote";
-import { BuildingPicker, ErrorState, Field, Loading } from "../ui/controls";
-import { fieldError } from "../ui/fieldError";
-import { localName } from "../ui/format";
-import { CategorySelect } from "../ui/ReferenceFields";
+import { ErrorState, Field, Loading } from "../ui/controls";
+import DateField from "../ui/DateField";
+import dateStyles from "../ui/date-field.module.css";
+import { fieldError, requiredFieldsError } from "../ui/fieldError";
+import { kstInputValue, localName } from "../ui/format";
+import { BuildingPicker, CategorySelect } from "../ui/ReferenceFields";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
 
@@ -62,14 +64,33 @@ function ReportEditor({
         onSubmit={(event) => {
           event.preventDefault();
           void action.run(async () => {
+            if (!draft.categoryId) {
+              const message = t(
+                "물품 분류를 선택해 주세요.",
+                "Select a category.",
+              );
+              throw requiredFieldsError(message, [{ field: "categoryId" }]);
+            }
             if (!draft.possibleBuildingIds.length) {
               const message = t(
                 "분실 추정 건물을 한 곳 이상 선택해 주세요.",
                 "Choose at least one possible building.",
               );
-              throw new ApiError(400, "VALIDATION_ERROR", message, [
-                { field: "possibleBuildingIds", code: "REQUIRED", message },
+              throw requiredFieldsError(message, [
+                { field: "possibleBuildingIds" },
               ]);
+            }
+            if (!draft.lostDateFrom || !draft.lostDateTo) {
+              const message = t(
+                "분실 시작일과 종료일을 선택해 주세요.",
+                "Select both dates.",
+              );
+              throw requiredFieldsError(
+                message,
+                (["lostDateFrom", "lostDateTo"] as const)
+                  .filter((key) => !draft[key])
+                  .map((field) => ({ field })),
+              );
             }
             const saved = await api.request<LostReport>(path, {
               method: report ? "PUT" : "POST",
@@ -168,36 +189,32 @@ function ReportEditor({
               )}
             </p>
           </Field>
-          <label className={ui.field}>
-            {t("분실 날짜 시작 (KST) *", "Lost date from (KST) *")}
-            <input
-              type="date"
-              required
-              value={draft.lostDateFrom}
-              max={draft.lostDateTo || undefined}
-              onChange={(event) => change("lostDateFrom", event.target.value)}
-            />
-            {field("lostDateFrom") && (
-              <span className={ui.fieldError} role="alert">
-                {field("lostDateFrom")}
-              </span>
-            )}
-          </label>
-          <label className={ui.field}>
-            {t("분실 날짜 종료 (KST) *", "Lost date to (KST) *")}
-            <input
-              type="date"
-              required
-              value={draft.lostDateTo}
-              min={draft.lostDateFrom || undefined}
-              onChange={(event) => change("lostDateTo", event.target.value)}
-            />
-            {field("lostDateTo") && (
-              <span className={ui.fieldError} role="alert">
-                {field("lostDateTo")}
-              </span>
-            )}
-          </label>
+          <div className={dateStyles.range}>
+            <Field
+              label={t("시작 날짜 (KST) *", "Date from (KST) *")}
+              error={field("lostDateFrom")}
+            >
+              <DateField
+                label={t("분실 날짜 시작", "Lost date from")}
+                value={draft.lostDateFrom}
+                max={draft.lostDateTo || kstInputValue().slice(0, 10)}
+                onChange={(value) => change("lostDateFrom", value)}
+              />
+            </Field>
+            <span aria-hidden="true">~</span>
+            <Field
+              label={t("종료 날짜 (KST) *", "Date to (KST) *")}
+              error={field("lostDateTo")}
+            >
+              <DateField
+                label={t("분실 날짜 종료", "Lost date to")}
+                value={draft.lostDateTo}
+                min={draft.lostDateFrom || undefined}
+                max={kstInputValue().slice(0, 10)}
+                onChange={(value) => change("lostDateTo", value)}
+              />
+            </Field>
+          </div>
           <label className={ui.field}>
             {t("비공개 식별 정보 *", "Private identifying details *")}
             <textarea
@@ -244,8 +261,8 @@ export default function LostForm() {
   const report = useRemote<LostReport>(
     reportId ? "/lost-reports/" + reportId : null,
   );
-  const categories = useRemote<{ items: Category[] }>("/categories", true);
-  const buildings = useRemote<{ items: Building[] }>("/buildings", true);
+  const categories = useCategories();
+  const buildings = useBuildings();
   for (const resource of [report, categories, buildings]) {
     if (resource.error !== undefined)
       return <ErrorState error={resource.error} retry={resource.reload} />;

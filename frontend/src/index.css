@@ -4,6 +4,8 @@
     sans-serif;
   color: #172440;
   background: #f5f7fc;
+  font-size: 14px;
+  line-height: 1.5;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --brand: #2856df;
@@ -14,6 +16,9 @@
   --ink: #172440;
   --muted: #69758a;
   --border: #dce4f5;
+  --divider: #e4eaf5;
+  --field-text-size: 13px;
+  --field-control-height: 52px;
   --success: #216542;
   --success-soft: #e7f6ed;
   --danger: #af2340;
@@ -33,15 +38,15 @@ p {
   margin: 0;
 }
 h1 {
-  font-size: 1.45rem;
+  font-size: 20px;
   line-height: 1.4;
 }
 h2 {
-  font-size: 1.06rem;
+  font-size: 16px;
   line-height: 1.45;
 }
 h3 {
-  font-size: 0.95rem;
+  font-size: 14px;
 }
 button,
 input,
@@ -71,6 +76,7 @@ textarea {
   padding: 10px 12px;
   color: var(--ink);
   background: var(--surface);
+  font-size: var(--field-text-size);
 }
 textarea {
   resize: vertical;
@@ -90,4 +96,19 @@ img {
 }
 ::selection {
   background: var(--soft);
+}
+
+select {
+  appearance: none;
+  min-height: var(--field-control-height);
+  padding-inline-end: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4.5 6.5 3.5 3.5 3.5-3.5' fill='none' stroke='%232856df' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+select:required:invalid {
+  color: var(--muted);
+}
+select option {
+  color: var(--ink);
 }
