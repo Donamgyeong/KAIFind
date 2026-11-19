@@ -31,12 +31,14 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-.location {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+.reportFields
+  input:not([type="file"], [type="checkbox"], [type="radio"], [type="hidden"]) {
+  min-height: var(--field-control-height);
+}
+.reportFields button[aria-haspopup="dialog"] > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .location strong {
   font-size: 0.95rem;

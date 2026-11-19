@@ -29,12 +29,16 @@ export default function BuildingMap({
     <>
       <button
         type="button"
-        className={iconOnly ? ui.iconButton : styles.mapLink}
+        className={iconOnly ? ui.iconButton : styles.mapButton}
         aria-label={building.code + " " + label}
         aria-haspopup="dialog"
         onClick={() => setOpen(true)}
       >
-        <MapPin size={16} strokeWidth={1.65} aria-hidden="true" />
+        <MapPin
+          size={iconOnly ? 16 : 24}
+          strokeWidth={1.65}
+          aria-hidden="true"
+        />
         {!iconOnly && label}
       </button>
       {open && (
@@ -54,9 +58,6 @@ export default function BuildingMap({
             referrerPolicy="no-referrer"
             allowFullScreen
           />
-          <p className={styles.mapSource}>
-            {t("지도 데이터 · Google 지도", "Map data · Google Maps")}
-          </p>
           <button
             type="button"
             className={ui.secondary + " " + ui.full}

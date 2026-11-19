@@ -15,6 +15,15 @@ export function localName(value: Building | Category, lang: Language) {
   return lang === "ko" ? value.nameKo : value.nameEn;
 }
 
+export function orderCategories(categories: Category[]) {
+  const order = ["전자기기", "카드·지갑", "생활용품", "의류", "기타"];
+  const priority = ({ nameKo }: Category) => {
+    const index = order.indexOf(nameKo);
+    return index === -1 ? order.length : index;
+  };
+  return [...categories].sort((a, b) => priority(a) - priority(b));
+}
+
 export function dateTime(value: string, lang: Language) {
   return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-GB", {
     timeZone: "Asia/Seoul",

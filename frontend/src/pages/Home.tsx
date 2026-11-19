@@ -12,15 +12,16 @@ import type {
 import { useRemote } from "../api/useRemote";
 import filterIcon from "../assets/filter.svg";
 import DateField from "../ui/DateField";
+import { ErrorState, Loading, Pagination, Status } from "../ui/controls";
 import {
-  BuildingPicker,
-  ErrorState,
-  Loading,
-  Pagination,
-  Status,
-} from "../ui/controls";
-import { dateTime, itemStatuses, localName, statusLabel } from "../ui/format";
+  dateTime,
+  itemStatuses,
+  localName,
+  orderCategories,
+  statusLabel,
+} from "../ui/format";
 import PhotoView from "../ui/PhotoView";
+import { BuildingPicker } from "../ui/ReferenceFields";
 import ui from "../ui/ui.module.css";
 import styles from "./home.module.css";
 
@@ -71,14 +72,7 @@ export default function Home() {
   }
   const buildings = useRemote<{ items: Building[] }>("/buildings", true);
   const categories = useRemote<{ items: Category[] }>("/categories", true);
-  const preferredOrder = ["전자기기", "카드·지갑", "생활용품", "의류", "기타"];
-  const priority = (category: Category) => {
-    const index = preferredOrder.indexOf(category.nameKo);
-    return index === -1 ? preferredOrder.length : index;
-  };
-  const choices = [...(categories.data?.items ?? [])].sort(
-    (a, b) => priority(a) - priority(b),
-  );
+  const choices = orderCategories(categories.data?.items ?? []);
   const request = new URLSearchParams();
   for (const field of [
     "q",

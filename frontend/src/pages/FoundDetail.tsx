@@ -37,13 +37,10 @@ function BuildingLocation({
   const { lang } = useSession();
   return (
     <div className={styles.location}>
-      <div>
-        <strong>
-          {building.code} · {localName(building, lang)}
-        </strong>
-        {description && <p>{description}</p>}
-      </div>
-      <BuildingMap building={building} />
+      <strong>
+        {building.code} · {localName(building, lang)}
+      </strong>
+      {description && <p>{description}</p>}
     </div>
   );
 }
@@ -151,7 +148,10 @@ function DetailContent({
         </section>
         <div className={ui.stack}>
           <section className={ui.panel + " " + ui.stack}>
-            <h2>{t("발견 정보", "Found at")}</h2>
+            <div className={ui.between}>
+              <h2>{t("발견 정보", "Found at")}</h2>
+              <BuildingMap building={item.foundBuilding} />
+            </div>
             <BuildingLocation
               building={item.foundBuilding}
               description={item.foundLocationDescription}
@@ -164,7 +164,12 @@ function DetailContent({
             </p>
           </section>
           <section className={ui.panel + " " + ui.stack}>
-            <h2>{t("보관 정보", "Storage location")}</h2>
+            <div className={ui.between}>
+              <h2>{t("보관 정보", "Storage location")}</h2>
+              {dropOff.data?.building && (
+                <BuildingMap building={dropOff.data.building} />
+              )}
+            </div>
             {checking && <Loading />}
             {!checking && !user && (
               <div className={ui.notice + " " + ui.stack}>

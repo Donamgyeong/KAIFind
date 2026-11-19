@@ -1,10 +1,14 @@
-.mapLink {
+.mapButton {
   display: inline-flex;
-  padding: 4px 0;
-  gap: 5px;
+  min-width: 144px;
+  min-height: 40px;
+  padding: 6px 12px;
+  gap: 6px;
   align-items: center;
+  justify-content: center;
   border: 0;
-  background: transparent;
+  border-radius: 10px;
+  background: var(--soft);
   color: var(--brand);
   font-size: 12px;
   font-weight: 700;
@@ -29,13 +33,9 @@
   display: block;
   border: 0;
   border-radius: 12px;
+  margin-bottom: 16px;
   aspect-ratio: 1;
   background: var(--bg);
-}
-.mapSource {
-  font-size: 12px;
-  color: var(--muted);
-  margin: 10px 0 18px;
 }
 @media (min-width: 800px) {
   .mapDialog {

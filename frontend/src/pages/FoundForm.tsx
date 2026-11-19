@@ -14,15 +14,16 @@ import type {
 } from "../api/types";
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
-import { BuildingPicker, ErrorState, Field, Loading } from "../ui/controls";
+import { ErrorState, Field, Loading } from "../ui/controls";
 import DateField from "../ui/DateField";
 import { fieldError } from "../ui/fieldError";
 import { kstInputValue } from "../ui/format";
 import PhotoInputs from "../ui/PhotoInputs";
 import type { PhotoDraft } from "../ui/PhotoInputs";
-import { CategorySelect } from "../ui/ReferenceFields";
+import { BuildingPicker, CategorySelect } from "../ui/ReferenceFields";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
+import styles from "./found.module.css";
 
 interface Draft {
   categoryId: string;
@@ -242,6 +243,10 @@ function FoundItemEditor({
     event.preventDefault();
     await action.run(async () => {
       const missing = [
+        !draft.categoryId && {
+          field: "categoryId",
+          message: t("물품 분류를 선택해 주세요.", "Select a category."),
+        },
         !draft.foundAt && {
           field: "foundAt",
           message: t(
@@ -352,7 +357,10 @@ function FoundItemEditor({
         className={ui.panel + " " + ui.stack}
         onSubmit={(event) => void submit(event)}
       >
-        <fieldset disabled={action.busy} className={ui.fields}>
+        <fieldset
+          disabled={action.busy}
+          className={ui.fields + " " + styles.reportFields}
+        >
           {!item && (
             <>
               <h2>{t("무엇을 주웠나요?", "What did you find?")}</h2>

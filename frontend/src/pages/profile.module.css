@@ -7,7 +7,9 @@
 }
 .loginDialog h2,
 .notificationDialog h2 {
-  font-size: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 .loginAccounts {
   display: grid;
@@ -155,17 +157,23 @@
   white-space: nowrap;
 }
 .accountActions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 10px;
+  display: grid;
 }
 .accountActions > * {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  min-height: 36px;
+  min-height: 48px;
+  border: 0;
+  border-top: 1px solid var(--divider);
+  background: transparent;
+  padding: 0;
+  color: var(--brand);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: start;
+}
+.accountActions .signOut {
+  color: var(--danger);
 }
 .profileRows > * + * {
   border-top: 1px solid var(--divider);

@@ -140,7 +140,7 @@
   border: 1px solid var(--border);
   padding: 10px 12px;
   min-width: 0;
-  min-height: 52px;
+  min-height: var(--field-control-height);
   font-size: var(--field-text-size);
   font-weight: 400;
   background: var(--surface);
@@ -185,11 +185,6 @@
   gap: 8px;
   margin-bottom: 12px;
 }
-.zoneList {
-  display: grid;
-  gap: 8px;
-  margin: 12px 0;
-}
 .zone {
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -210,26 +205,6 @@
 }
 .zone[open] summary svg {
   transform: rotate(90deg);
-}
-.buildingOptions {
-  display: grid;
-  max-height: 280px;
-  overflow: auto;
-}
-.buildingOptions button {
-  border: 0;
-  border-top: 1px solid var(--border);
-  padding: 12px;
-  text-align: start;
-  background: white;
-  color: var(--ink);
-}
-.buildingOptions button[aria-pressed="true"] {
-  background: var(--soft);
-  color: var(--brand);
-}
-.buildingOptions b {
-  color: var(--brand);
 }
 .pagination {
   display: flex;
@@ -374,48 +349,6 @@
 .userText {
   overflow-wrap: anywhere;
   white-space: pre-wrap;
-}
-
-.zoneChoice {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
-  color: var(--ink);
-  min-height: 56px;
-  padding: 10px 13px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  text-align: start;
-}
-.zoneChoice:hover {
-  background: var(--soft);
-}
-.zoneChoice svg {
-  color: var(--brand);
-  flex: none;
-}
-.zoneChoice small {
-  display: block;
-  color: var(--muted);
-  margin-top: 2px;
-}
-.zoneHeading {
-  font-size: 0.85rem;
-  font-weight: 700;
-  padding: 10px 0;
-}
-.buildingOptions {
-  margin-bottom: 14px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-.buildingOptions button {
-  min-height: 54px;
-}
-.buildingOptions button:first-child {
-  border-top: 0;
 }
 
 .switchRow {

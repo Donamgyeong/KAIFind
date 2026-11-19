@@ -10,12 +10,12 @@ import type {
 } from "../api/types";
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
-import { BuildingPicker, ErrorState, Field, Loading } from "../ui/controls";
+import { ErrorState, Field, Loading } from "../ui/controls";
 import DateField from "../ui/DateField";
 import dateStyles from "../ui/date-field.module.css";
 import { fieldError } from "../ui/fieldError";
 import { kstInputValue, localName } from "../ui/format";
-import { CategorySelect } from "../ui/ReferenceFields";
+import { BuildingPicker, CategorySelect } from "../ui/ReferenceFields";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
 
@@ -64,6 +64,15 @@ function ReportEditor({
         onSubmit={(event) => {
           event.preventDefault();
           void action.run(async () => {
+            if (!draft.categoryId) {
+              const message = t(
+                "물품 분류를 선택해 주세요.",
+                "Select a category.",
+              );
+              throw new ApiError(400, "VALIDATION_ERROR", message, [
+                { field: "categoryId", code: "REQUIRED", message },
+              ]);
+            }
             if (!draft.possibleBuildingIds.length) {
               const message = t(
                 "분실 추정 건물을 한 곳 이상 선택해 주세요.",

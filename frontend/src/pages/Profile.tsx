@@ -1,4 +1,4 @@
-import { LogOut, Shield, UserRound } from "lucide-react";
+import { UserRound } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSession } from "../api/session-context";
@@ -88,20 +88,16 @@ export default function Profile() {
         )}
         <div className={styles.accountActions}>
           {profile?.role === "ADMIN" && (
-            <Link to="/admin" className={ui.textButton}>
-              <Shield size={16} strokeWidth={1.65} aria-hidden="true" />{" "}
-              {t("관리자 페이지", "Admin dashboard")}
-            </Link>
+            <Link to="/admin">{t("관리자 페이지", "Admin dashboard")}</Link>
           )}
           <button
             type="button"
-            className={ui.textButton}
+            className={styles.signOut}
             onClick={() => {
               action.clear();
               setLogout(true);
             }}
           >
-            <LogOut size={16} strokeWidth={1.65} aria-hidden="true" />{" "}
             {t("로그아웃", "Sign out")}
           </button>
         </div>
