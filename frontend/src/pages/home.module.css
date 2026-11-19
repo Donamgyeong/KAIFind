@@ -32,11 +32,15 @@
 }
 .chips {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  overflow: auto;
-  padding: 3px;
-  margin: -3px;
-  scrollbar-width: none;
+  min-width: 0;
+}
+.chips > button {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: start;
 }
 .filterToggle {
   min-height: 24px;

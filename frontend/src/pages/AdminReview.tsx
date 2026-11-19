@@ -8,6 +8,7 @@ import { ErrorState, Loading, Pagination } from "../ui/controls";
 import { dateTime } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
+import styles from "./admin.module.css";
 import type { AdminDispute } from "./adminTypes";
 
 type Moderation = PostReport | AdminDispute;
@@ -29,30 +30,18 @@ export function ReviewQueue({ kind }: { kind: Kind }) {
 
   return (
     <div className={ui.stack}>
-      <div className={ui.row}>
-        <button
-          className={ui.chip}
-          type="button"
-          aria-pressed={status === "OPEN"}
-          onClick={() => {
-            setStatus("OPEN");
-            setPage(0);
-          }}
-        >
-          {t("검토 대기", "Awaiting review")}
-        </button>
-        <button
-          className={ui.chip}
-          type="button"
-          aria-pressed={status === reviewed}
-          onClick={() => {
-            setStatus(reviewed);
-            setPage(0);
-          }}
-        >
-          {t("검토 완료", "Reviewed")}
-        </button>
-      </div>
+      <select
+        className={styles.reviewFilter}
+        aria-label={t("검토 상태", "Review status")}
+        value={status}
+        onChange={(event) => {
+          setStatus(event.target.value);
+          setPage(0);
+        }}
+      >
+        <option value="OPEN">{t("검토 대기", "Awaiting review")}</option>
+        <option value={reviewed}>{t("검토 완료", "Reviewed")}</option>
+      </select>
       {records.loading && <Loading />}
       {records.error !== undefined && (
         <ErrorState error={records.error} retry={records.reload} />

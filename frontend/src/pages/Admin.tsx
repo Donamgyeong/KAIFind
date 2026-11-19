@@ -352,7 +352,7 @@ export default function Admin() {
   const selected = sections.find(({ key }) => key === section);
   if (!selected) return <Navigate to="/admin" replace />;
   return (
-    <div className={ui.stack}>
+    <div className={ui.stack + " " + styles.page}>
       <SectionTitle
         title={t("관리자 대시보드", "Admin dashboard")}
         back="/me"

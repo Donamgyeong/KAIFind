@@ -164,7 +164,11 @@ export default function Home() {
         />
       </form>
       <div className={styles.filters}>
-        <div className={styles.chips} aria-label={t("카테고리", "Categories")}>
+        <div
+          className={styles.chips}
+          role="group"
+          aria-label={t("카테고리", "Categories")}
+        >
           <button
             type="button"
             className={ui.chip}

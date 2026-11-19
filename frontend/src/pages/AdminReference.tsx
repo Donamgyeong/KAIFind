@@ -156,8 +156,7 @@ export default function AdminReference({
   return (
     <div className={ui.stack}>
       <div className={ui.between}>
-        <label className={ui.field}>
-          {t("활성 상태", "Active status")}
+        <div className={ui.field}>
           <select
             value={active}
             aria-label={t("활성 상태", "Active status")}
@@ -170,7 +169,7 @@ export default function AdminReference({
             <option value="true">{t("활성", "Active")}</option>
             <option value="false">{t("비활성", "Inactive")}</option>
           </select>
-        </label>
+        </div>
         <button
           className={ui.primary}
           type="button"

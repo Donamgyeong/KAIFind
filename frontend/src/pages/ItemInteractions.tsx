@@ -142,8 +142,7 @@ export default function ItemInteractions({
   }
 
   return (
-    <section className={ui.panel + " " + ui.stack}>
-      <h2>{t("수령", "Pickup")}</h2>
+    <div className={ui.stack}>
       {item.status === "POSTED" && !item.hidden && (
         <>
           <StartConversation item={item} />
@@ -321,6 +320,6 @@ export default function ItemInteractions({
           </form>
         </Dialog>
       )}
-    </section>
+    </div>
   );
 }
