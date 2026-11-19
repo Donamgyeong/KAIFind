@@ -15,6 +15,7 @@ import type {
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { BuildingPicker, ErrorState, Field, Loading } from "../ui/controls";
+import DateField from "../ui/DateField";
 import { fieldError } from "../ui/fieldError";
 import { kstInputValue } from "../ui/format";
 import PhotoInputs from "../ui/PhotoInputs";
@@ -211,7 +212,7 @@ function FoundItemEditor({
   buildings: Building[];
   categories: Category[];
 }) {
-  const { t, api, lang } = useSession();
+  const { t, api } = useSession();
   const navigate = useNavigate();
   const [draft, setDraft] = useState<Draft>({
     title: item?.title ?? "",
@@ -241,6 +242,13 @@ function FoundItemEditor({
     event.preventDefault();
     await action.run(async () => {
       const missing = [
+        !draft.foundAt && {
+          field: "foundAt",
+          message: t(
+            "발견 날짜와 시각을 선택해 주세요.",
+            "Select the found date and time.",
+          ),
+        },
         !draft.foundBuildingId && {
           field: "foundBuildingId",
           message: t(
@@ -454,21 +462,18 @@ function FoundItemEditor({
               </span>
             )}
           </label>
-          <label className={ui.field}>
-            {t("발견 날짜·시각 (KST) *", "Found date and time (KST) *")}
-            <input
-              type="datetime-local"
-              required
+          <Field
+            label={t("발견 날짜·시각 (KST) *", "Found date and time (KST) *")}
+            error={error("foundAt")}
+          >
+            <DateField
+              label={t("발견 날짜·시각", "Found date and time")}
+              time
               value={draft.foundAt}
-              lang={lang}
-              onChange={(event) => field("foundAt", event.target.value)}
+              max={kstInputValue()}
+              onChange={(value) => field("foundAt", value)}
             />
-            {error("foundAt") && (
-              <span role="alert" className={ui.fieldError}>
-                {error("foundAt")}
-              </span>
-            )}
-          </label>
+          </Field>
           {!item && (
             <LocationFields
               value={location}

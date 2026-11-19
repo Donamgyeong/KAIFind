@@ -1,0 +1,61 @@
+.picker {
+  width: min(402px, 100% - 24px);
+}
+.month {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  text-align: center;
+}
+.calendar > span {
+  color: var(--muted);
+  font-size: 12px;
+  padding: 5px 0;
+}
+.calendar button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  color: var(--brand);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 700;
+}
+.calendar button:hover:not(:disabled) {
+  background: var(--soft);
+}
+.calendar button[aria-pressed="true"] {
+  background: var(--brand);
+  color: white;
+}
+.times {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--divider);
+}
+.actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  text-align: center;
+  color: var(--brand);
+  font-weight: 700;
+}
+.range {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+.range > span {
+  padding-top: 40px;
+}

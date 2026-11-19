@@ -32,13 +32,13 @@ export function kstInputValue(value = new Date().toISOString()) {
     .slice(0, 16);
 }
 
-export function buildingMapUrl(building: Building) {
-  const url = new URL("https://www.google.com/maps/search/");
-  url.search = new URLSearchParams({
-    api: "1",
-    query: "한국과학기술원 " + building.nameKo,
-  }).toString();
-  return url.href;
+export function timeOfDay(value: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Seoul",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date(value));
 }
 
 export function buildingZones(buildings: Building[], t: Translate) {

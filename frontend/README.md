@@ -16,6 +16,8 @@ KAIFIND_TLS_CERT=/path/to/localhost.pem KAIFIND_TLS_KEY=/path/to/localhost-key.p
 
 브라우저에서 [KAIFind](https://localhost:3000)를 엽니다. Vite는 동일 출처의 `/api/v1`을 Compose의 FastAPI 포트 8000으로 전달합니다. 정적 빌드 배포 시에도 같은 HTTPS 호스트에 API 리버스 프록시를 두고, 페이지 경로의 직접 접근은 `index.html`로 처리합니다.
 
+로컬에서 TLS 환경 변수 없이 `npm run dev`를 실행하면 Vite는 `http://localhost:3000`을 사용합니다. `AUTH_ALLOWED_ORIGINS`에는 브라우저 주소와 스킴 및 포트가 모두 일치하는 주소를 넣습니다. HTTP와 HTTPS를 모두 사용하면 `http://localhost:3000,https://localhost:3000`처럼 쉼표로 구분합니다. 저장소 루트의 `.env`를 변경한 뒤 `docker compose up -d backend`로 적용합니다.
+
 ## 구조와 검증
 
 - `src/api`는 API 요청, 세션·CSRF, 응답 타입을 관리합니다.

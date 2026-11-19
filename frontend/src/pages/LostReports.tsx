@@ -1,4 +1,4 @@
-import { ClipboardList, Plus, Search } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSession } from "../api/session-context";
@@ -23,8 +23,6 @@ import {
 import { dateTime, localName } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
-
-const statuses: LostReportStatus[] = ["OPEN", "RESOLVED", "CLOSED"];
 
 function ReportStatus({ status }: { status: LostReportStatus }) {
   const { t } = useSession();
@@ -75,88 +73,84 @@ function MatchStatus({ status }: { status: ProcessingStatus }) {
   );
 }
 
-export function ReportCard({ report }: { report: LostReport }) {
-  const { t, lang } = useSession();
+function ReportCard({
+  report,
+  buildings,
+}: {
+  report: LostReport;
+  buildings: Building[];
+}) {
+  const { t } = useSession();
   const path = "/lost-reports/" + report.reportId;
+  const open = report.status === "OPEN";
+  const matches = useRemote<MatchPage>(open ? path + "/matches?size=1" : null);
+  const codes = report.possibleBuildingIds
+    .map((id) => buildings.find((building) => building.buildingId === id)?.code)
+    .filter(Boolean)
+    .join(", ");
   return (
-    <article className={ui.panel + " " + ui.stack}>
-      <div className={ui.between}>
-        <h2 className={ui.userText}>{report.description}</h2>
-        <ReportStatus status={report.status} />
+    <article>
+      <span className={ui.reportStatus}>
+        {open
+          ? t("찾는 중", "Searching")
+          : report.status === "RESOLVED"
+            ? t("해결 완료", "Resolved")
+            : t("자동 종료", "Closed")}
+      </span>
+      <h3 className={ui.reportTitle}>{report.description}</h3>
+      <div className={ui.reportMeta}>
+        {codes && (
+          <p>
+            {t("분실 추정 건물", "Possible buildings")} · {codes}
+          </p>
+        )}
+        <p>
+          {t("분실 기간", "Lost between")} · {report.lostDateFrom} ~{" "}
+          {report.lostDateTo}
+        </p>
       </div>
-      <p className={ui.muted}>
-        {report.lostDateFrom} ~ {report.lostDateTo}
-      </p>
-      <div className={ui.row}>
-        <span className={ui.muted}>
-          {t("기한", "Expires")} {dateTime(report.expiresAt, lang)} KST
-        </span>
-        <MatchStatus status={report.matchingStatus} />
-      </div>
-      <div className={ui.row}>
-        <Link to={path + "/matches"} className={ui.primary}>
-          <Search size={17} />
-          {t("매칭 후보", "Match candidates")}
+      {open && (
+        <Link to={path + "/matches"} className={ui.reportStatus}>
+          {matches.data?.totalElements
+            ? t(
+                "매칭 후보 " + matches.data.totalElements + "개",
+                matches.data.totalElements + " match candidates",
+              )
+            : t("매칭 후보 보기", "View match candidates")}
         </Link>
-        <Link to={path} className={ui.secondary}>
-          {t("신고 상세", "Report details")}
-        </Link>
-      </div>
+      )}
+      <Link to={path} className={ui.secondary + " " + ui.full}>
+        {t("신고 관리하기", "Manage report")}
+      </Link>
     </article>
   );
 }
 
 export default function LostReports() {
   const { t } = useSession();
-  const [status, setStatus] = useState<LostReportStatus | "">("");
   const [page, setPage] = useState(0);
-  const reports = useRemote<Page<LostReport>>(
-    "/lost-reports?page=" + page + (status ? "&status=" + status : ""),
+  const reports = useRemote<Page<LostReport>>("/lost-reports?page=" + page);
+  const buildings = useRemote<{ items: Building[] }>("/buildings", true);
+  const activeCount = useRemote<Page<LostReport>>(
+    (reports.data?.totalPages ?? 0) > 1
+      ? "/lost-reports?status=OPEN&size=1"
+      : null,
   );
+  const active =
+    reports.data?.items.filter(({ status }) => status === "OPEN") ?? [];
+  const previous =
+    reports.data?.items.filter(({ status }) => status !== "OPEN") ?? [];
   return (
-    <div className={ui.formPage}>
-      <div className={ui.between}>
-        <SectionTitle title={t("분실 신고", "Lost reports")} />
-        <Link to="/lost-reports/new" className={ui.primary}>
-          <Plus size={18} />
-          {t("분실물 등록", "Report lost item")}
-        </Link>
-      </div>
-      <div className={ui.row}>
-        <button
-          type="button"
-          className={ui.chip}
-          aria-pressed={!status}
-          onClick={() => {
-            setStatus("");
-            setPage(0);
-          }}
-        >
-          {t("전체", "All")}
-        </button>
-        {statuses.map((value) => (
-          <button
-            type="button"
-            key={value}
-            className={ui.chip}
-            aria-pressed={status === value}
-            onClick={() => {
-              setStatus(value);
-              setPage(0);
-            }}
-          >
-            <ReportStatus status={value} />
-          </button>
-        ))}
-      </div>
+    <div className={ui.formPage + " " + ui.reportPage}>
+      <SectionTitle title={t("분실 신고", "Lost reports")} />
       {reports.loading && <Loading />}
       {reports.error !== undefined && (
         <ErrorState error={reports.error} retry={reports.reload} />
       )}
       {reports.data?.items.length === 0 && (
         <section className={ui.panel + " " + ui.emptyCard}>
-          <ClipboardList size={34} aria-hidden="true" />
-          <h2>{t("분실 신고 내역이 없어요", "No lost reports here")}</h2>
+          <ClipboardList size={34} strokeWidth={1.65} aria-hidden="true" />
+          <h2>{t("분실 신고 내역이 없어요", "No lost reports yet")}</h2>
           <p>
             {t(
               "분실한 물품을 등록하면 매칭 알림을 받을 수 있어요.",
@@ -165,9 +159,36 @@ export default function LostReports() {
           </p>
         </section>
       )}
-      {reports.data?.items.map((report) => (
-        <ReportCard key={report.reportId} report={report} />
-      ))}
+      {active.length > 0 && (
+        <section className={ui.panel + " " + ui.reportGroup}>
+          <div className={ui.between}>
+            <h2>{t("진행 중인 분실 신고", "Active lost reports")}</h2>
+            <span className={ui.reportCount}>
+              {activeCount.data?.totalElements ?? active.length}
+              {t("건", " reports")}
+            </span>
+          </div>
+          {active.map((report) => (
+            <ReportCard
+              key={report.reportId}
+              report={report}
+              buildings={buildings.data?.items ?? []}
+            />
+          ))}
+        </section>
+      )}
+      {previous.length > 0 && (
+        <section className={ui.panel + " " + ui.reportGroup}>
+          <h2>{t("이전 분실 신고", "Previous lost reports")}</h2>
+          {previous.map((report) => (
+            <ReportCard
+              key={report.reportId}
+              report={report}
+              buildings={buildings.data?.items ?? []}
+            />
+          ))}
+        </section>
+      )}
       {reports.data && (
         <Pagination
           page={page}
@@ -175,6 +196,11 @@ export default function LostReports() {
           change={setPage}
         />
       )}
+      <div className={ui.reportFooter}>
+        <Link to="/lost-reports/new" className={ui.primary + " " + ui.full}>
+          {t("새 분실 신고하기", "New lost report")}
+        </Link>
+      </div>
     </div>
   );
 }

@@ -77,6 +77,7 @@ function Shell() {
   const [notificationRevision, setNotificationRevision] = useState<number>();
   const location = useLocation();
   const navigate = useNavigate();
+  const viewingThread = /^\/conversations\/[^/]+\/?$/.test(location.pathname);
   const links = [
     { to: "/", label: t("홈", "Home"), Icon: House },
     { to: "/lost-reports", label: t("찾기", "Find"), Icon: Search },
@@ -180,7 +181,11 @@ function Shell() {
           </div>
         </div>
       </header>
-      <main id="main" className={styles.main} key={revision}>
+      <main
+        id="main"
+        className={styles.main + (viewingThread ? " " + styles.chatMain : "")}
+        key={revision}
+      >
         {error !== undefined && <ErrorState error={error} />}
         <Routes>
           <Route path="/" element={<Home />} />
@@ -381,12 +386,14 @@ function Shell() {
           <NotificationPopup close={() => setNotificationRevision(undefined)} />
         )}
       </main>
-      <nav
-        className={styles.mobileNav}
-        aria-label={t("주 메뉴", "Main navigation")}
-      >
-        {nav}
-      </nav>
+      {!viewingThread && (
+        <nav
+          className={styles.mobileNav}
+          aria-label={t("주 메뉴", "Main navigation")}
+        >
+          {nav}
+        </nav>
+      )}
     </>
   );
 }

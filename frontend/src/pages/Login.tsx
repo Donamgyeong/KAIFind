@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { LogIn } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSession } from "../api/session-context";
 import type { MockAccount } from "../api/types";
+import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { Dialog, ErrorState, Loading } from "../ui/controls";
-import ui from "../ui/ui.module.css";
+import styles from "./profile.module.css";
 
 function destination(path: string | null) {
   return path?.startsWith("/") &&
@@ -24,67 +24,69 @@ export default function Login({ onClose }: { onClose: () => void }) {
   );
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const [selected, setSelected] = useState("");
-  const [error, setError] = useState<unknown>();
-  const [busy, setBusy] = useState(false);
+  const action = useAction();
+  const affiliations = {
+    STUDENT: t("학생", "Student"),
+    FACULTY: t("교원", "Faculty"),
+    STAFF: t("직원", "Staff"),
+  };
+
   return (
-    <Dialog title={t("KAIFind 로그인", "Sign in to KAIFind")} close={onClose}>
-      <form
-        className={ui.stack}
-        onSubmit={async (event) => {
-          event.preventDefault();
-          if (busy || !selected) return;
-          setBusy(true);
-          setError(undefined);
-          try {
-            await signIn(selected);
-            navigate(destination(params.get("returnTo")), { replace: true });
-          } catch (failure) {
-            setError(failure);
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        <p className={ui.muted}>
+    <Dialog
+      title={t("KAIFind 로그인", "Sign in to KAIFind")}
+      className={styles.loginDialog}
+      close={() => {
+        if (!action.busy) onClose();
+      }}
+    >
+      {accounts.loading && <Loading />}
+      {accounts.error !== undefined && (
+        <ErrorState error={accounts.error} retry={accounts.reload} />
+      )}
+      <div className={styles.loginAccounts} aria-busy={action.busy}>
+        {accounts.data?.accounts.map((account) => (
+          <button
+            key={account.mockAccountId}
+            type="button"
+            className={styles.loginAccount}
+            disabled={action.busy}
+            onClick={() =>
+              void action.run(async () => {
+                await signIn(account.mockAccountId);
+                navigate(destination(params.get("returnTo")), {
+                  replace: true,
+                });
+              })
+            }
+          >
+            <span className={styles.accountAvatar} aria-hidden="true">
+              {
+                Array.from(
+                  account.displayName.replace(/^(테스트|test)\s+/i, ""),
+                )[0]
+              }
+            </span>
+            <span className={styles.accountIdentity}>
+              <strong>{account.displayName}</strong>
+              <small>
+                {account.role === "ADMIN"
+                  ? t("관리자", "Administrator")
+                  : affiliations[account.affiliation]}
+              </small>
+            </span>
+            <ChevronRight size={20} strokeWidth={1.65} aria-hidden="true" />
+          </button>
+        ))}
+      </div>
+      {action.error !== undefined && <ErrorState error={action.error} />}
+      {accounts.data?.accounts.length ? (
+        <p className={styles.loginNote}>
           {t(
-            "시연용 KAIST 계정을 선택해 주세요.",
-            "Choose a KAIST demo account.",
+            "시연용 가상 프로필입니다.",
+            "These profiles are for demonstration.",
           )}
         </p>
-        {accounts.loading && <Loading />}
-        {accounts.error !== undefined && (
-          <ErrorState error={accounts.error} retry={accounts.reload} />
-        )}
-        {accounts.data?.accounts.map((account) => (
-          <label
-            key={account.mockAccountId}
-            className={ui.panel + " " + ui.row}
-          >
-            <input
-              type="radio"
-              name="account"
-              value={account.mockAccountId}
-              checked={selected === account.mockAccountId}
-              onChange={() => setSelected(account.mockAccountId)}
-              disabled={busy}
-            />
-            {account.displayName}
-            {account.role === "ADMIN" && (
-              <span className={ui.badge}>{t("관리자", "Admin")}</span>
-            )}
-          </label>
-        ))}
-        {error !== undefined && <ErrorState error={error} />}
-        <button
-          type="submit"
-          className={ui.primary}
-          disabled={!selected || busy}
-        >
-          <LogIn size={18} />
-          {t("로그인", "Sign in")}
-        </button>
-      </form>
+      ) : null}
     </Dialog>
   );
 }

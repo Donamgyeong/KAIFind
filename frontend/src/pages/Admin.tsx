@@ -5,6 +5,7 @@ import type { Page, Role } from "../api/types";
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { Dialog, ErrorState, Loading, Pagination } from "../ui/controls";
+import DateField from "../ui/DateField";
 import { dateTime, statusLabel } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
@@ -259,11 +260,15 @@ function Audit() {
         </label>
         <label className={ui.field}>
           {t("시작 시각 (KST)", "From (KST)")}
-          <input type="datetime-local" name="from" />
+          <DateField
+            label={t("시작 시각 (KST)", "From (KST)")}
+            name="from"
+            time
+          />
         </label>
         <label className={ui.field}>
           {t("종료 시각 (KST)", "To (KST)")}
-          <input type="datetime-local" name="to" />
+          <DateField label={t("종료 시각 (KST)", "To (KST)")} name="to" time />
         </label>
         <button className={ui.primary} type="submit">
           {t("조회", "Apply filters")}

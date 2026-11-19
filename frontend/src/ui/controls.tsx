@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { ApiError } from "../api/client";
 import { useSession } from "../api/session-context";
 import type { Building, ItemStatus } from "../api/types";
@@ -79,10 +79,12 @@ export function Dialog({
   title,
   close,
   children,
+  className,
 }: {
   title: string;
   close: () => void;
   children: ReactNode;
+  className?: string;
 }) {
   const { t } = useSession();
   const ref = useRef<HTMLDialogElement>(null);
@@ -95,7 +97,7 @@ export function Dialog({
   return (
     <dialog
       ref={ref}
-      className={styles.dialog}
+      className={[styles.dialog, className].filter(Boolean).join(" ")}
       aria-labelledby={id}
       onCancel={(event) => {
         event.preventDefault();
@@ -122,7 +124,7 @@ export function Dialog({
           aria-label={t("닫기", "Close")}
           onClick={close}
         >
-          <X size={21} />
+          <X size={20} strokeWidth={1.65} />
         </button>
       </div>
       {children}
@@ -163,6 +165,7 @@ export function BuildingPicker({
       <button
         type="button"
         className={styles.selectButton}
+        data-placeholder={multiple || selected.length === 0}
         disabled={disabled}
         aria-haspopup="dialog"
         onClick={() => {
@@ -170,8 +173,8 @@ export function BuildingPicker({
           setOpen(true);
         }}
       >
-        {summary}
-        <ChevronRight size={16} />
+        <span>{summary}</span>
+        <ChevronDown size={16} strokeWidth={1.65} />
       </button>
       {open && (
         <Dialog title={label} close={() => setOpen(false)}>

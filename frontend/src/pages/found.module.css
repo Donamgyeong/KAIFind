@@ -45,11 +45,6 @@
   font-size: 0.84rem;
   color: var(--muted);
 }
-.location a {
-  min-height: 36px;
-  padding: 6px 10px;
-  font-size: 0.8rem;
-}
 .storagePhoto {
   max-height: 280px;
   border-radius: 12px;

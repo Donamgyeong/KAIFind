@@ -1,5 +1,6 @@
+import BuildingMap from "../ui/BuildingMap";
 import { useState } from "react";
-import { LockKeyhole, MapPin } from "lucide-react";
+import { LockKeyhole } from "lucide-react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSession } from "../api/session-context";
 import type {
@@ -18,7 +19,7 @@ import {
   Pagination,
   Status,
 } from "../ui/controls";
-import { buildingMapUrl, dateTime, localName } from "../ui/format";
+import { dateTime, localName } from "../ui/format";
 import PhotoView from "../ui/PhotoView";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
@@ -33,7 +34,7 @@ function BuildingLocation({
   building: Building;
   description?: string | null;
 }) {
-  const { t, lang } = useSession();
+  const { lang } = useSession();
   return (
     <div className={styles.location}>
       <div>
@@ -42,15 +43,7 @@ function BuildingLocation({
         </strong>
         {description && <p>{description}</p>}
       </div>
-      <a
-        className={ui.secondary}
-        href={buildingMapUrl(building)}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <MapPin size={17} />
-        {t("지도에서 보기", "View on map")}
-      </a>
+      <BuildingMap building={building} />
     </div>
   );
 }

@@ -12,7 +12,7 @@
 }
 .brand {
   color: var(--brand);
-  font-size: 1.5rem;
+  font-size: 24px;
   line-height: 1;
   font-weight: 800;
   letter-spacing: -0.035em;
@@ -25,7 +25,7 @@
 }
 .language {
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 10px;
   border: 0;
   background: transparent;
   min-height: 44px;
@@ -70,7 +70,7 @@
   align-items: center;
   justify-content: center;
   gap: 3px;
-  font-size: 0.69rem;
+  font-size: 11px;
 }
 .mobileNav .active,
 .desktopNav .active {
@@ -117,4 +117,8 @@
   .desktopNav svg {
     display: none;
   }
+}
+
+.chatMain {
+  padding: 0 16px;
 }

@@ -27,9 +27,9 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 46px;
+  min-height: 48px;
   padding: 9px 16px;
-  border-radius: 14px;
+  border-radius: 16px;
   border: 1px solid transparent;
   font-weight: 700;
   text-align: center;
@@ -78,7 +78,7 @@
   border-radius: 999px;
   background: var(--soft);
   color: var(--brand);
-  font-size: 0.74rem;
+  font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -129,7 +129,7 @@
   min-width: 0;
 }
 .fieldLabel {
-  font-size: 0.88rem;
+  font-size: 12px;
   font-weight: 700;
 }
 .fieldError {
@@ -139,7 +139,10 @@
 .selectButton {
   border: 1px solid var(--border);
   padding: 10px 12px;
-  min-height: 48px;
+  min-width: 0;
+  min-height: 52px;
+  font-size: var(--field-text-size);
+  font-weight: 400;
   background: var(--surface);
   border-radius: 12px;
   color: var(--ink);
@@ -149,6 +152,13 @@
   align-items: center;
   text-align: start;
   gap: 12px;
+}
+.selectButton[data-placeholder="true"] {
+  color: var(--muted);
+}
+.selectButton span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .selectButton svg {
   color: var(--brand);
@@ -246,10 +256,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 50px;
+  min-height: 42px;
 }
 .pageTitle h1 {
-  font-size: 1.14rem;
+  font-size: 20px;
 }
 .pageTitle a {
   margin-left: -6px;
@@ -406,4 +416,104 @@
 }
 .buildingOptions button:first-child {
   border-top: 0;
+}
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+.switchControl {
+  appearance: none;
+  width: 44px;
+  height: 26px;
+  flex: 0 0 44px;
+  margin: 0;
+  position: relative;
+  border: 0;
+  border-radius: 999px;
+  background: #c6cfdd;
+  cursor: pointer;
+}
+.switchControl::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 150ms ease;
+}
+.switchControl:checked {
+  background: var(--brand);
+}
+.switchControl:checked::before {
+  transform: translateX(18px);
+}
+.switchControl:disabled {
+  opacity: 0.56;
+  cursor: default;
+}
+
+.reportPage {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: calc(100dvh - 180px - env(safe-area-inset-bottom));
+}
+.reportFooter {
+  margin-top: auto;
+  padding-top: 8px;
+}
+@media (max-width: 799px) {
+  .reportPage {
+    padding-bottom: 60px;
+  }
+  .reportFooter {
+    position: fixed;
+    z-index: 2;
+    inset: auto 0 0;
+    padding: 8px 20px calc(108px + env(safe-area-inset-bottom));
+    background: var(--bg);
+    pointer-events: none;
+  }
+  .reportFooter > a {
+    pointer-events: auto;
+  }
+}
+.reportGroup {
+  display: grid;
+  gap: 12px;
+}
+.reportGroup > article {
+  border-top: 1px solid var(--divider);
+  padding-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+.reportCount {
+  color: var(--brand);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.reportStatus {
+  color: var(--brand);
+  font-size: 12px;
+}
+@media (min-width: 800px) {
+  .reportPage {
+    min-height: calc(100dvh - 167px);
+  }
+}
+.reportTitle {
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+.reportMeta {
+  color: var(--muted);
+  font-size: 12px;
 }

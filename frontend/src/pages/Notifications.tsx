@@ -1,6 +1,6 @@
-import { ArrowUpRight, Bell, Check } from "lucide-react";
+import { Bell, Check, Clock3, Search } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSession } from "../api/session-context";
 import type { Notification, Page } from "../api/types";
 import { useAction } from "../api/useAction";
@@ -27,47 +27,31 @@ function safeTarget(notification: Notification) {
 function NotificationList({ onNavigate }: { onNavigate?: () => void }) {
   const { api, t, lang } = useSession();
   const navigate = useNavigate();
-  const [unread, setUnread] = useState(false);
   const [page, setPage] = useState(0);
-  const query = useRemote<Page<Notification>>(
-    "/me/notifications?page=" + page + "&unreadOnly=" + unread,
-  );
+  const query = useRemote<Page<Notification>>("/me/notifications?page=" + page);
   const action = useAction();
+  const labels = {
+    MATCH_CANDIDATE: { Icon: Search, label: t("매칭 알림", "Match alert") },
+    ITEM_COLLECTED: { Icon: Check, label: t("수령 완료", "Item collected") },
+    ITEM_EXPIRED: { Icon: Clock3, label: t("물품 만료", "Item expired") },
+    KEYWORD_MATCH: { Icon: Bell, label: t("키워드 알림", "Keyword alert") },
+  };
 
-  async function mark(notification: Notification, open: boolean) {
+  async function open(notification: Notification) {
     await action.run(async () => {
       if (!notification.readAt) {
         await api.request("/me/notifications/" + notification.notificationId, {
           method: "PATCH",
           body: { read: true },
         });
-        query.reload();
       }
-      if (open) {
-        onNavigate?.();
-        navigate(safeTarget(notification));
-      }
+      onNavigate?.();
+      navigate(safeTarget(notification));
     });
   }
 
   return (
     <div className={ui.stack}>
-      <div className={ui.between}>
-        <label className={ui.row}>
-          <input
-            type="checkbox"
-            checked={unread}
-            onChange={(event) => {
-              setUnread(event.target.checked);
-              setPage(0);
-            }}
-          />
-          {t("안 읽은 알림만", "Unread only")}
-        </label>
-        <button className={ui.textButton} type="button" onClick={query.reload}>
-          {t("새로고침", "Refresh")}
-        </button>
-      </div>
       {query.loading && <Loading />}
       {query.error !== undefined && (
         <ErrorState error={query.error} retry={query.reload} />
@@ -78,41 +62,40 @@ function NotificationList({ onNavigate }: { onNavigate?: () => void }) {
           {t("표시할 알림이 없어요.", "No notifications to show.")}
         </p>
       )}
-      <ul className={styles.notificationList}>
-        {query.data?.items.map((notification) => (
-          <li
-            key={notification.notificationId}
-            data-unread={!notification.readAt}
-          >
-            <button
-              type="button"
-              className={styles.notification}
-              disabled={action.busy}
-              onClick={() => void mark(notification, true)}
-            >
-              <Bell size={18} aria-hidden="true" />
-              <span>
-                <strong>{notification.message}</strong>
-                <time dateTime={notification.createdAt}>
-                  {dateTime(notification.createdAt, lang)} KST
-                </time>
-              </span>
-              <ArrowUpRight size={16} aria-hidden="true" />
-            </button>
-            {!notification.readAt && (
-              <button
-                type="button"
-                disabled={action.busy}
-                className={ui.iconButton}
-                aria-label={t("읽음 처리", "Mark as read")}
-                onClick={() => void mark(notification, false)}
-              >
-                <Check size={18} />
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
+      {query.data?.items.length ? (
+        <ul className={styles.notificationList}>
+          {query.data.items.map((notification) => {
+            const { Icon, label } = labels[notification.type];
+            return (
+              <li key={notification.notificationId}>
+                <button
+                  type="button"
+                  className={styles.notification}
+                  data-unread={!notification.readAt}
+                  disabled={action.busy}
+                  onClick={() => void open(notification)}
+                >
+                  <span className={styles.notificationMeta}>
+                    <Icon size={22} strokeWidth={1.65} aria-hidden="true" />
+                    <span>{label}</span>
+                    <time dateTime={notification.createdAt}>
+                      {dateTime(notification.createdAt, lang)}
+                    </time>
+                    {!notification.readAt && (
+                      <span
+                        className={styles.unreadDot}
+                        role="img"
+                        aria-label={t("읽지 않음", "Unread")}
+                      />
+                    )}
+                  </span>
+                  <strong>{notification.message}</strong>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
       {query.data && (
         <Pagination
           page={page}
@@ -139,15 +122,12 @@ export default function Notifications() {
 export function NotificationPopup({ close }: { close: () => void }) {
   const { t } = useSession();
   return (
-    <Dialog title={t("알림", "Notifications")} close={close}>
+    <Dialog
+      title={t("알림", "Notifications")}
+      className={styles.notificationDialog}
+      close={close}
+    >
       <NotificationList onNavigate={close} />
-      <Link
-        className={ui.secondary + " " + ui.full}
-        to="/me/notifications"
-        onClick={close}
-      >
-        {t("전체 알림 보기", "View all notifications")}
-      </Link>
     </Dialog>
   );
 }

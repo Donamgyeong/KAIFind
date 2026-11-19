@@ -45,7 +45,9 @@ export function StartConversation({ item }: { item: ItemDetail }) {
               "/conversations",
               { method: "POST", body: { itemId: item.itemId } },
             );
-            navigate("/conversations/" + conversation.conversationId);
+            navigate("/conversations/" + conversation.conversationId, {
+              state: { conversation, back: "/found-items/" + item.itemId },
+            });
           })
         }
       >

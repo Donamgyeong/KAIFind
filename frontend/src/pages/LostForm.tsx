@@ -11,8 +11,10 @@ import type {
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { BuildingPicker, ErrorState, Field, Loading } from "../ui/controls";
+import DateField from "../ui/DateField";
+import dateStyles from "../ui/date-field.module.css";
 import { fieldError } from "../ui/fieldError";
-import { localName } from "../ui/format";
+import { kstInputValue, localName } from "../ui/format";
 import { CategorySelect } from "../ui/ReferenceFields";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
@@ -70,6 +72,20 @@ function ReportEditor({
               throw new ApiError(400, "VALIDATION_ERROR", message, [
                 { field: "possibleBuildingIds", code: "REQUIRED", message },
               ]);
+            }
+            if (!draft.lostDateFrom || !draft.lostDateTo) {
+              const message = t(
+                "분실 시작일과 종료일을 선택해 주세요.",
+                "Select both dates.",
+              );
+              throw new ApiError(
+                400,
+                "VALIDATION_ERROR",
+                message,
+                (["lostDateFrom", "lostDateTo"] as const)
+                  .filter((key) => !draft[key])
+                  .map((key) => ({ field: key, code: "REQUIRED", message })),
+              );
             }
             const saved = await api.request<LostReport>(path, {
               method: report ? "PUT" : "POST",
@@ -168,36 +184,32 @@ function ReportEditor({
               )}
             </p>
           </Field>
-          <label className={ui.field}>
-            {t("분실 날짜 시작 (KST) *", "Lost date from (KST) *")}
-            <input
-              type="date"
-              required
-              value={draft.lostDateFrom}
-              max={draft.lostDateTo || undefined}
-              onChange={(event) => change("lostDateFrom", event.target.value)}
-            />
-            {field("lostDateFrom") && (
-              <span className={ui.fieldError} role="alert">
-                {field("lostDateFrom")}
-              </span>
-            )}
-          </label>
-          <label className={ui.field}>
-            {t("분실 날짜 종료 (KST) *", "Lost date to (KST) *")}
-            <input
-              type="date"
-              required
-              value={draft.lostDateTo}
-              min={draft.lostDateFrom || undefined}
-              onChange={(event) => change("lostDateTo", event.target.value)}
-            />
-            {field("lostDateTo") && (
-              <span className={ui.fieldError} role="alert">
-                {field("lostDateTo")}
-              </span>
-            )}
-          </label>
+          <div className={dateStyles.range}>
+            <Field
+              label={t("시작 날짜 (KST) *", "Date from (KST) *")}
+              error={field("lostDateFrom")}
+            >
+              <DateField
+                label={t("분실 날짜 시작", "Lost date from")}
+                value={draft.lostDateFrom}
+                max={draft.lostDateTo || kstInputValue().slice(0, 10)}
+                onChange={(value) => change("lostDateFrom", value)}
+              />
+            </Field>
+            <span aria-hidden="true">~</span>
+            <Field
+              label={t("종료 날짜 (KST) *", "Date to (KST) *")}
+              error={field("lostDateTo")}
+            >
+              <DateField
+                label={t("분실 날짜 종료", "Lost date to")}
+                value={draft.lostDateTo}
+                min={draft.lostDateFrom || undefined}
+                max={kstInputValue().slice(0, 10)}
+                onChange={(value) => change("lostDateTo", value)}
+              />
+            </Field>
+          </div>
           <label className={ui.field}>
             {t("비공개 식별 정보 *", "Private identifying details *")}
             <textarea
