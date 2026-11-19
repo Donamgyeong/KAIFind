@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ApiError } from "../api/client";
 import { useSession } from "../api/session-context";
 import type {
   Building,
@@ -9,11 +8,12 @@ import type {
   LostReportInput,
 } from "../api/types";
 import { useAction } from "../api/useAction";
+import { useBuildings, useCategories } from "../api/useReferences";
 import { useRemote } from "../api/useRemote";
 import { ErrorState, Field, Loading } from "../ui/controls";
 import DateField from "../ui/DateField";
 import dateStyles from "../ui/date-field.module.css";
-import { fieldError } from "../ui/fieldError";
+import { fieldError, requiredFieldsError } from "../ui/fieldError";
 import { kstInputValue, localName } from "../ui/format";
 import { BuildingPicker, CategorySelect } from "../ui/ReferenceFields";
 import SectionTitle from "../ui/SectionTitle";
@@ -69,17 +69,15 @@ function ReportEditor({
                 "물품 분류를 선택해 주세요.",
                 "Select a category.",
               );
-              throw new ApiError(400, "VALIDATION_ERROR", message, [
-                { field: "categoryId", code: "REQUIRED", message },
-              ]);
+              throw requiredFieldsError(message, [{ field: "categoryId" }]);
             }
             if (!draft.possibleBuildingIds.length) {
               const message = t(
                 "분실 추정 건물을 한 곳 이상 선택해 주세요.",
                 "Choose at least one possible building.",
               );
-              throw new ApiError(400, "VALIDATION_ERROR", message, [
-                { field: "possibleBuildingIds", code: "REQUIRED", message },
+              throw requiredFieldsError(message, [
+                { field: "possibleBuildingIds" },
               ]);
             }
             if (!draft.lostDateFrom || !draft.lostDateTo) {
@@ -87,13 +85,11 @@ function ReportEditor({
                 "분실 시작일과 종료일을 선택해 주세요.",
                 "Select both dates.",
               );
-              throw new ApiError(
-                400,
-                "VALIDATION_ERROR",
+              throw requiredFieldsError(
                 message,
                 (["lostDateFrom", "lostDateTo"] as const)
                   .filter((key) => !draft[key])
-                  .map((key) => ({ field: key, code: "REQUIRED", message })),
+                  .map((field) => ({ field })),
               );
             }
             const saved = await api.request<LostReport>(path, {
@@ -265,8 +261,8 @@ export default function LostForm() {
   const report = useRemote<LostReport>(
     reportId ? "/lost-reports/" + reportId : null,
   );
-  const categories = useRemote<{ items: Category[] }>("/categories", true);
-  const buildings = useRemote<{ items: Building[] }>("/buildings", true);
+  const categories = useCategories();
+  const buildings = useBuildings();
   for (const resource of [report, categories, buildings]) {
     if (resource.error !== undefined)
       return <ErrorState error={resource.error} retry={resource.reload} />;

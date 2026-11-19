@@ -1,7 +1,31 @@
-import type { Building, Category, ItemStatus, Language } from "../api/types";
+import type {
+  Affiliation,
+  Building,
+  Category,
+  ItemStatus,
+  Language,
+} from "../api/types";
 import type { Translate } from "../api/session-context";
 
+const campusTimeZone = "Asia/Seoul";
+const kstOffsetHours = 9;
+const preferredCategoryNames = [
+  "전자기기",
+  "카드·지갑",
+  "생활용품",
+  "의류",
+  "기타",
+];
+
 export const itemStatuses: ItemStatus[] = ["POSTED", "COLLECTED", "EXPIRED"];
+
+export function affiliationLabel(affiliation: Affiliation, t: Translate) {
+  return {
+    STUDENT: t("학생", "Student"),
+    FACULTY: t("교원", "Faculty"),
+    STAFF: t("직원", "Staff"),
+  }[affiliation];
+}
 
 export function statusLabel(status: ItemStatus, t: Translate) {
   return {
@@ -16,17 +40,16 @@ export function localName(value: Building | Category, lang: Language) {
 }
 
 export function orderCategories(categories: Category[]) {
-  const order = ["전자기기", "카드·지갑", "생활용품", "의류", "기타"];
   const priority = ({ nameKo }: Category) => {
-    const index = order.indexOf(nameKo);
-    return index === -1 ? order.length : index;
+    const index = preferredCategoryNames.indexOf(nameKo);
+    return index === -1 ? preferredCategoryNames.length : index;
   };
   return [...categories].sort((a, b) => priority(a) - priority(b));
 }
 
 export function dateTime(value: string, lang: Language) {
   return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-GB", {
-    timeZone: "Asia/Seoul",
+    timeZone: campusTimeZone,
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -35,15 +58,23 @@ export function dateTime(value: string, lang: Language) {
   }).format(new Date(value));
 }
 
+export function kstDateTime(value: string, lang: Language) {
+  return dateTime(value, lang) + " KST";
+}
+
+export function kstTimestamp(input: string) {
+  return input + ":00+" + String(kstOffsetHours).padStart(2, "0") + ":00";
+}
+
 export function kstInputValue(value = new Date().toISOString()) {
-  return new Date(new Date(value).getTime() + 9 * 60 * 60 * 1000)
+  return new Date(new Date(value).getTime() + kstOffsetHours * 60 * 60 * 1000)
     .toISOString()
     .slice(0, 16);
 }
 
 export function timeOfDay(value: string) {
   return new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Asia/Seoul",
+    timeZone: campusTimeZone,
     hour: "2-digit",
     minute: "2-digit",
     hourCycle: "h23",

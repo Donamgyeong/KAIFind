@@ -1,7 +1,6 @@
 import BuildingMap from "../ui/BuildingMap";
 import { useSession } from "../api/session-context";
-import type { Building } from "../api/types";
-import { useRemote } from "../api/useRemote";
+import { useBuildings } from "../api/useReferences";
 import { ErrorState, Loading } from "../ui/controls";
 import { buildingZones, localName } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
@@ -9,10 +8,7 @@ import ui from "../ui/ui.module.css";
 
 export default function Buildings() {
   const { t, lang } = useSession();
-  const result = useRemote<{ items: Building[] }>(
-    "/buildings?includePostedCount=true",
-    true,
-  );
+  const result = useBuildings(true);
   return (
     <div className={ui.formPage}>
       <SectionTitle

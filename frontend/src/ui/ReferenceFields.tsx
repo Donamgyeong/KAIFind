@@ -1,9 +1,10 @@
-import { Check, ChevronDown, ChevronRight } from "lucide-react";
-import { useId, useState } from "react";
+import { Check, ChevronRight } from "lucide-react";
+import { useState } from "react";
 import { useSession } from "../api/session-context";
 import type { Building, Category } from "../api/types";
 import { Dialog } from "./controls";
 import { buildingZones, localName, orderCategories } from "./format";
+import PickerButton from "./PickerButton";
 import styles from "./reference-fields.module.css";
 import ui from "./ui.module.css";
 
@@ -50,27 +51,16 @@ export function CategorySelect({
 }) {
   const { t, lang } = useSession();
   const [open, setOpen] = useState(false);
-  const selectionId = useId();
   const selected = categories.find((category) => category.categoryId === value);
   return (
     <>
-      <button
-        type="button"
-        className={ui.selectButton}
-        aria-label={label}
-        aria-describedby={selected ? selectionId : undefined}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        data-placeholder={!selected}
-        onClick={() => setOpen(true)}
-      >
-        <span id={selectionId}>
-          {selected
-            ? localName(selected, lang)
-            : t("물품 분류를 선택해 주세요", "Select a category")}
-        </span>
-        <ChevronDown size={16} strokeWidth={1.65} aria-hidden="true" />
-      </button>
+      <PickerButton
+        label={label}
+        value={selected ? localName(selected, lang) : undefined}
+        placeholder={t("물품 분류를 선택해 주세요", "Select a category")}
+        open={open}
+        onOpen={() => setOpen(true)}
+      />
       {open && (
         <Dialog
           title={t("분류 선택", "Choose a category")}
@@ -123,27 +113,21 @@ export function BuildingPicker({
   const selected = buildings.find((building) =>
     values.includes(building.buildingId),
   );
-  const showSelection = !multiple && !!selected;
+  const summary =
+    !multiple && selected
+      ? selected.code + " · " + localName(selected, lang)
+      : undefined;
   return (
     <>
-      <button
-        type="button"
-        className={ui.selectButton}
-        data-placeholder={!showSelection}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        onClick={() => {
+      <PickerButton
+        value={summary}
+        placeholder={label}
+        open={open}
+        onOpen={() => {
           setZone(undefined);
           setOpen(true);
         }}
-      >
-        <span>
-          {showSelection
-            ? selected.code + " · " + localName(selected, lang)
-            : label}
-        </span>
-        <ChevronDown size={16} strokeWidth={1.65} aria-hidden="true" />
-      </button>
+      />
       {open && (
         <Dialog
           title={label}

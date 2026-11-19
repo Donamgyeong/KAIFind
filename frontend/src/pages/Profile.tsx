@@ -14,18 +14,39 @@ import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { Dialog, ErrorState, Loading, Pagination } from "../ui/controls";
 import { fieldError } from "../ui/fieldError";
-import { dateTime } from "../ui/format";
+import { affiliationLabel, dateTime } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
 import Switch from "../ui/Switch";
 import ui from "../ui/ui.module.css";
 import { ConversationRow } from "./Messages";
 import styles from "./profile.module.css";
 
+const notificationSettingsPath = "/me/notification-settings";
+
+function useNotificationSettings() {
+  const { api } = useSession();
+  const settings = useRemote<NotificationSettings>(notificationSettingsPath);
+
+  async function save(value: NotificationSettings) {
+    const updated = await api.request<NotificationSettings>(
+      notificationSettingsPath,
+      {
+        method: "PUT",
+        body: value,
+      },
+    );
+    settings.reload();
+    return updated;
+  }
+
+  return { ...settings, save };
+}
+
 export default function Profile() {
-  const { user, api, signOut, lang, t } = useSession();
+  const { user, signOut, lang, t } = useSession();
   const navigate = useNavigate();
   const account = useRemote<User>("/me/profile");
-  const settings = useRemote<NotificationSettings>("/me/notification-settings");
+  const settings = useNotificationSettings();
   const [chatPage, setChatPage] = useState(0);
   const [reportPage, setReportPage] = useState(0);
   const chats = useRemote<Page<Conversation>>(
@@ -49,13 +70,7 @@ export default function Profile() {
               <h2>{profile.name}</h2>
             </div>
             <p className={styles.profileAffiliation}>
-              {
-                {
-                  STUDENT: t("학생", "Student"),
-                  FACULTY: t("교원", "Faculty"),
-                  STAFF: t("직원", "Staff"),
-                }[profile.affiliation]
-              }
+              {affiliationLabel(profile.affiliation, t)}
             </p>
           </>
         )}
@@ -73,13 +88,9 @@ export default function Profile() {
             onChange={(checked) => {
               const previous = settings.data;
               if (!previous) return;
-              void action.run(async () => {
-                await api.request("/me/notification-settings", {
-                  method: "PUT",
-                  body: { ...previous, matchEmail: checked },
-                });
-                settings.reload();
-              });
+              void action.run(() =>
+                settings.save({ ...previous, matchEmail: checked }),
+              );
             }}
           />
         )}
@@ -222,12 +233,12 @@ export default function Profile() {
 
 function EmailForm({
   initial,
-  reload,
+  save,
 }: {
   initial: NotificationSettings;
-  reload: () => void;
+  save: (value: NotificationSettings) => Promise<NotificationSettings>;
 }) {
-  const { t, api } = useSession();
+  const { t } = useSession();
   const [draft, setDraft] = useState(initial);
   const [saved, setSaved] = useState(false);
   const action = useAction();
@@ -244,13 +255,8 @@ function EmailForm({
       onSubmit={(event) => {
         event.preventDefault();
         void action.run(async () => {
-          const value = await api.request<NotificationSettings>(
-            "/me/notification-settings",
-            { method: "PUT", body: draft },
-          );
-          setDraft(value);
+          setDraft(await save(draft));
           setSaved(true);
-          reload();
         });
       }}
     >
@@ -283,7 +289,7 @@ function EmailForm({
 
 export function EmailSettings() {
   const { t } = useSession();
-  const settings = useRemote<NotificationSettings>("/me/notification-settings");
+  const settings = useNotificationSettings();
   return (
     <div className={ui.formPage}>
       <SectionTitle
@@ -295,7 +301,7 @@ export function EmailSettings() {
         <ErrorState error={settings.error} retry={settings.reload} />
       )}
       {settings.data && (
-        <EmailForm initial={settings.data} reload={settings.reload} />
+        <EmailForm initial={settings.data} save={settings.save} />
       )}
     </div>
   );

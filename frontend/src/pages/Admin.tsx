@@ -6,7 +6,7 @@ import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { Dialog, ErrorState, Loading, Pagination } from "../ui/controls";
 import DateField from "../ui/DateField";
-import { dateTime, statusLabel } from "../ui/format";
+import { kstDateTime, kstTimestamp, statusLabel } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
 import AdminReference from "./AdminReference";
@@ -43,7 +43,7 @@ function Overview() {
         ))}
       </div>
       <small className={ui.muted}>
-        {t("집계 시각", "As of")} {dateTime(asOf, lang)} KST
+        {t("집계 시각", "As of")} {kstDateTime(asOf, lang)}
       </small>
     </div>
   );
@@ -232,7 +232,7 @@ function Audit() {
             if (value)
               params.set(
                 key,
-                key === "from" || key === "to" ? value + ":00+09:00" : value,
+                key === "from" || key === "to" ? kstTimestamp(value) : value,
               );
           }
           setFilter(params.size ? "&" + params.toString() : "");
@@ -291,7 +291,7 @@ function Audit() {
           <summary>
             <strong>{entry.action}</strong>
             <time dateTime={entry.occurredAt}>
-              {dateTime(entry.occurredAt, lang)} KST
+              {kstDateTime(entry.occurredAt, lang)}
             </time>
           </summary>
           <dl>

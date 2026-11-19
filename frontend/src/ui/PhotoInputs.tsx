@@ -1,9 +1,19 @@
 import { Camera, ImagePlus, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import type { ChangeEvent } from "react";
 import { useSession } from "../api/session-context";
 import type { Photo } from "../api/types";
 import PhotoView from "./PhotoView";
 import styles from "./ui.module.css";
+
+const photoFormats = {
+  "image/jpeg": [".jpg", ".jpeg"],
+  "image/png": [".png"],
+  "image/webp": [".webp"],
+};
+const photoMimeTypes = Object.keys(photoFormats);
+const photoExtensions = Object.values(photoFormats).flat();
+const photoAccept = [...photoMimeTypes, ...photoExtensions].join(",");
 
 export interface PhotoDraft {
   key: string;
@@ -39,14 +49,19 @@ export default function PhotoInputs({
 }) {
   const { t } = useSession();
   const [problem, setProblem] = useState("");
-  const accept = "image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp";
-  function add(files: FileList | null) {
+  function add(event: ChangeEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    const files = input.files;
     if (!files?.length) return;
-    const accepted = [...files].filter(
-      (file) =>
-        /^(image\/(jpeg|png|webp))?$/.test(file.type) &&
-        /\.(jpe?g|png|webp)$/i.test(file.name),
-    );
+    const accepted = [...files].filter((file) => {
+      const extension = file.name
+        .slice(file.name.lastIndexOf("."))
+        .toLowerCase();
+      return (
+        (!file.type || photoMimeTypes.includes(file.type)) &&
+        photoExtensions.includes(extension)
+      );
+    });
     const next = accepted.slice(0, max - values.length);
     setProblem(
       accepted.length !== files.length
@@ -70,6 +85,7 @@ export default function PhotoInputs({
           file,
         })),
       ]);
+    input.value = "";
   }
 
   return (
@@ -82,13 +98,10 @@ export default function PhotoInputs({
             <input
               className={styles.visuallyHidden}
               type="file"
-              accept={accept}
+              accept={photoAccept}
               multiple={max > 1}
               aria-label={t("사진 파일 선택", "Choose photo files")}
-              onChange={(event) => {
-                add(event.target.files);
-                event.target.value = "";
-              }}
+              onChange={add}
             />
           </label>
           <label className={styles.capture}>
@@ -100,10 +113,7 @@ export default function PhotoInputs({
               accept="image/*"
               capture="environment"
               aria-label={t("카메라로 촬영", "Take a photo")}
-              onChange={(event) => {
-                add(event.target.files);
-                event.target.value = "";
-              }}
+              onChange={add}
             />
           </label>
         </div>

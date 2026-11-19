@@ -3,6 +3,7 @@ import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSession } from "../api/session-context";
 import { Dialog } from "./controls";
 import { kstInputValue } from "./format";
+import PickerButton from "./PickerButton";
 import ui from "./ui.module.css";
 import styles from "./date-field.module.css";
 
@@ -78,7 +79,9 @@ function Calendar({
   const nextMonth = moveMonth(month, 1);
   const prevMonth = moveMonth(month, -1);
   const firstDay = month.getUTCDay();
-  const daysInMonth = new Date(nextMonth.getTime() - 86400000).getUTCDate();
+  const lastDay = new Date(nextMonth);
+  lastDay.setUTCDate(0);
+  const daysInMonth = lastDay.getUTCDate();
   const selected = time ? day + "T" + hour + ":" + minute : day;
   const valid =
     (!min || !lower || selected >= min) && (!max || !upper || selected <= max);
@@ -216,26 +219,24 @@ export default function DateField({
   const candidate = value ?? draft;
   const day = validDay(candidate);
   const selected = day ? candidate : "";
-  const text = day
+  const displayValue = day
     ? day.replaceAll("-", lang === "ko" ? "." : "-") +
       (time ? " " + selected.slice(11, 16) : "")
-    : time
-      ? t("날짜·시각 선택", "Select date & time")
-      : t("날짜 선택", "Select date");
+    : undefined;
+  const placeholder = time
+    ? t("날짜·시각 선택", "Select date & time")
+    : t("날짜 선택", "Select date");
   return (
     <>
       {name && <input type="hidden" name={name} value={selected} />}
-      <button
-        type="button"
-        className={ui.selectButton}
-        data-placeholder={!selected}
-        aria-label={label}
-        aria-haspopup="dialog"
-        onClick={() => setOpen(true)}
-      >
-        <span>{text}</span>
-        <CalendarDays size={16} strokeWidth={1.65} />
-      </button>
+      <PickerButton
+        label={label}
+        value={displayValue}
+        placeholder={placeholder}
+        open={open}
+        onOpen={() => setOpen(true)}
+        icon={CalendarDays}
+      />
       {open && (
         <Calendar
           title={label}

@@ -13,11 +13,12 @@ import type {
   PhotoAttachment,
 } from "../api/types";
 import { useAction } from "../api/useAction";
+import { useBuildings, useCategories } from "../api/useReferences";
 import { useRemote } from "../api/useRemote";
 import { ErrorState, Field, Loading } from "../ui/controls";
 import DateField from "../ui/DateField";
-import { fieldError } from "../ui/fieldError";
-import { kstInputValue } from "../ui/format";
+import { fieldError, requiredFieldsError } from "../ui/fieldError";
+import { kstInputValue, kstTimestamp } from "../ui/format";
 import PhotoInputs from "../ui/PhotoInputs";
 import type { PhotoDraft } from "../ui/PhotoInputs";
 import { BuildingPicker, CategorySelect } from "../ui/ReferenceFields";
@@ -281,11 +282,9 @@ function FoundItemEditor({
         Boolean(value),
       );
       if (missing.length)
-        throw new ApiError(
-          400,
-          "VALIDATION_ERROR",
+        throw requiredFieldsError(
           t("필수 항목을 확인해 주세요.", "Check the required fields."),
-          missing.map((value) => ({ ...value, code: "REQUIRED" })),
+          missing,
         );
 
       const payload = {
@@ -293,7 +292,7 @@ function FoundItemEditor({
         title: draft.title.trim(),
         description: draft.description.trim(),
         foundLocationDescription: draft.foundLocationDescription.trim(),
-        foundAt: draft.foundAt + ":00+09:00",
+        foundAt: kstTimestamp(draft.foundAt),
       };
       if (item && kstInputValue(item.foundAt) === draft.foundAt)
         payload.foundAt = item.foundAt;
@@ -509,8 +508,8 @@ export default function FoundForm() {
   const { itemId } = useParams();
   const { user, t } = useSession();
   const item = useRemote<ItemDetail>(itemId ? "/found-items/" + itemId : null);
-  const categories = useRemote<{ items: Category[] }>("/categories", true);
-  const buildings = useRemote<{ items: Building[] }>("/buildings", true);
+  const categories = useCategories();
+  const buildings = useBuildings();
   if (item.error !== undefined)
     return <ErrorState error={item.error} retry={item.reload} />;
   if (categories.error !== undefined)
@@ -565,9 +564,7 @@ function StorageEditor({
                 "보관 건물을 선택해 주세요.",
                 "Select a drop-off building.",
               );
-              throw new ApiError(400, "VALIDATION_ERROR", message, [
-                { field: "buildingId", code: "REQUIRED", message },
-              ]);
+              throw requiredFieldsError(message, [{ field: "buildingId" }]);
             }
             await api.request(path + "/drop-off", {
               method: "PUT",
@@ -595,20 +592,25 @@ function StorageEditor({
   );
 }
 
+function useFinderStorage(itemId: string | undefined) {
+  const { user } = useSession();
+  const path = itemId ? "/found-items/" + itemId : "/me/found-items";
+  const item = useRemote<ItemDetail>(itemId ? path : null);
+  const isFinder = !!item.data && item.data.finder.userId === user?.userId;
+  const dropOff = useRemote<DropOff>(isFinder ? path + "/drop-off" : null);
+  return { path, item, dropOff, isFinder };
+}
+
 export function ChangeStorage() {
   const { itemId } = useParams();
-  const { user, t } = useSession();
-  const path = "/found-items/" + itemId;
-  const item = useRemote<ItemDetail>(path);
-  const dropOff = useRemote<DropOff>(
-    item.data?.finder.userId === user?.userId ? path + "/drop-off" : null,
-  );
-  const buildings = useRemote<{ items: Building[] }>("/buildings", true);
+  const { t } = useSession();
+  const { item, dropOff, isFinder } = useFinderStorage(itemId);
+  const buildings = useBuildings();
   for (const resource of [item, dropOff, buildings]) {
     if (resource.error !== undefined)
       return <ErrorState error={resource.error} retry={resource.reload} />;
   }
-  if (item.data && item.data.finder.userId !== user?.userId)
+  if (item.data && !isFinder)
     return (
       <p role="alert">
         {t("작성자만 수정할 수 있어요.", "Only the finder can edit this item.")}
@@ -631,16 +633,12 @@ export function ChangeStorage() {
 
 export function FoundCreated() {
   const { itemId } = useParams();
-  const { user, t } = useSession();
-  const path = "/found-items/" + itemId;
-  const item = useRemote<ItemDetail>(path);
-  const dropOff = useRemote<DropOff>(
-    item.data?.finder.userId === user?.userId ? path + "/drop-off" : null,
-  );
+  const { t } = useSession();
+  const { path, item, dropOff, isFinder } = useFinderStorage(itemId);
   if (item.error !== undefined)
     return <ErrorState error={item.error} retry={item.reload} />;
   if (!item.data) return <Loading />;
-  if (item.data.finder.userId !== user?.userId)
+  if (!isFinder)
     return <Link to={path}>{t("물품 상세 보기", "View item")}</Link>;
   return (
     <div className={ui.formPage}>

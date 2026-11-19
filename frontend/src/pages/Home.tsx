@@ -2,13 +2,8 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useSession } from "../api/session-context";
-import type {
-  Building,
-  Category,
-  ItemStatus,
-  ItemSummary,
-  Page,
-} from "../api/types";
+import type { ItemStatus, ItemSummary, Page } from "../api/types";
+import { useBuildings, useCategories } from "../api/useReferences";
 import { useRemote } from "../api/useRemote";
 import filterIcon from "../assets/filter.svg";
 import DateField from "../ui/DateField";
@@ -70,8 +65,8 @@ export default function Home() {
     setPreviousQuery(q);
     setSearch(q);
   }
-  const buildings = useRemote<{ items: Building[] }>("/buildings", true);
-  const categories = useRemote<{ items: Category[] }>("/categories", true);
+  const buildings = useBuildings();
+  const categories = useCategories();
   const choices = orderCategories(categories.data?.items ?? []);
   const request = new URLSearchParams();
   for (const field of [

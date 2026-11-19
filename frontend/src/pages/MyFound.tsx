@@ -1,12 +1,16 @@
 import { PackageSearch } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useSession } from "../api/session-context";
 import type { DropOff, ItemDetail, ItemSummary, Page } from "../api/types";
 import { useRemote } from "../api/useRemote";
 import { ErrorState, Loading, Pagination } from "../ui/controls";
 import { dateTime, statusLabel } from "../ui/format";
-import SectionTitle from "../ui/SectionTitle";
+import {
+  EmptyReportList,
+  ReportEntry,
+  ReportGroup,
+  ReportList,
+} from "../ui/ReportList";
 import ui from "../ui/ui.module.css";
 
 function FoundReport({ item }: { item: ItemSummary }) {
@@ -22,9 +26,11 @@ function FoundReport({ item }: { item: ItemSummary }) {
           .filter(Boolean)
           .join(" ");
   return (
-    <article>
-      <span className={ui.reportStatus}>{statusLabel(item.status, t)}</span>
-      <h3 className={ui.reportTitle}>{item.title}</h3>
+    <ReportEntry
+      title={item.title}
+      status={statusLabel(item.status, t)}
+      to={path}
+    >
       <div className={ui.reportMeta}>
         <p>
           {t("발견 장소", "Found at")} · {item.foundBuilding.code}
@@ -40,10 +46,7 @@ function FoundReport({ item }: { item: ItemSummary }) {
       <small className={ui.reportMeta}>
         {t("등록일", "Posted on")} · {dateTime(item.createdAt, lang)}
       </small>
-      <Link className={ui.secondary + " " + ui.full} to={path}>
-        {t("신고 관리하기", "Manage report")}
-      </Link>
-    </article>
+    </ReportEntry>
   );
 }
 
@@ -62,45 +65,41 @@ export default function MyFound() {
     items.data?.items.filter((item) => item.status !== "POSTED") ?? [];
 
   return (
-    <div className={ui.formPage + " " + ui.reportPage}>
-      <SectionTitle title={t("습득 신고", "Found reports")} />
+    <ReportList
+      title={t("습득 신고", "Found reports")}
+      createTo="/found-items/new"
+      createLabel={t("새 습득 신고하기", "New found report")}
+    >
       {items.loading && <Loading />}
       {items.error !== undefined && (
         <ErrorState error={items.error} retry={items.reload} />
       )}
       {items.data?.items.length === 0 && (
-        <section className={ui.panel + " " + ui.emptyCard}>
-          <PackageSearch size={34} strokeWidth={1.65} aria-hidden="true" />
-          <h2>{t("습득 신고가 없어요", "No found reports yet")}</h2>
-          <p>
-            {t(
-              "습득한 물품을 등록하고 주인을 찾아 주세요.",
-              "Report a found item to help its owner find it.",
-            )}
-          </p>
-        </section>
+        <EmptyReportList
+          Icon={PackageSearch}
+          title={t("습득 신고가 없어요", "No found reports yet")}
+          description={t(
+            "습득한 물품을 등록하고 주인을 찾아 주세요.",
+            "Report a found item to help its owner find it.",
+          )}
+        />
       )}
       {active.length > 0 && (
-        <section className={ui.panel + " " + ui.reportGroup}>
-          <div className={ui.between}>
-            <h2>{t("진행 중인 습득 신고", "Active found reports")}</h2>
-            <span className={ui.reportCount}>
-              {activeCount.data?.totalElements ?? active.length}
-              {t("건", " reports")}
-            </span>
-          </div>
+        <ReportGroup
+          title={t("진행 중인 습득 신고", "Active found reports")}
+          count={activeCount.data?.totalElements ?? active.length}
+        >
           {active.map((item) => (
             <FoundReport key={item.itemId} item={item} />
           ))}
-        </section>
+        </ReportGroup>
       )}
       {previous.length > 0 && (
-        <section className={ui.panel + " " + ui.reportGroup}>
-          <h2>{t("이전 습득 신고", "Previous found reports")}</h2>
+        <ReportGroup title={t("이전 습득 신고", "Previous found reports")}>
           {previous.map((item) => (
             <FoundReport key={item.itemId} item={item} />
           ))}
-        </section>
+        </ReportGroup>
       )}
       {items.data && (
         <Pagination
@@ -109,11 +108,6 @@ export default function MyFound() {
           change={setPage}
         />
       )}
-      <div className={ui.reportFooter}>
-        <Link className={ui.primary + " " + ui.full} to="/found-items/new">
-          {t("새 습득 신고하기", "New found report")}
-        </Link>
-      </div>
-    </div>
+    </ReportList>
   );
 }

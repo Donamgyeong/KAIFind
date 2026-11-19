@@ -5,6 +5,7 @@ import type { MockAccount } from "../api/types";
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { Dialog, ErrorState, Loading } from "../ui/controls";
+import { affiliationLabel } from "../ui/format";
 import styles from "./profile.module.css";
 
 function destination(path: string | null) {
@@ -25,11 +26,6 @@ export default function Login({ onClose }: { onClose: () => void }) {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const action = useAction();
-  const affiliations = {
-    STUDENT: t("학생", "Student"),
-    FACULTY: t("교원", "Faculty"),
-    STAFF: t("직원", "Staff"),
-  };
 
   return (
     <Dialog
@@ -71,7 +67,7 @@ export default function Login({ onClose }: { onClose: () => void }) {
               <small>
                 {account.role === "ADMIN"
                   ? t("관리자", "Administrator")
-                  : affiliations[account.affiliation]}
+                  : affiliationLabel(account.affiliation, t)}
               </small>
             </span>
             <ChevronRight size={20} strokeWidth={1.65} aria-hidden="true" />

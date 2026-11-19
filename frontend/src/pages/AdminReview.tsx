@@ -5,7 +5,7 @@ import type { Page, PostReport } from "../api/types";
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
 import { ErrorState, Loading, Pagination } from "../ui/controls";
-import { dateTime } from "../ui/format";
+import { kstDateTime } from "../ui/format";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
 import styles from "./admin.module.css";
@@ -16,6 +16,16 @@ type Kind = "post-reports" | "disputes";
 
 function caseId(entry: Moderation) {
   return "reportId" in entry ? entry.reportId : entry.disputeId;
+}
+
+function ReviewStatus({ status }: { status: Moderation["status"] }) {
+  const { t } = useSession();
+  const open = status === "OPEN";
+  return (
+    <span className={ui.badge} data-status={open ? "POSTED" : "COLLECTED"}>
+      {open ? t("검토 대기", "Awaiting review") : t("검토 완료", "Reviewed")}
+    </span>
+  );
 }
 
 export function ReviewQueue({ kind }: { kind: Kind }) {
@@ -61,17 +71,10 @@ export function ReviewQueue({ kind }: { kind: Kind }) {
             <strong className={ui.userText}>
               {"details" in entry ? entry.details : entry.reason}
             </strong>
-            <span
-              className={ui.badge}
-              data-status={entry.status === "OPEN" ? "POSTED" : "COLLECTED"}
-            >
-              {entry.status === "OPEN"
-                ? t("검토 대기", "Awaiting review")
-                : t("검토 완료", "Reviewed")}
-            </span>
+            <ReviewStatus status={entry.status} />
           </div>
           <small className={ui.muted}>
-            {dateTime(entry.createdAt, lang)} KST
+            {kstDateTime(entry.createdAt, lang)}
           </small>
         </Link>
       ))}
@@ -231,20 +234,13 @@ export default function AdminReviewDetail({ kind }: { kind: Kind }) {
       <article className={ui.panel + " " + ui.stack}>
         <div className={ui.between}>
           <strong>{t("접수 내역", "Case details")}</strong>
-          <span
-            className={ui.badge}
-            data-status={record.status === "OPEN" ? "POSTED" : "COLLECTED"}
-          >
-            {record.status === "OPEN"
-              ? t("검토 대기", "Awaiting review")
-              : t("검토 완료", "Reviewed")}
-          </span>
+          <ReviewStatus status={record.status} />
         </div>
         <p className={ui.userText}>
           {"details" in record ? record.details : record.reason}
         </p>
         {"reasonCode" in record && <p>{reasons[record.reasonCode]}</p>}
-        <p className={ui.muted}>{dateTime(record.createdAt, lang)} KST</p>
+        <p className={ui.muted}>{kstDateTime(record.createdAt, lang)}</p>
         {record.decision && (
           <p>
             {t("검토 결과", "Decision")} · {decisions[record.decision]}

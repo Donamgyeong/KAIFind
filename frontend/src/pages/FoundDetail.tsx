@@ -12,6 +12,7 @@ import type {
 } from "../api/types";
 import { useAction } from "../api/useAction";
 import { useRemote } from "../api/useRemote";
+import { signInPath } from "../routing";
 import {
   Dialog,
   ErrorState,
@@ -19,7 +20,7 @@ import {
   Pagination,
   Status,
 } from "../ui/controls";
-import { dateTime, localName } from "../ui/format";
+import { kstDateTime, localName } from "../ui/format";
 import PhotoView from "../ui/PhotoView";
 import SectionTitle from "../ui/SectionTitle";
 import ui from "../ui/ui.module.css";
@@ -60,7 +61,7 @@ function LocationHistory({ path }: { path: string }) {
         {history.data?.items.map((entry) => (
           <li key={entry.historyId}>
             <time dateTime={entry.changedAt}>
-              {dateTime(entry.changedAt, lang)} KST
+              {kstDateTime(entry.changedAt, lang)}
             </time>
             <div>
               {entry.after.building
@@ -159,7 +160,7 @@ function DetailContent({
             <p className={ui.muted}>
               {t("발견 시각", "Found")}{" "}
               <time dateTime={item.foundAt}>
-                {dateTime(item.foundAt, lang)} KST
+                {kstDateTime(item.foundAt, lang)}
               </time>
             </p>
           </section>
@@ -182,9 +183,7 @@ function DetailContent({
                 </span>
                 <Link
                   className={ui.secondary}
-                  to={
-                    "/login?returnTo=" + encodeURIComponent(location.pathname)
-                  }
+                  to={signInPath(location.pathname)}
                 >
                   {t("로그인", "Sign in")}
                 </Link>
